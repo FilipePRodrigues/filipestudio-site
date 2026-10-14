@@ -17,6 +17,9 @@ import { Testimonials } from './components/Testimonials.tsx'
 import { useScrollReveal } from './hooks/useScrollReveal.ts'
 import { useTheme } from './hooks/useTheme.ts'
 import { getBlogPost, getBlogPosts } from './lib/blog.ts'
+import { setPageMeta } from './lib/seo.ts'
+
+const BASE_URL = 'https://filipeprodrigues.github.io/filipestudio-site/'
 
 type Route =
   | { name: 'home'; section: string }
@@ -95,7 +98,37 @@ export default function App() {
 
   useScrollReveal(route.name)
 
+  // Update meta tags dynamically per route (SPA SEO)
   useEffect(() => {
+    if (route.name === 'blog') {
+      setPageMeta({
+        title: 'Blog — FilipeStudio | Histórias da pista e da vida',
+        description: 'Reflexões sobre atletismo, rotina, constância e o caminho do FilipeStudio.',
+        url: `${BASE_URL}#/blog`,
+        type: 'blog',
+      })
+    } else if (route.name === 'post') {
+      const post = getBlogPost(route.slug)
+      if (post) {
+        setPageMeta({
+          title: `${post.title} — FilipeStudio`,
+          description: post.excerpt || `Post de ${post.title} no blog do FilipeStudio.`,
+          url: `${BASE_URL}#/blog/${post.slug}`,
+          image: post.cover,
+          type: 'article',
+        })
+      }
+    } else {
+      setPageMeta({
+        title: 'FilipeStudio — Sites, Landing Pages e Soluções Digitais',
+        description:
+          'Sites institucionais, landing pages e soluções digitais modernos, rápidos e responsivos. Design exclusivo, SEO técnico e suporte contínuo.',
+        url: BASE_URL,
+        type: 'website',
+      })
+    }
+
+    // scroll to top on route change
     if (route.name !== 'home') {
       window.scrollTo({ top: 0, behavior: 'auto' })
     }

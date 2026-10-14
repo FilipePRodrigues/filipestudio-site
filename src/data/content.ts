@@ -19,7 +19,7 @@ export const BRAND = {
   phoneDisplay: '(31) 99799-8171',
   whatsappNumber: '5531997998171',
   cnpj: '00.000.000/0001-00',
-  baseUrl: 'https://exemplo.com.br/',
+  baseUrl: 'https://filipeprodrigues.github.io/filipestudio-site/',
 } as const
 
 export function whatsappLink(message: string): string {
