@@ -11,7 +11,6 @@ import { Pricing } from './components/Pricing.tsx'
 import { Process } from './components/Process.tsx'
 import { Services } from './components/Services.tsx'
 import { TechStrip } from './components/TechStrip.tsx'
-import { Testimonials } from './components/Testimonials.tsx'
 import { useScrollReveal } from './hooks/useScrollReveal.ts'
 import { useTheme } from './hooks/useTheme.ts'
 import { getBlogPost, getBlogPosts } from './lib/blog.ts'
@@ -75,7 +74,6 @@ function Landing({ section }: { section: string }) {
       <Benefits />
       <Process />
       <Portfolio />
-      <Testimonials />
       <Pricing />
       <FAQ />
       <Contact />

@@ -5,15 +5,15 @@ export function Portfolio() {
     <section id="portfolio" className="relative py-20 sm:py-28" aria-labelledby="portfolio-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Portfólio</p>
+          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Case de destaque</p>
           <h2
             id="portfolio-title"
             className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
-            Projetos que geram resultado
+            Feito por mim, para mim
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Uma seleção de trabalhos recentes. Clique em um projeto para ver o preview completo.
+            Este site foi construído do zero — do design ao deploy. Clique e confira o resultado.
           </p>
         </div>
 
