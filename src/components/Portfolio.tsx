@@ -17,7 +17,7 @@ export function Portfolio() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mt-14 grid max-w-lg gap-6">
           {PORTFOLIO.map((item) => (
             <a
               key={item.id}

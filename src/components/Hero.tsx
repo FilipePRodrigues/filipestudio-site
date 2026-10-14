@@ -1,19 +1,4 @@
-import { useCounter } from '../hooks/useCounter.ts'
 import { assetUrl } from '../lib/asset.ts'
-
-function Stat({ target, suffix, label }: { target: number; suffix: string; label: string }) {
-  const { value, ref } = useCounter(target)
-  return (
-    <div>
-      <dt className="sr-only">{label}</dt>
-      <dd className="font-display text-2xl font-bold text-slate-900 dark:text-white">
-        <span ref={ref}>{value}</span>
-        {suffix}
-      </dd>
-      <dd className="text-sm text-slate-500 dark:text-slate-400">{label}</dd>
-    </div>
-  )
-}
 
 export function Hero() {
   return (
@@ -65,12 +50,6 @@ export function Hero() {
                 Ver portfólio
               </a>
             </div>
-
-            <dl className="mt-10 grid max-w-md grid-cols-3 gap-4">
-              <Stat target={120} suffix="+" label="Projetos entregues" />
-              <Stat target={98} suffix="%" label="Clientes satisfeitos" />
-              <Stat target={24} suffix="h" label="Resposta média" />
-            </dl>
           </div>
 
           <div className="reveal" aria-hidden="true">
