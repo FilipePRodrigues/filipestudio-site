@@ -63,6 +63,11 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
                 </a>
               </li>
             ))}
+            <li>
+              <a href="#/blog" className="nav-link">
+                Blog
+              </a>
+            </li>
           </ul>
 
           <div className="flex items-center gap-2">
@@ -105,6 +110,11 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
                 </a>
               </li>
             ))}
+            <li>
+              <a href="#/blog" className="mobile-nav-link" onClick={closeMenu}>
+                Blog
+              </a>
+            </li>
             <li>
               <a
                 href="#contato"
