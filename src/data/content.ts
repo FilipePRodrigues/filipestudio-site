@@ -180,6 +180,16 @@ export const PROCESS_STEPS: ProcessStep[] = [
 
 export const PORTFOLIO: PortfolioItem[] = [
   {
+    id: 'filipestudio',
+    category: 'Landing Page',
+    title: 'FilipeStudio',
+    description:
+      'Landing page institucional com identidade neon, planos, portfólio e captação de leads via WhatsApp e e-mail.',
+    emoji: '⚡',
+    gradient: 'from-violet-500/40 via-blue-500/30 to-cyan-400/40',
+    href: 'https://filipeprodrigues.github.io/filipestudio-site/',
+  },
+  {
     id: 'saas',
     category: 'Landing Page',
     title: 'Startup de Tecnologia',

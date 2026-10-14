@@ -29,6 +29,7 @@ export interface PortfolioItem {
   description: string
   emoji: string
   gradient: string
+  href?: string
 }
 
 export interface Testimonial {

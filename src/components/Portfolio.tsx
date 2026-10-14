@@ -19,7 +19,14 @@ export function Portfolio() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PORTFOLIO.map((item) => (
-            <a key={item.id} href="#contato" className="portfolio-card reveal group">
+            <a
+              key={item.id}
+              href={item.href ?? '#contato'}
+              className="portfolio-card reveal group"
+              {...(item.href
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+            >
               <div className={`portfolio-thumb bg-gradient-to-br ${item.gradient}`}>
                 <div className="absolute inset-0 grid place-items-center">
                   <div className="px-4 text-center">
