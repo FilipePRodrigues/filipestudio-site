@@ -96,6 +96,8 @@ export function Hero() {
                     src={assetUrl('/logo-horizontal.png')}
                     alt="FilipeStudio — Sites, landing pages e soluções digitais"
                     className="relative mx-auto w-[90%] py-8"
+                    fetchPriority="high"
+                    decoding="async"
                   />
                   <div className="relative flex items-center justify-center gap-2 pb-6">
                     <div className="h-8 w-28 rounded-lg bg-gradient-to-r from-neon-violet via-neon-blue to-neon-cyan" />

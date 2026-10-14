@@ -34,6 +34,7 @@ export function Portfolio() {
                     alt={`Preview do projeto ${item.title}`}
                     className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                   />
                 ) : null}
                 <div

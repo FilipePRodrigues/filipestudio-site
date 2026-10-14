@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
-import { BlogIndex } from './components/blog/BlogIndex.tsx'
-import { BlogPostNotFound, BlogPostView } from './components/blog/BlogPostView.tsx'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Benefits } from './components/Benefits.tsx'
 import { Contact } from './components/Contact.tsx'
 import { FAQ } from './components/FAQ.tsx'
@@ -20,6 +18,11 @@ import { getBlogPost, getBlogPosts } from './lib/blog.ts'
 import { setPageMeta } from './lib/seo.ts'
 
 const BASE_URL = 'https://filipeprodrigues.github.io/filipestudio-site/'
+
+// Blog components lazy-loaded — marked + dompurify (~150KB) only fetched on blog visit
+const BlogIndex = lazy(() => import('./components/blog/BlogIndex.tsx').then((m) => ({ default: m.BlogIndex })))
+const BlogPostView = lazy(() => import('./components/blog/BlogPostView.tsx').then((m) => ({ default: m.BlogPostView })))
+const BlogPostNotFound = lazy(() => import('./components/blog/BlogPostView.tsx').then((m) => ({ default: m.BlogPostNotFound })))
 
 type Route =
   | { name: 'home'; section: string }
@@ -146,21 +149,48 @@ export default function App() {
 
       {route.name === 'blog' ? (
         <main id="conteudo">
-          <BlogIndex posts={getBlogPosts()} />
+          <Suspense fallback={<BlogLoading />}>
+            <BlogIndex posts={getBlogPosts()} />
+          </Suspense>
         </main>
       ) : null}
 
       {route.name === 'post' ? (
         <main id="conteudo">
-          {(() => {
-            const post = getBlogPost(route.slug)
-            return post ? <BlogPostView post={post} /> : <BlogPostNotFound slug={route.slug} />
-          })()}
+          <Suspense fallback={<BlogLoading />}>
+            {(() => {
+              const post = getBlogPost(route.slug)
+              return post ? <BlogPostView post={post} /> : <BlogPostNotFound slug={route.slug} />
+            })()}
+          </Suspense>
         </main>
       ) : null}
 
       <Footer />
       <FloatingWhatsApp />
+      <ServiceWorkerRegistration />
     </>
+  )
+}
+
+function ServiceWorkerRegistration() {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register(`${import.meta.env.BASE_URL}sw.js`)
+        .catch(() => {})
+    }
+  }, [])
+  return null
+}
+
+function BlogLoading() {
+  return (
+    <section className="relative py-28">
+      <div className="mx-auto max-w-xl px-4 text-center">
+        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-neon-cyan border-t-transparent" />
+        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Carregando...</p>
+      </div>
+    </section>
   )
 }

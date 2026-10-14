@@ -2,7 +2,7 @@
 title: Treino, disciplina e constância
 date: 2026-10-13
 excerpt: O que a rotina de atleta me ensinou sobre constância — e como isso aparece no trabalho e na vida.
-cover: /blog/constancia/cover.png
+cover: /blog/constancia/cover.webp
 tags: [atleta, treino, rotina]
 ---
 

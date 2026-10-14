@@ -2,7 +2,7 @@
 title: Boas-vindas ao meu blog
 date: 2026-10-14
 excerpt: Um espaço para dividir a jornada como pessoa e como atleta — treinos, aprendizados e a vida fora da corrida.
-cover: /blog/boas-vindas/cover.png
+cover: /blog/boas-vindas/cover.webp
 tags: [vida, atleta, blog]
 ---
 
