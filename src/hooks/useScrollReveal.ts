@@ -1,28 +1,51 @@
 import { useEffect } from 'react'
 
-export function useScrollReveal(): void {
-  useEffect(() => {
-    const elements = document.querySelectorAll<HTMLElement>('.reveal')
-    if (elements.length === 0) return
+let sharedObserver: IntersectionObserver | null = null
+const observedElements = new Set<Element>()
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      elements.forEach((el) => el.classList.add('is-visible'))
-      return
-    }
+function getObserver(): IntersectionObserver {
+  if (sharedObserver) return sharedObserver
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-            observer.unobserve(entry.target)
-          }
+  sharedObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          sharedObserver?.unobserve(entry.target)
+          observedElements.delete(entry.target)
         }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
-    )
+      }
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+  )
 
-    elements.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
+  return sharedObserver
+}
+
+function revealAll(): void {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLElement>('.reveal').forEach((el) => el.classList.add('is-visible'))
+    return
+  }
+
+  const observer = getObserver()
+
+  document.querySelectorAll<HTMLElement>('.reveal').forEach((el) => {
+    if (observedElements.has(el) || el.classList.contains('is-visible')) return
+    observer.observe(el)
+    observedElements.add(el)
+  })
+}
+
+export function useScrollReveal(trigger?: unknown): void {
+  useEffect(() => {
+    const timeout = setTimeout(revealAll, 80)
+    return () => clearTimeout(timeout)
+  }, [trigger])
+
+  // also on first mount
+  useEffect(() => {
+    const timeout = setTimeout(revealAll, 80)
+    return () => clearTimeout(timeout)
   }, [])
 }

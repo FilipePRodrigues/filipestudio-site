@@ -79,8 +79,21 @@ function Landing({ section }: { section: string }) {
 
 export default function App() {
   const { theme, toggleTheme } = useTheme()
-  useScrollReveal()
   const route = useHashRoute()
+
+  // Reset reveal state when route changes so new elements animate in
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.querySelectorAll<HTMLElement>('.reveal.is-visible').forEach((el) => {
+          el.classList.remove('is-visible')
+        })
+        // useScrollReveal with route dep will re-observe on next tick
+      })
+    })
+  }, [route.name])
+
+  useScrollReveal(route.name)
 
   useEffect(() => {
     if (route.name !== 'home') {
