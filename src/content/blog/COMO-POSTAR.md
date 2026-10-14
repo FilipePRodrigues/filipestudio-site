@@ -73,3 +73,17 @@ Em alguns minutos o post aparece em `#/blog` do site.
 Use o app do GitHub → repositório `filipestudio-site` → `src/content/blog/` → **Add file** → **Create new file**.
 
 Cole o Markdown, anexe imagens em `public/blog/...`, e faça o commit direto em `main`.
+
+---
+
+## Jeito mais fácil: publicar por Issue do GitHub
+
+1. Vá em: [Issues do repositório](https://github.com/FilipePRodrigues/filipestudio-site/issues/new?template=blog.yml)
+2. Preencha o formulário (título, conteúdo, tags, resumo)
+3. Anexe fotos direto no editor (arraste ou cole)
+4. Clique em **Submit new issue**
+
+A Action converte automaticamente em post e publica.
+Em ~2 minutos o post aparece em `#/blog` do site.
+
+> A Issue recebe um comentário de confirmação quando o post é publicado.

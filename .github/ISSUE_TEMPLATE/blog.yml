@@ -1,0 +1,51 @@
+name: Novo post no blog
+description: Publique um post no blog do FilipeStudio
+title: "[Blog] "
+labels: ["blog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Escreva o post abaixo. **O título da Issue vira o título do post.**
+        Você pode anexar imagens — elas são baixadas automaticamente.
+  - type: textarea
+    id: content
+    attributes:
+      label: Conteúdo do post
+      description: Use Markdown. Opcionalmente, comece com um bloco de configuração (veja abaixo).
+      value: |
+        <!--
+        Opcional: apague os comentários e personalize
+
+        ---
+        excerpt: Resumo curto do post
+        tags: atleta, vida
+        date: 2026-10-15
+        cover: /blog/meu-post/cover.png
+        ---
+        -->
+
+        Escreva aqui o seu post.
+
+        ## Exemplo de subtítulo
+
+        Texto normal. **Negrito**, *itálico*, listas:
+
+        - item 1
+        - item 2
+
+        ![Legenda](cole-aqui-a-imagem-que-você-anexou)
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags (opcional)
+      description: Se não usar o bloco `---` acima, separe por vírgula.
+      placeholder: atleta, corrida, vida
+  - type: input
+    id: excerpt
+    attributes:
+      label: Resumo curto (opcional)
+      description: Aparece no card da lista. Se vazio, usamos o primeiro parágrafo.
+      placeholder: Como foi minha prova de 10km...

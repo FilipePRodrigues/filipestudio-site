@@ -1,0 +1,59 @@
+name: Blog from Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: blog-issue-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    if: contains(github.event.issue.labels.*.name, 'blog')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Convert issue to blog post
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: node scripts/issue-to-post.mjs
+
+      - name: Commit and push
+        run: |
+          git config user.name "filipestudio-blog-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/blog public/blog
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração para publicar."
+            exit 0
+          fi
+          git commit -m "blog: publish from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_number = context.payload.issue.number;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body: `✅ **Post publicado!**\n\nEle deve aparecer em alguns minutos em:\nhttps://filipeprodrigues.github.io/filipestudio-site/#/blog\n\n_(workflow: Blog from Issue)_`
+            });
