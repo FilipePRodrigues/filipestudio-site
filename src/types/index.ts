@@ -30,6 +30,7 @@ export interface PortfolioItem {
   emoji: string
   gradient: string
   href?: string
+  image?: string
 }
 
 export interface Testimonial {
