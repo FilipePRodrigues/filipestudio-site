@@ -1,3 +1,4 @@
+import { assetUrl } from '../lib/asset.ts'
 import type {
   Benefit,
   FaqItem,
@@ -188,7 +189,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     emoji: '⚡',
     gradient: 'from-violet-500/40 via-blue-500/30 to-cyan-400/40',
     href: 'https://filipeprodrigues.github.io/filipestudio-site/',
-    image: '/portfolio-filipestudio.png',
+    image: assetUrl('/portfolio-filipestudio.png'),
   },
   {
     id: 'saas',

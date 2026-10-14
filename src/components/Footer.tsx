@@ -1,4 +1,5 @@
 import { BRAND, NAV_LINKS, SOCIAL_LINKS, whatsappLink } from '../data/content.ts'
+import { assetUrl } from '../lib/asset.ts'
 import { MailIcon, WhatsAppIcon } from './icons.tsx'
 
 const SERVICE_LINKS = [
@@ -20,7 +21,7 @@ export function Footer() {
           <div>
             <a href="#topo" className="inline-flex items-center gap-2.5">
               <img
-                src="/favicon.svg"
+                src={assetUrl('/favicon.svg')}
                 alt=""
                 width={36}
                 height={36}

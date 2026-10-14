@@ -2,23 +2,23 @@
   "name": "FilipeStudio",
   "short_name": "FilipeStudio",
   "description": "Sites e landing pages que convertem",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0B0B1F",
   "theme_color": "#0B0B1F",
   "icons": [
     {
-      "src": "/favicon-192.png",
+      "src": "./favicon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/favicon-512.png",
+      "src": "./favicon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/favicon-512.png",
+      "src": "./favicon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

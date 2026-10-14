@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BRAND, NAV_LINKS } from '../data/content.ts'
+import { assetUrl } from '../lib/asset.ts'
 import { ThemeToggle } from './ThemeToggle.tsx'
 
 interface NavbarProps {
@@ -40,7 +41,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
         >
           <a href="#topo" className="group flex items-center gap-2.5" onClick={closeMenu}>
             <img
-              src="/favicon.svg"
+              src={assetUrl('/favicon.svg')}
               alt=""
               width={36}
               height={36}

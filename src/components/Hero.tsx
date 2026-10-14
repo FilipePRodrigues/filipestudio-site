@@ -1,4 +1,5 @@
 import { useCounter } from '../hooks/useCounter.ts'
+import { assetUrl } from '../lib/asset.ts'
 
 function Stat({ target, suffix, label }: { target: number; suffix: string; label: string }) {
   const { value, ref } = useCounter(target)
@@ -92,7 +93,7 @@ export function Hero() {
                     }}
                   />
                   <img
-                    src="/logo-horizontal.svg"
+                    src={assetUrl('/logo-horizontal.png')}
                     alt="FilipeStudio — Sites, landing pages e soluções digitais"
                     className="relative mx-auto w-[90%] py-8"
                   />
