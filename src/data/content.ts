@@ -367,7 +367,7 @@ export const TECH_STACK: TechItem[] = [
 ]
 
 export const SOCIAL_LINKS = [
-  { id: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/' },
-  { id: 'instagram', label: 'Instagram', href: 'https://instagram.com/' },
-  { id: 'github', label: 'GitHub', href: 'https://github.com/' },
+  { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/filipe-pinheiro-rodrigues-a7281134a/' },
+  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/lipe___dev/' },
+  { id: 'github', label: 'GitHub', href: 'https://github.com/FilipePRodrigues' },
 ] as const
