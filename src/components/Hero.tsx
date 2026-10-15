@@ -63,7 +63,7 @@ export function Hero() {
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
                   <div className="ml-3 h-6 flex-1 rounded-full bg-white/10" />
                 </div>
-                <div className="relative overflow-hidden rounded-b-2xl bg-[#03071a]">
+                <div className="relative overflow-hidden rounded-b-2xl bg-[#0b0b1f]">
                   <div
                     className="absolute inset-0 opacity-60"
                     style={{
@@ -73,7 +73,7 @@ export function Hero() {
                   />
                   <img
                     src={assetUrl('/logo-horizontal.svg')}
-                    alt="FP Tech — Sites, landing pages e soluções digitais"
+                    alt="FilipeStudio — Sites, landing pages e soluções digitais"
                     width={720}
                     height={300}
                     className="relative mx-auto w-[90%] py-8"

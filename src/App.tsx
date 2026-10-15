@@ -103,8 +103,8 @@ export default function App() {
   useEffect(() => {
     if (route.name === 'blog') {
       setPageMeta({
-        title: 'Blog — FP Tech | Histórias da pista e da vida',
-        description: 'Reflexões sobre atletismo, rotina, constância e o caminho do FP Tech.',
+        title: 'Blog — FilipeStudio | Histórias da pista e da vida',
+        description: 'Reflexões sobre atletismo, rotina, constância e o caminho do FilipeStudio.',
         url: `${BASE_URL}#/blog`,
         type: 'blog',
       })
@@ -112,8 +112,8 @@ export default function App() {
       const post = getBlogPost(route.slug)
       if (post) {
         setPageMeta({
-          title: `${post.title} — FP Tech`,
-          description: post.excerpt || `Post de ${post.title} no blog do FP Tech.`,
+          title: `${post.title} — FilipeStudio`,
+          description: post.excerpt || `Post de ${post.title} no blog do FilipeStudio.`,
           url: `${BASE_URL}#/blog/${post.slug}`,
           image: post.cover,
           type: 'article',
@@ -121,7 +121,7 @@ export default function App() {
       }
     } else {
       setPageMeta({
-        title: 'FP Tech — Sites, Landing Pages e Soluções Digitais',
+        title: 'FilipeStudio — Sites, Landing Pages e Soluções Digitais',
         description:
           'Sites institucionais, landing pages e soluções digitais modernos, rápidos e responsivos. Design exclusivo, SEO técnico e suporte contínuo.',
         url: BASE_URL,

@@ -61,7 +61,7 @@ export function BlogPostView({ post }: { post: BlogPost }) {
             ← Voltar para o blog
           </a>
           <a href="#/" className="btn-primary">
-            Conhecer o FP Tech
+            Conhecer o FilipeStudio
           </a>
         </div>
       </div>

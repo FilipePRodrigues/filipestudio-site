@@ -47,8 +47,11 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
               height={36}
               className="h-9 w-9 rounded-xl shadow-glow"
             />
-            <span className="font-display text-lg font-semibold tracking-tight text-white">
+            <span className="font-display text-lg font-semibold tracking-tight">
               {BRAND.name}
+              <span className="bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent">
+                {BRAND.nameSuffix}
+              </span>
             </span>
           </a>
 

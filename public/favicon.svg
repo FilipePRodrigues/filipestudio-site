@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#3682f6"/></linearGradient></defs><rect x="13" y="13" width="74" height="74" rx="18" fill="url(#g)" stroke="#1c9eff" stroke-width="2"/><path d="M31 65 42 31h30L61 42H46l-3 9h18L48 62h-8l-4 12z" fill="#fff"/><path d="M48 65 59 31h17L65 42h-8l-3 9h15L58 62h-8z" fill="#19d7f5"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+<defs>
+  <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0%" stop-color="#7C3AED"/>
+    <stop offset="52%" stop-color="#3B82F6"/>
+    <stop offset="100%" stop-color="#22D3EE"/>
+  </linearGradient>
+</defs>
+
+<rect x="8" y="8" width="112" height="112" rx="27" fill="#0B0B1F" stroke="url(#brand)" stroke-width="4"/>
+    <g transform="translate(20 19) scale(0.83)">
+      <path d="M31 8 H88 Q91 8 89 12 L82 22 Q80 25 76 25 H48 L40 33 V43 H72 Q76 43 74 47 L68 56 Q66 59 62 59 H40 V76 Q40 80 36 83 L24 94 Q19 98 19 91 V31 Q19 26 23 22 Z" fill="url(#brand)"/>
+      <path d="M8 35 L0 43 L8 51" fill="none" stroke="#22D3EE" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/>
+      <path d="M96 35 L104 43 L96 51" fill="none" stroke="#22D3EE" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/>
+    </g>
+</svg>

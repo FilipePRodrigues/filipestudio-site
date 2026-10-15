@@ -11,9 +11,9 @@ import type {
 } from '../types/index.ts'
 
 export const BRAND = {
-  name: 'FP Tech',
-  nameSuffix: '',
-  fullName: 'FP Tech',
+  name: 'Filipe',
+  nameSuffix: 'Studio',
+  fullName: 'FilipeStudio',
   tagline: 'Sites, landing pages e soluções digitais',
   email: 'fprodrigues2908@gmail.com',
   phoneDisplay: '(31) 99799-8171',
@@ -182,13 +182,13 @@ export const PORTFOLIO: PortfolioItem[] = [
   {
     id: 'filipestudio',
     category: 'Este site',
-    title: 'FP Tech',
+    title: 'FilipeStudio',
     description:
       'Site institucional desenvolvido por mim, do design ao deploy. React + TypeScript, Lighthouse 95+, blog automatizado por GitHub Issues e CI/CD completo com GitHub Actions.',
     emoji: '⚡',
     gradient: 'from-violet-500/40 via-blue-500/30 to-cyan-400/40',
     href: 'https://filipeprodrigues.github.io/filipestudio-site/',
-    image: assetUrl('/portfolio-fptech.webp'),
+    image: assetUrl('/portfolio-filipestudio.webp'),
   },
 ]
 

@@ -6,19 +6,19 @@
   --font-display: "Montserrat", "Arial", system-ui, sans-serif;
   --font-sans: "Montserrat", "Arial", system-ui, sans-serif;
 
-  --color-ink-950: #03070f;
-  --color-ink-900: #03071a;
-  --color-ink-850: #0a0d24;
-  --color-ink-800: #12152e;
-  --color-ink-700: #1e2240;
+  --color-ink-950: #07070d;
+  --color-ink-900: #0b0b1f;
+  --color-ink-850: #0e0e1a;
+  --color-ink-800: #12122a;
+  --color-ink-700: #1a1a35;
 
-  --color-neon-cyan: #04e4fc;
-  --color-neon-blue: #2c84fc;
-  --color-neon-violet: #7c34fc;
-  --color-neon-orange: #fc843c;
+  --color-neon-cyan: #22d3ee;
+  --color-neon-blue: #3b82f6;
+  --color-neon-violet: #7c3aed;
+  --color-neon-magenta: #a78bfa;
 
-  --shadow-glow: 0 0 24px rgba(4, 228, 252, 0.35);
-  --shadow-glow-violet: 0 0 28px rgba(124, 52, 252, 0.4);
+  --shadow-glow: 0 0 24px rgba(34, 211, 238, 0.35);
+  --shadow-glow-violet: 0 0 28px rgba(124, 58, 237, 0.4);
   --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.28);
 
   --animate-float: float 7s ease-in-out infinite;

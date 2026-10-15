@@ -9,7 +9,7 @@ interface PageMeta {
 }
 
 const defaults: PageMeta = {
-  title: 'FP Tech — Sites, Landing Pages e Soluções Digitais',
+  title: 'FilipeStudio — Sites, Landing Pages e Soluções Digitais',
   description:
     'Sites institucionais, landing pages e soluções digitais modernos, rápidos e responsivos. Design exclusivo, SEO técnico e suporte contínuo.',
   url: SITE_URL,

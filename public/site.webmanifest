@@ -1,11 +1,11 @@
 {
-  "name": "FP Tech",
-  "short_name": "FP Tech",
+  "name": "FilipeStudio",
+  "short_name": "FilipeStudio",
   "description": "Sites, landing pages e soluções digitais",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#03071a",
-  "theme_color": "#03071a",
+  "background_color": "#0b0b1f",
+  "theme_color": "#0b0b1f",
   "icons": [
     {
       "src": "./favicon-192.png",

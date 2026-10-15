@@ -1,0 +1,21 @@
+FilipeStudio — pacote de logos
+================================
+
+Arquivos:
+- 01_logo_principal_horizontal.svg/.png — logo principal com assinatura e tagline, fundo transparente.
+- 02_icone_favicon.svg/.png — ícone quadrado para favicon e avatar.
+- 03_simbolo_transparente.svg/.png — símbolo isolado com fundo transparente.
+- 04_simbolo_monocromatico.svg/.png — símbolo branco monocromático.
+- 05_logo_fundo_claro.svg/.png — logo aplicado em fundo claro.
+- 06_logo_monocromatico.svg/.png — assinatura horizontal monocromática.
+- favicon_16px.png, favicon_32px.png, favicon_48px.png, favicon_180px.png, favicon_192px.png, favicon_512px.png — tamanhos úteis para web e dispositivos.
+
+Paleta:
+- Roxo Código: #7C3AED
+- Azul Deploy: #3B82F6
+- Ciano Neon: #22D3EE
+- Noite: #0B0B1F
+- Névoa: #EEF0FF
+
+SVG é vetorial e editável. PNG é rasterizado com transparência quando aplicável.
+A tipografia usa Montserrat como referência, com fallback para Arial/sans-serif se a fonte não estiver instalada.

@@ -27,8 +27,11 @@ export function Footer() {
                 height={36}
                 className="h-9 w-9 rounded-xl"
               />
-              <span className="font-display text-lg font-semibold tracking-tight text-white">
+              <span className="font-display text-lg font-semibold tracking-tight">
                 {BRAND.name}
+                <span className="bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent">
+                  {BRAND.nameSuffix}
+                </span>
               </span>
             </a>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600 dark:text-slate-400">
