@@ -41,7 +41,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
         >
           <a href="#topo" className="group flex items-center gap-2.5" onClick={closeMenu}>
             <img
-              src={assetUrl('/favicon.svg')}
+              src={assetUrl('/monogram.webp')}
               alt=""
               width={36}
               height={36}
