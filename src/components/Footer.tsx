@@ -123,9 +123,6 @@ export function Footer() {
                   {BRAND.phoneDisplay}
                 </a>
               </li>
-              <li className="pt-2 text-xs leading-relaxed">
-                <strong className="text-slate-700 dark:text-slate-300">CNPJ:</strong> {BRAND.cnpj}
-              </li>
             </ul>
           </div>
         </div>

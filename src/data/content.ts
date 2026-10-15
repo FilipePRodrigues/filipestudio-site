@@ -18,7 +18,6 @@ export const BRAND = {
   email: 'fprodrigues2908@gmail.com',
   phoneDisplay: '(31) 99799-8171',
   whatsappNumber: '5531997998171',
-  cnpj: '00.000.000/0001-00',
   baseUrl: 'https://filipeprodrigues.github.io/filipestudio-site/',
 } as const
 
