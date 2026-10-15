@@ -37,3 +37,7 @@ _html-scaffold
 *.bak
 *.backup
 
+
+# Brand assets (source)
+FP_Tech_Itens_Icones_E_Logos*
+

@@ -12,7 +12,7 @@ Este é o meu espaço para contar histórias que vão além do código.
 
 - **Vida pessoal** — rotina, viagens, o que estou aprendendo
 - **Vida de atleta** — treinos, competições, evolução e os bastidores
-- **Bastidores do FilipeStudio** — o que estou construindo e estudando
+- **Bastidores do FP Tech** — o que estou construindo e estudando
 
 ## Por que um blog?
 

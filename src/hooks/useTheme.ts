@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Theme } from '../types/index.ts'
 
-const STORAGE_KEY = 'filipestudio-theme'
+const STORAGE_KEY = 'fptech-theme'
 
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'dark'

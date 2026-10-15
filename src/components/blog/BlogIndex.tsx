@@ -24,7 +24,7 @@ export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
             Histórias da pista e da vida
           </h1>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Reflexões sobre atletismo, rotina, constância e o caminho do FilipeStudio.
+            Reflexões sobre atletismo, rotina, constância e o caminho do FP Tech.
           </p>
         </div>
 
