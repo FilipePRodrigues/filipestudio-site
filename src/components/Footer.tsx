@@ -21,7 +21,7 @@ export function Footer() {
           <div>
             <a href="#topo" className="inline-flex items-center gap-2.5">
               <img
-                src={assetUrl('/monogram.webp')}
+                src={assetUrl('/monogram.svg')}
                 alt=""
                 width={36}
                 height={36}

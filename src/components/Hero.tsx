@@ -72,10 +72,10 @@ export function Hero() {
                     }}
                   />
                   <img
-                    src={assetUrl('/logo-horizontal.webp')}
+                    src={assetUrl('/logo-horizontal.svg')}
                     alt="FP Tech — Sites, landing pages e soluções digitais"
-                    width={490}
-                    height={166}
+                    width={720}
+                    height={300}
                     className="relative mx-auto w-[90%] py-8"
                     fetchPriority="high"
                     decoding="async"
