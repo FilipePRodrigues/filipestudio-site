@@ -45,6 +45,8 @@ export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
                     <img
                       src={post.cover}
                       alt=""
+                      width={800}
+                      height={500}
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                     />

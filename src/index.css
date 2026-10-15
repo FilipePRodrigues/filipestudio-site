@@ -83,19 +83,19 @@ body {
 
 /* Navigation */
 .nav-link {
-  @apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-white/60 hover:text-ink-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white;
+  @apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-white/60 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon-cyan dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white;
 }
 
 .mobile-nav-link {
-  @apply block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-ink-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white;
+  @apply block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon-cyan dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white;
 }
 
 .footer-link {
-  @apply text-slate-600 transition-colors hover:text-neon-cyan dark:text-slate-400 dark:hover:text-neon-cyan;
+  @apply text-slate-600 transition-colors hover:text-neon-cyan focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon-cyan dark:text-slate-400 dark:hover:text-neon-cyan;
 }
 
 .social-link {
-  @apply grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-slate-600 transition-all hover:-translate-y-0.5 hover:border-neon-cyan/50 hover:text-neon-cyan hover:shadow-glow dark:border-white/10 dark:text-slate-400 dark:hover:text-neon-cyan;
+  @apply grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-slate-600 transition-all hover:-translate-y-0.5 hover:border-neon-cyan/50 hover:text-neon-cyan hover:shadow-glow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon-cyan dark:border-white/10 dark:text-slate-400 dark:hover:text-neon-cyan;
 }
 
 /* Buttons */
@@ -141,7 +141,7 @@ body {
 }
 
 .portfolio-card {
-  @apply overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-neon-cyan/40 hover:shadow-glow dark:border-white/10 dark:bg-ink-850/70;
+  @apply overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-neon-cyan/40 hover:shadow-glow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon-cyan dark:border-white/10 dark:bg-ink-850/70;
 }
 
 .portfolio-thumb {

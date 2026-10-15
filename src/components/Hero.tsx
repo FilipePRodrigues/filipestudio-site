@@ -74,6 +74,8 @@ export function Hero() {
                   <img
                     src={assetUrl('/logo-horizontal.png')}
                     alt="FilipeStudio — Sites, landing pages e soluções digitais"
+                    width={900}
+                    height={150}
                     className="relative mx-auto w-[90%] py-8"
                     fetchPriority="high"
                     decoding="async"

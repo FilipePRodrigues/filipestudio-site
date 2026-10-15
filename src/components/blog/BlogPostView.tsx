@@ -45,6 +45,8 @@ export function BlogPostView({ post }: { post: BlogPost }) {
           <img
             src={post.cover}
             alt=""
+            width={800}
+            height={500}
             className="mt-8 w-full rounded-3xl border border-white/10 object-cover shadow-soft"
           />
         ) : null}
