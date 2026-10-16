@@ -166,20 +166,8 @@ export default function App() {
 
       <Footer />
       <FloatingWhatsApp />
-      <ServiceWorkerRegistration />
     </>
   )
-}
-
-function ServiceWorkerRegistration() {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register(`${import.meta.env.BASE_URL}sw.js`)
-        .catch(() => {})
-    }
-  }, [])
-  return null
 }
 
 function BlogLoading() {

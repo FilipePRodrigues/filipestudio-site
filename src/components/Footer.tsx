@@ -10,6 +10,8 @@ const SERVICE_LINKS = [
   'Manutenção',
 ]
 
+const YEAR = new Date().getFullYear()
+
 export function Footer() {
   return (
     <footer
@@ -146,7 +148,7 @@ export function Footer() {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-slate-200/80 pt-8 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400 sm:flex-row">
           <p>
-            © <span suppressHydrationWarning>{new Date().getFullYear()}</span> {BRAND.fullName}. Todos
+            © <span suppressHydrationWarning>{YEAR}</span> {BRAND.fullName}. Todos
             os direitos reservados.
           </p>
           <div className="flex gap-6">

@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
 export function useCounter(target: number, durationMs = 1400) {
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return target
+    }
+    return 0
+  })
   const ref = useRef<HTMLSpanElement | null>(null)
   const started = useRef(false)
 
@@ -10,7 +15,6 @@ export function useCounter(target: number, durationMs = 1400) {
     if (!node) return
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setValue(target)
       return
     }
 

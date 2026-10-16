@@ -1,5 +1,0 @@
-FP Tech — pacote de ícones vetoriais recriados
-
-Cada ícone possui um arquivo SVG (vetorial e editável) e um PNG com fundo transparente.
-Os desenhos são recriações vetoriais inspiradas na identidade visual enviada, não recortes da imagem original.
-A marca FP Tech é uma aproximação vetorial do logotipo de referência; revise detalhes tipográficos antes de uso oficial.

@@ -225,13 +225,6 @@ export const TESTIMONIALS: Testimonial[] = [
   },
 ]
 
-export const METRICS = [
-  { id: 'projects', value: 120, suffix: '+', label: 'Projetos entregues' },
-  { id: 'conversion', value: 38, suffix: '%', label: 'Aumento médio de conversão' },
-  { id: 'satisfaction', value: 98, suffix: '%', label: 'Índice de satisfação' },
-  { id: 'rating', value: 5, suffix: '★', label: 'Avaliação média' },
-] as const
-
 export const PRICING: PricingTier[] = [
   {
     id: 'essencial',

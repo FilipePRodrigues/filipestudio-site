@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/readme-banner.png" alt="FP Tech — sites, landing pages e soluções digitais" width="100%" />
+<img src="docs/readme-banner.png" alt="FilipeStudio — sites, landing pages e soluções digitais" width="100%" />
 
 <br />
 
@@ -43,7 +43,7 @@ Design moderno, performance e conversão — do primeiro clique ao fechamento.
 | Névoa | `#EEF0FF` | Texto e superfícies |
 
 <div align="center">
-  <img src="public/favicon.svg" width="64" alt="FP Tech icon" />
+  <img src="public/favicon.svg" width="64" alt="FilipeStudio icon" />
 </div>
 
 ---
@@ -123,7 +123,7 @@ Para publicar um post, basta abrir uma Issue com label `blog`:
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=fff)](https://www.linkedin.com/in/filipe-pinheiro-rodrigues-a7281134a/)
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=fff)](https://www.instagram.com/lipe___dev/)
 
-**Filipe Pinheiro Rodrigues** · FP Tech  
+**Filipe Pinheiro Rodrigues** · FilipeStudio  
 Belo Horizonte · MG
 
 </div>
@@ -131,5 +131,5 @@ Belo Horizonte · MG
 ---
 
 <div align="center">
-  <sub>Feito com ☕, React e um pouco de neon · © FP Tech</sub>
+  <sub>Feito com ☕, React e um pouco de neon · © FilipeStudio</sub>
 </div>
