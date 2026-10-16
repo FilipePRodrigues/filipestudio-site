@@ -1,3 +1,4 @@
+import { useScrollReveal } from '../../hooks/useScrollReveal.ts'
 import type { BlogPostMeta } from '../../types/blog.ts'
 
 function formatDate(date: string): string {
@@ -12,6 +13,9 @@ function formatDate(date: string): string {
 }
 
 export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
+  // Blog is lazy-loaded — reveal must trigger after mount, not with the parent route
+  useScrollReveal()
+
   return (
     <section className="relative py-20 sm:py-28" aria-labelledby="blog-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
