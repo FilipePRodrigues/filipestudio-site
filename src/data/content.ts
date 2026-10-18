@@ -111,7 +111,7 @@ export const SERVICES: Service[] = [
     id: 'manutencao',
     title: 'Manutenção & Suporte',
     description:
-      'Não entreguei e sumi. Seu site no ar, atualizado e com suporte quando precisar.',
+      'O combinado não para no deploy. Site no ar, atualizado e com suporte quando você precisar.',
     icon: 'battery',
     bullets: ['Atualizações e correções', 'Monitoramento e backups', 'Ajustes sob demanda'],
   },
