@@ -33,25 +33,23 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav
           aria-label="Navegação principal"
-          className={`mt-3 flex items-center justify-between rounded-2xl border border-white/10 px-4 py-3 backdrop-blur-xl transition-all duration-300 ${
+          className={`mt-3 flex items-center justify-between border-2 border-black px-4 py-3 transition-all duration-150 dark:border-white/30 ${
             scrolled
-              ? 'shadow-soft bg-white/80 dark:bg-ink-900/85'
-              : 'bg-white/70 dark:bg-ink-900/70'
+              ? 'shadow-pixel bg-white dark:bg-ink-900'
+              : 'shadow-pixel-sm bg-white dark:bg-ink-900'
           }`}
         >
-          <a href="#topo" className="group flex items-center gap-2.5" onClick={closeMenu}>
+          <a href="#topo" className="group flex min-w-0 items-center gap-2" onClick={closeMenu}>
             <img
               src={assetUrl('/monogram.svg')}
               alt=""
               width={36}
               height={36}
-              className="h-9 w-9 rounded-xl shadow-glow"
+              className="h-8 w-8 shrink-0 border-2 border-black shadow-pixel-sm dark:border-white/30 sm:h-9 sm:w-9"
             />
-            <span className="font-display text-lg font-semibold tracking-tight">
+            <span className="whitespace-nowrap font-display text-base font-semibold tracking-tight sm:text-lg">
               {BRAND.name}
-              <span className="bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent">
-                {BRAND.nameSuffix}
-              </span>
+              <span className="text-roxo dark:text-ciano">{BRAND.nameSuffix}</span>
             </span>
           </a>
 
@@ -70,17 +68,17 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
             </li>
           </ul>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-            <a
-              href="#contato"
-              className="btn-primary hidden px-4 py-2.5 text-sm sm:inline-flex"
-            >
-              Solicitar orçamento
-            </a>
+            {/* wrapper: `hidden` não vence o `inline-flex` do .btn-primary */}
+            <span className="hidden sm:block">
+              <a href="#contato" className="btn-primary px-3 py-2.5 text-[10px] sm:px-4 sm:text-[11px]">
+                Orçamento
+              </a>
+            </span>
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 lg:hidden dark:border-white/10 dark:text-slate-200"
+              className="inline-flex h-10 w-10 items-center justify-center border-2 border-black text-slate-700 shadow-pixel-sm lg:hidden dark:border-white/30 dark:text-slate-200"
               aria-label={open ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
               aria-expanded={open}
               aria-controls="mobile-menu"
@@ -100,7 +98,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
         <div
           id="mobile-menu"
           hidden={!open}
-          className="mt-2 rounded-2xl border border-white/10 bg-white/95 p-4 shadow-soft backdrop-blur-xl lg:hidden dark:bg-ink-850/95"
+          className="mt-2 border-2 border-black bg-white p-4 shadow-pixel lg:hidden dark:border-white/30 dark:bg-ink-850"
         >
           <ul className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
@@ -118,10 +116,10 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
             <li>
               <a
                 href="#contato"
-                className="mobile-nav-link mt-2 block rounded-xl bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-violet px-4 py-3 text-center font-semibold text-ink-950"
+                className="mobile-nav-link mt-2 block border-2 border-black bg-roxo px-4 py-3 text-center font-pixel text-[11px] text-black shadow-pixel-sm"
                 onClick={closeMenu}
               >
-                Solicitar orçamento
+                Bora conversar
               </a>
             </li>
           </ul>

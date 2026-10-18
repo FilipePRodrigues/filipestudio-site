@@ -1,21 +1,21 @@
 import { SERVICES } from '../data/content.ts'
-import { ServiceIcon } from './icons.tsx'
+import { PixelIcon } from './PixelIcon.tsx'
 
 export function Services() {
   return (
     <section id="servicos" className="relative py-20 sm:py-28" aria-labelledby="servicos-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Serviços</p>
+          <span className="pixel-label">Serviços</span>
           <h2
             id="servicos-title"
             className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
-            Soluções digitais completas para o seu negócio
+            O que eu faço por você
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Do conceito ao lançamento — e além. Cada projeto é pensado para gerar autoridade, leads e
-            vendas.
+            Do conceito ao deploy — e depois também. Cada projeto pensado pra gerar
+            autoridade, leads e vendas de verdade.
           </p>
         </div>
 
@@ -23,7 +23,7 @@ export function Services() {
           {SERVICES.map((service) => (
             <article key={service.id} className="service-card reveal">
               <div className="service-icon">
-                <ServiceIcon name={service.icon} />
+                <PixelIcon name={service.icon} />
               </div>
               <h3 className="mt-5 font-display text-xl font-semibold text-slate-900 dark:text-white">
                 {service.title}
@@ -32,8 +32,8 @@ export function Services() {
               <ul className="mt-4 space-y-2 text-sm text-slate-500 dark:text-slate-400">
                 {service.bullets.map((bullet) => (
                   <li key={bullet} className="flex items-start gap-2">
-                    <span className="mt-1 text-neon-cyan" aria-hidden="true">
-                      ✓
+                    <span className="mt-0.5 font-pixel text-[10px] text-roxo" aria-hidden="true">
+                      ►
                     </span>
                     {bullet}
                   </li>

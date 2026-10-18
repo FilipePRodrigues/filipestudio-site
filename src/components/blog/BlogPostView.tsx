@@ -21,14 +21,14 @@ export function BlogPostView({ post }: { post: BlogPost }) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <a
           href="#/blog"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-neon-cyan"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-ciano"
         >
           ← Todos os posts
         </a>
 
         <header className="mt-8">
           {post.tags.length > 0 ? (
-            <p className="text-xs font-semibold uppercase tracking-wider text-neon-cyan">
+            <p className="text-xs font-semibold uppercase tracking-wider text-ciano">
               {post.tags.join(' · ')}
             </p>
           ) : null}
@@ -47,7 +47,7 @@ export function BlogPostView({ post }: { post: BlogPost }) {
             alt=""
             width={800}
             height={500}
-            className="mt-8 w-full rounded-3xl border border-white/10 object-cover shadow-soft"
+            className="mt-8 w-full border-2 border-black object-cover shadow-pixel dark:border-white/30"
           />
         ) : null}
 
@@ -73,12 +73,12 @@ export function BlogPostNotFound({ slug }: { slug: string }) {
   return (
     <section className="relative py-28">
       <div className="mx-auto max-w-xl px-4 text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Blog</p>
+        <span className="pixel-label">Blog</span>
         <h1 className="mt-3 font-display text-3xl font-bold text-slate-900 dark:text-white">
           Post não encontrado
         </h1>
         <p className="mt-3 text-slate-600 dark:text-slate-300">
-          Não achei o post <code className="text-neon-cyan">{slug}</code>.
+          Não achei o post <code className="text-ciano">{slug}</code>.
         </p>
         <a href="#/blog" className="btn-primary mt-8">
           Ver todos os posts

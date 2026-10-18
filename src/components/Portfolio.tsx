@@ -5,15 +5,15 @@ export function Portfolio() {
     <section id="portfolio" className="relative py-20 sm:py-28" aria-labelledby="portfolio-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Case de destaque</p>
+          <span className="pixel-label">Case de destaque</span>
           <h2
             id="portfolio-title"
             className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
-            Feito por mim, para mim
+            Feito por mim, pra mim
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Este site foi construído do zero — do design ao deploy. Clique e confira o resultado.
+            Este site nasceu do zero — do design ao deploy. Clica aí e confere.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export function Portfolio() {
                 >
                   <div className="px-4 text-center">
                     <div
-                      className="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-white/25 bg-white/10 text-2xl"
+                      className="mx-auto grid h-14 w-14 place-items-center border-2 border-white/40 bg-white/10 text-2xl"
                       aria-hidden="true"
                     >
                       {item.emoji}
@@ -60,7 +60,7 @@ export function Portfolio() {
                 </div>
                 {item.href ? (
                   <span
-                    className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-ink-900 shadow-soft dark:bg-ink-900/90 dark:text-white"
+                    className="pixel-badge absolute right-3 top-3"
                     aria-hidden="true"
                   >
                     Preview
@@ -71,7 +71,7 @@ export function Portfolio() {
                 ) : null}
               </div>
               <div className="p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-neon-cyan">
+                <p className="font-pixel text-[9px] uppercase tracking-wider text-roxo dark:text-ciano">
                   {item.category}
                 </p>
                 <h3 className="mt-2 font-display text-lg font-semibold text-slate-900 dark:text-white">
@@ -79,7 +79,7 @@ export function Portfolio() {
                 </h3>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{item.description}</p>
                 {item.href ? (
-                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-neon-cyan">
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-roxo dark:text-ciano">
                     Abrir projeto
                     <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />

@@ -13,9 +13,7 @@ export function FAQ() {
     <section id="faq" className="relative py-20 sm:py-28" aria-labelledby="faq-title">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="reveal text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">
-            Perguntas frequentes
-          </p>
+          <span className="pixel-label">FAQ</span>
           <h2
             id="faq-title"
             className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
@@ -23,7 +21,7 @@ export function FAQ() {
             Tire suas dúvidas
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Não encontrou o que procurava? Fale comigo pelo formulário ou WhatsApp.
+            Não achou o que precisava? Chama no formulário ou no WhatsApp.
           </p>
         </div>
 

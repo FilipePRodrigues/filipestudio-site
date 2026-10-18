@@ -15,7 +15,7 @@ const YEAR = new Date().getFullYear()
 export function Footer() {
   return (
     <footer
-      className="border-t border-slate-200/80 bg-white/50 dark:border-white/10 dark:bg-ink-950/50"
+      className="border-t-2 border-black bg-white dark:border-white/20 dark:bg-ink-950"
       id="privacidade"
     >
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -27,18 +27,16 @@ export function Footer() {
                 alt=""
                 width={36}
                 height={36}
-                className="h-9 w-9 rounded-xl"
+                className="h-9 w-9 border-2 border-black dark:border-white/30"
               />
               <span className="font-display text-lg font-semibold tracking-tight">
                 {BRAND.name}
-                <span className="bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent">
-                  {BRAND.nameSuffix}
-                </span>
+                <span className="text-roxo dark:text-ciano">{BRAND.nameSuffix}</span>
               </span>
             </a>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              Criação de sites e landing pages modernos, rápidos e pensados para converter.
-              Transformo ideias em experiências digitais que geram resultado.
+              Sites e landing pages com a sua cara — rápidos, responsivos e pensados pra
+              converter. Ideia vira experiência digital que gera resultado.
             </p>
             <div className="mt-5 flex gap-3">
               {SOCIAL_LINKS.map((social) => (
@@ -129,7 +127,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 rounded-2xl border border-slate-200/80 bg-slate-50/80 p-5 text-xs leading-relaxed text-slate-500 dark:border-white/10 dark:bg-ink-900/60 dark:text-slate-400">
+        <div className="mt-12 border-2 border-black bg-white p-5 text-xs leading-relaxed text-slate-500 dark:border-white/30 dark:bg-ink-850 dark:text-slate-400">
           <h2 className="font-display text-sm font-semibold text-slate-700 dark:text-slate-200">
             Privacidade & LGPD
           </h2>
@@ -139,7 +137,7 @@ export function Footer() {
             comercial, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Não
             compartilhamos suas informações com terceiros. Você pode solicitar a correção ou exclusão
             dos seus dados a qualquer momento pelo e-mail{' '}
-            <a href={`mailto:${BRAND.email}`} className="underline hover:text-neon-cyan">
+            <a href={`mailto:${BRAND.email}`} className="underline hover:text-ciano">
               {BRAND.email}
             </a>
             .

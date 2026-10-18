@@ -6,6 +6,7 @@ import { FloatingWhatsApp } from './components/FloatingWhatsApp.tsx'
 import { Footer } from './components/Footer.tsx'
 import { Hero } from './components/Hero.tsx'
 import { Navbar } from './components/Navbar.tsx'
+import { PixelGallery } from './components/PixelGallery.tsx'
 import { Portfolio } from './components/Portfolio.tsx'
 import { Pricing } from './components/Pricing.tsx'
 import { Process } from './components/Process.tsx'
@@ -72,6 +73,7 @@ function Landing({ section }: { section: string }) {
       <TechStrip />
       <Services />
       <Benefits />
+      <PixelGallery />
       <Process />
       <Portfolio />
       <Pricing />
@@ -174,7 +176,7 @@ function BlogLoading() {
   return (
     <section className="relative py-28">
       <div className="mx-auto max-w-xl px-4 text-center">
-        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-neon-cyan border-t-transparent" />
+        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-ciano border-t-transparent" />
         <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Carregando...</p>
       </div>
     </section>

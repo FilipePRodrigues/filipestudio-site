@@ -8,7 +8,7 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
     <button
       type="button"
       onClick={onToggle}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:border-neon-cyan/50 hover:text-neon-cyan focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:text-slate-200 dark:focus-visible:ring-offset-ink-900"
+      className="inline-flex h-10 w-10 items-center justify-center border-2 border-black text-slate-700 shadow-pixel-sm transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-ciano hover:text-black hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-200 dark:hover:bg-roxo dark:hover:text-white"
       aria-label={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
       title={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
     >

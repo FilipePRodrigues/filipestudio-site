@@ -5,15 +5,15 @@ export function Process() {
     <section id="processo" className="relative py-20 sm:py-28" aria-labelledby="processo-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Como funciona</p>
+          <span className="pixel-label">Como funciona</span>
           <h2
             id="processo-title"
             className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
-            Um processo simples, transparente e sem surpresas
+            Simples, transparente e sem surpresa
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Quatro etapas claras para tirar o seu projeto do papel e colocar no ar com qualidade.
+            Quatro etapas claras pra tirar o projeto do papel e colocar no ar com qualidade.
           </p>
         </div>
 

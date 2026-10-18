@@ -1,4 +1,4 @@
-import { assetUrl } from '../lib/asset.ts'
+import { PIXEL_ARTS } from '../data/content.ts'
 
 export function Hero() {
   return (
@@ -17,31 +17,30 @@ export function Hero() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="reveal">
-            <div className="inline-flex items-center gap-2 rounded-full border border-neon-cyan/30 bg-neon-cyan/10 px-3 py-1.5 text-xs font-medium text-neon-cyan">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-neon-cyan opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-neon-cyan" />
+            <div className="pixel-label">
+              <span className="mr-2 inline-block animate-blink" aria-hidden="true">
+                ▶
               </span>
-              Agenda aberta para novos projetos
+              Agenda aberta pra novos projetos
             </div>
 
             <h1
               id="hero-title"
-              className="mt-6 font-display text-4xl font-bold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-white"
+              className="mt-6 font-display text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-white"
             >
-              Sites e landing pages que{' '}
-              <span className="gradient-text">transformam visitantes em clientes</span>
+              Sites e landing pages{' '}
+              <span className="gradient-text">com a sua cara</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600 sm:text-xl dark:text-slate-300">
-              Design futurista, performance de ponta e estratégias de conversão sob medida.
-              Eu crio experiências digitais que posicionam a sua marca e geram resultados reais — do
-              primeiro clique ao fechamento.
+              Sem frescura, sem template genérico. Eu crio experiências digitais que
+              posicionam a sua marca e transformam clique em cliente — com design que
+              tem personalidade e performance que entrega.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <a href="#contato" className="btn-primary">
-                Solicite um orçamento
+                Bora conversar
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
@@ -54,47 +53,51 @@ export function Hero() {
 
           <div className="reveal" aria-hidden="true">
             <div className="relative mx-auto w-full max-w-lg">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-neon-cyan/30 via-neon-blue/20 to-neon-violet/30 blur-2xl animate-pulse-soft" />
+              <div
+                className="absolute -inset-3 bg-roxo/20"
+                style={{ boxShadow: '12px 12px 0 0 rgba(34, 211, 238, 0.25)' }}
+              />
 
-              <div className="glass-card relative overflow-hidden rounded-3xl border border-white/15 p-2 shadow-glow">
-                <div className="flex items-center gap-2 rounded-t-2xl bg-white/5 px-4 py-3">
-                  <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-                  <div className="ml-3 h-6 flex-1 rounded-full bg-white/10" />
+              <div className="character-frame relative overflow-hidden">
+                <div className="flex items-center gap-2 border-b-2 border-black bg-ink-900 px-4 py-3 dark:border-white/30">
+                  <span className="h-3 w-3 border border-black bg-ciano" />
+                  <span className="h-3 w-3 border border-black bg-roxo" />
+                  <span className="h-3 w-3 border border-black bg-azul" />
+                  <div className="ml-3 h-4 flex-1 border border-white/15 bg-white/5" />
                 </div>
-                <div className="relative overflow-hidden rounded-b-2xl bg-[#0b0b1f]">
+                <div className="relative bg-noite">
                   <div
-                    className="absolute inset-0 opacity-60"
+                    className="absolute inset-0 opacity-50"
                     style={{
                       background:
-                        'radial-gradient(ellipse at 30% 20%, rgba(124,58,237,0.35), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(34,211,238,0.25), transparent 50%)',
+                        'radial-gradient(ellipse at 30% 20%, rgba(124, 58, 237, 0.45), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(34, 211, 238, 0.3), transparent 50%), radial-gradient(ellipse at 60% 90%, rgba(59, 130, 246, 0.25), transparent 45%)',
                     }}
                   />
                   <img
-                    src={assetUrl('/logo-horizontal.svg')}
-                    alt="FilipeStudio — Sites, landing pages e soluções digitais"
-                    width={720}
-                    height={300}
-                    className="relative mx-auto w-[90%] py-8"
+                    src={PIXEL_ARTS[0].src}
+                    alt="Pixel art do Filipe codando — FilipeStudio"
+                    width={314}
+                    height={418}
+                    className="pixel-art relative mx-auto w-[78%] py-4"
                     fetchPriority="high"
                     decoding="async"
                   />
                   <div className="relative flex items-center justify-center gap-2 pb-6">
-                    <div className="h-8 w-28 rounded-lg bg-gradient-to-r from-neon-violet via-neon-blue to-neon-cyan" />
-                    <div className="h-8 w-20 rounded-lg border border-white/15" />
+                    <div className="h-8 w-28 border-2 border-black bg-roxo" />
+                    <div className="h-8 w-20 border-2 border-black bg-ciano" />
+                    <div className="h-8 w-16 border-2 border-black bg-azul" />
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -left-4 top-10 animate-float rounded-2xl border border-white/15 bg-white/80 px-4 py-2.5 text-xs font-semibold shadow-soft backdrop-blur-md dark:bg-ink-800/80">
-                <span className="text-neon-cyan">⚡</span> PageSpeed 98/100
+              <div className="absolute left-0 top-2 animate-float border-2 border-black bg-white px-3 py-2 font-pixel text-[8px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-ink-800 dark:text-white sm:-left-4 sm:top-10 sm:px-4 sm:py-2.5 sm:text-[9px]">
+                <span className="text-roxo">⚡</span> PageSpeed 98/100
               </div>
-              <div className="absolute -right-2 top-1/3 animate-float-delayed rounded-2xl border border-white/15 bg-white/80 px-4 py-2.5 text-xs font-semibold shadow-soft backdrop-blur-md dark:bg-ink-800/80">
-                <span className="text-neon-violet">◆</span> Design exclusivo
+              <div className="absolute right-0 top-16 animate-float-delayed border-2 border-black bg-white px-3 py-2 font-pixel text-[8px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-ink-800 dark:text-white sm:-right-2 sm:top-1/3 sm:px-4 sm:py-2.5 sm:text-[9px]">
+                <span className="text-ciano">◆</span> Design exclusivo
               </div>
-              <div className="absolute -bottom-4 left-8 animate-float rounded-2xl border border-white/15 bg-white/80 px-4 py-2.5 text-xs font-semibold shadow-soft backdrop-blur-md dark:bg-ink-800/80">
-                <span className="text-emerald-400">●</span> +38% conversão média
+              <div className="absolute -bottom-4 left-4 animate-float border-2 border-black bg-white px-3 py-2 font-pixel text-[8px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-ink-800 dark:text-white sm:left-8 sm:px-4 sm:py-2.5 sm:text-[9px]">
+                <span className="text-azul">●</span> +38% conversão média
               </div>
             </div>
           </div>

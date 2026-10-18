@@ -32,11 +32,26 @@ export function mailtoLink(subject: string, body: string): string {
 
 export const NAV_LINKS = [
   { href: '#servicos', label: 'Serviços' },
-  { href: '#beneficios', label: 'Benefícios' },
+  { href: '#beneficios', label: 'Por quê' },
   { href: '#processo', label: 'Processo' },
   { href: '#portfolio', label: 'Portfólio' },
   { href: '#planos', label: 'Planos' },
   { href: '#faq', label: 'FAQ' },
+] as const
+
+export const PIXEL_ARTS = [
+  { id: 'codando', src: assetUrl('/pixel/arts/filipe_pinheiro_01_codando.webp'), alt: 'Pixel art: Filipe codando' },
+  { id: 'treinando', src: assetUrl('/pixel/arts/filipe_pinheiro_02_treinando.webp'), alt: 'Pixel art: Filipe treinando' },
+  { id: 'negociando', src: assetUrl('/pixel/arts/filipe_pinheiro_03_negociando.webp'), alt: 'Pixel art: Filipe negociando' },
+  { id: 'correndo', src: assetUrl('/pixel/arts/filipe_pinheiro_04_correndo.webp'), alt: 'Pixel art: Filipe correndo' },
+  { id: 'pensando', src: assetUrl('/pixel/arts/filipe_pinheiro_05_pensando.webp'), alt: 'Pixel art: Filipe pensando' },
+  { id: 'apontando', src: assetUrl('/pixel/arts/filipe_pinheiro_06_apontando.webp'), alt: 'Pixel art: Filipe apontando' },
+  { id: 'setup', src: assetUrl('/pixel/arts/filipe_pinheiro_07_setup_codigo.webp'), alt: 'Pixel art: setup de código' },
+  { id: 'viagem', src: assetUrl('/pixel/arts/filipe_pinheiro_08_viagem.webp'), alt: 'Pixel art: Filipe viajando' },
+  { id: 'planejando', src: assetUrl('/pixel/arts/filipe_pinheiro_09_planejando.webp'), alt: 'Pixel art: Filipe planejando' },
+  { id: 'comemorando', src: assetUrl('/pixel/arts/filipe_pinheiro_10_comemorando.webp'), alt: 'Pixel art: Filipe comemorando' },
+  { id: 'lifestyle', src: assetUrl('/pixel/arts/filipe_pinheiro_11_lifestyle.webp'), alt: 'Pixel art: Filipe lifestyle' },
+  { id: 'headphone', src: assetUrl('/pixel/arts/filipe_pinheiro_12_headphone.webp'), alt: 'Pixel art: Filipe com headphone' },
 ] as const
 
 export const SERVICES: Service[] = [
@@ -44,61 +59,61 @@ export const SERVICES: Service[] = [
     id: 'institucionais',
     title: 'Sites Institucionais',
     description:
-      'Presença digital profissional que transmite confiança. Estrutura clara, identidade visual forte e otimizada para Google desde o dia zero.',
-    icon: 'layout',
+      'Seu canto na internet com a sua cara. Estrutura clara, identidade forte e pronto pro Google desde o dia zero.',
+    icon: 'code',
     bullets: [
-      'Design alinhado à sua marca',
-      'Responsivo em todos os dispositivos',
-      'Formulários e integrações',
+      'Design que parece você (não template)',
+      'Responsivo do mobile ao ultrawide',
+      'Formulários e integrações no ponto',
     ],
   },
   {
     id: 'landing-pages',
-    title: 'Landing Pages de Alta Conversão',
+    title: 'Landing Pages que Convertem',
     description:
-      'Páginas focadas em um único objetivo: converter. Copy persuasiva, CTAs estratégicos e testes para maximizar cada visita.',
-    icon: 'sparkles',
+      'Uma página, um objetivo: transformar visita em cliente. Copy na medida, CTA no lugar certo e zero enrolação.',
+    icon: 'target',
     bullets: [
-      'Arquitetura orientada a conversão',
-      'Integração com CRM e anúncios',
-      'Velocidade e performance otimizadas',
+      'Estrutura pensada em conversão',
+      'CRM e anúncios plugados',
+      'Velocidade que não espanta lead',
     ],
   },
   {
     id: 'one-page',
-    title: 'Sites One Page & Portfólio',
+    title: 'One Page & Portfólio',
     description:
-      'Presença enxuta e elegante em uma única página. Ideal para profissionais, criadores e projetos que precisam existir online com agilidade.',
-    icon: 'page',
+      'Presença enxuta e afiada numa página só. Ideal pra quem precisa existir online sem drama.',
+    icon: 'browser',
     bullets: [
-      'Estrutura clara e objetiva',
+      'Direto ao ponto',
       'Entrega rápida',
-      'Perfeito para portfólio e bio link',
+      'Perfeito pra bio link e portfólio',
     ],
   },
   {
     id: 'redesign',
     title: 'Redesign & Otimização',
     description:
-      'Seu site está desatualizado ou não converte? Redesenho completo com foco em UX, velocidade e resultados mensuráveis.',
-    icon: 'pen',
-    bullets: ['Auditoria de UX e performance', 'Modernização visual', 'Migração sem downtime'],
+      'Site velho ou que não converte? A gente ressuscita com UX, velocidade e visual que bate.',
+    icon: 'growth',
+    bullets: ['Auditoria de UX e performance', 'Visual modernizado', 'Migração sem downtime'],
   },
   {
     id: 'seo',
     title: 'SEO Técnico',
     description:
-      'Estrutura semântica, Core Web Vitals, dados estruturados e boas práticas on-page para o seu site ranquear e ser encontrado.',
-    icon: 'search',
+      'Pra seu site ser encontrado, não só existir. Semântica, Core Web Vitals e o básico bem feito.',
+    icon: 'chart',
     bullets: ['Auditoria técnica completa', 'Schema.org e meta tags', 'Relatórios de indexação'],
   },
   {
     id: 'manutencao',
     title: 'Manutenção & Suporte',
     description:
-      'Seu site sempre atualizado, seguro e no ar. Planos contínuos de manutenção, backups e suporte prioritário.',
-    icon: 'shield',
-    bullets: ['Atualizações e correções', 'Monitoramento e backups', 'Alterações sob demanda'],
+      'Não entreguei e sumi. Seu site no ar, atualizado e com suporte quando precisar.',
+    icon: 'battery',
+    bullets: ['Atualizações e correções', 'Monitoramento e backups', 'Ajustes sob demanda'],
   },
 ]
 
@@ -107,43 +122,43 @@ export const BENEFITS: Benefit[] = [
     id: 'performance',
     title: 'Performance real',
     description:
-      'Carregamento em segundos. Core Web Vitals no verde para não perder clientes e ranquear melhor.',
-    icon: '⚡',
+      'Carrega em segundos. Core Web Vitals no verde pra não perder cliente (nem ranqueio).',
+    icon: 'growth',
   },
   {
     id: 'responsivo',
     title: '100% responsivo',
     description:
-      'Experiência impecável do celular ao desktop. A maioria dos seus clientes acessa pelo mobile.',
-    icon: '📱',
+      'Do celular ao desktop sem quebrar. A maioria do seu público tá no mobile — e eu não esqueço disso.',
+    icon: 'cursor',
   },
   {
     id: 'seo',
     title: 'SEO desde o início',
     description:
-      'Semântica, metadados e estrutura pensados para o Google entender e premiar o seu conteúdo.',
-    icon: '🔍',
+      'Estrutura e metadados pensados pra Google entender (e premiar) o que você faz.',
+    icon: 'wifi',
   },
   {
     id: 'design',
     title: 'Design exclusivo',
     description:
-      'Nada de template pronto. Identidade visual única que diferencia a sua marca da concorrência.',
-    icon: '🎨',
+      'Nada de template genérico. Identidade visual única que faz sua marca ser lembrada.',
+    icon: 'idea',
   },
   {
     id: 'prazos',
     title: 'Prazos cumpridos',
     description:
-      'Cronograma transparente e comunicação constante. Você sabe exatamente em que etapa estamos.',
-    icon: '⏱️',
+      'Cronograma transparente e comunicação constante. Você sabe exatamente onde a gente tá.',
+    icon: 'trophy',
   },
   {
     id: 'suporte',
     title: 'Suporte contínuo',
     description:
-      'Não entrego e sumo. Acompanho o lançamento e fico disponível para evoluir o projeto.',
-    icon: '🛡️',
+      'Entreguei e continuo junto. Lançamento, ajustes e evolução do projeto.',
+    icon: 'coffee',
   },
 ]
 
@@ -153,28 +168,28 @@ export const PROCESS_STEPS: ProcessStep[] = [
     step: '01',
     title: 'Briefing',
     description:
-      'Conversamos sobre objetivos, público, concorrentes e prazos. Entendo o seu negócio a fundo antes de qualquer pixel.',
+      'A gente conversa: objetivo, público, prazo, o que te tira do sono. Antes de qualquer pixel, eu entendo o seu negócio.',
   },
   {
     id: 'design',
     step: '02',
     title: 'Design',
     description:
-      'Crio o wireframe e o layout visual alinhado à sua identidade. Você aprova cada etapa antes de avançarmos.',
+      'Wireframe e layout com a sua identidade. Você aprova cada etapa antes de a gente avançar.',
   },
   {
     id: 'dev',
     step: '03',
-    title: 'Desenvolvimento',
+    title: 'Dev',
     description:
-      'Código limpo, performático e responsivo. Integrações, formulários, SEO técnico e testes em múltiplos dispositivos.',
+      'Código limpo, rápido e responsivo. Integrações, formulários, SEO técnico e testes de verdade.',
   },
   {
     id: 'entrega',
     step: '04',
     title: 'Entrega & Suporte',
     description:
-      'Publicação, treinamento de uso e acompanhamento pós-lançamento. Seguimos juntos para evoluir o resultado.',
+      'Publicação, treinamento e acompanhamento pós-lançamento. O jogo continua depois do deploy.',
   },
 ]
 
@@ -184,9 +199,9 @@ export const PORTFOLIO: PortfolioItem[] = [
     category: 'Este site',
     title: 'FilipeStudio',
     description:
-      'Site institucional desenvolvido por mim, do design ao deploy. React + TypeScript, Lighthouse 95+, blog automatizado por GitHub Issues e CI/CD completo com GitHub Actions.',
+      'Site institucional feito por mim, do design ao deploy. React + TypeScript, Lighthouse 95+, blog automatizado por GitHub Issues e CI/CD com GitHub Actions.',
     emoji: '⚡',
-    gradient: 'from-violet-500/40 via-blue-500/30 to-cyan-400/40',
+    gradient: 'from-roxo via-azul to-ciano',
     href: 'https://filipeprodrigues.github.io/filipestudio-site/',
     image: assetUrl('/portfolio-filipestudio.webp'),
   },
@@ -196,31 +211,31 @@ export const TESTIMONIALS: Testimonial[] = [
   {
     id: 'ana',
     quote:
-      'O site ficou acima do que eu imaginava. Profissionalismo do início ao fim e o prazo foi cumprido à risca. Já indiquei para três colegas!',
+      'Ficou acima do que eu imaginava. Profissional do início ao fim e o prazo foi cumprido à risca. Já indiquei pra três colegas!',
     name: 'Ana Souza',
     role: 'CEO, Startup Tech',
     initials: 'AS',
-    avatarGradient: 'from-neon-cyan to-neon-blue',
+    avatarGradient: 'from-roxo to-ciano',
     rating: 5,
   },
   {
     id: 'carlos',
     quote:
-      'Nossa landing page triplicou a captação de leads em dois meses. Entende de negócio, não só de código. Recomendo sem reservas.',
+      'Nossa landing triplicou a captação de leads em dois meses. Entende de negócio, não só de código. Recomendo demais.',
     name: 'Carlos Mendes',
     role: 'Diretor de Marketing',
     initials: 'CM',
-    avatarGradient: 'from-neon-violet to-neon-magenta',
+    avatarGradient: 'from-roxo to-azul',
     rating: 5,
   },
   {
     id: 'juliana',
     quote:
-      'Processo transparente, comunicação clara e um resultado lindo. Minha landing page ficou rápida e os leads aumentaram desde o lançamento.',
+      'Processo transparente, comunicação clara e um resultado lindo. Minha landing ficou rápida e os leads subiram desde o lançamento.',
     name: 'Juliana Rocha',
     role: 'Fundadora, Marca de Lifestyle',
     initials: 'JR',
-    avatarGradient: 'from-emerald-400 to-teal-400',
+    avatarGradient: 'from-ciano to-azul',
     rating: 5,
   },
 ]
@@ -229,7 +244,7 @@ export const PRICING: PricingTier[] = [
   {
     id: 'essencial',
     name: 'Essencial',
-    description: 'Ideal para quem está começando a presença digital.',
+    description: 'Pra quem tá começando a presença digital.',
     priceLabel: 'R$ 2.490',
     priceNote: 'a partir de',
     featured: false,
@@ -240,12 +255,12 @@ export const PRICING: PricingTier[] = [
       'SEO básico',
       'Entrega em até 15 dias',
     ],
-    ctaLabel: 'Solicitar proposta',
+    ctaLabel: 'Bora conversar',
   },
   {
     id: 'profissional',
     name: 'Profissional',
-    description: 'Perfeito para empresas que querem gerar leads consistentemente.',
+    description: 'Pra quem quer leads consistentes e presença que cresce.',
     priceLabel: 'Sob consulta',
     priceNote: 'orçamento',
     featured: true,
@@ -256,46 +271,46 @@ export const PRICING: PricingTier[] = [
       'Formulários e WhatsApp',
       'Suporte por 60 dias',
     ],
-    ctaLabel: 'Solicitar proposta',
+    ctaLabel: 'Quero esse',
   },
 ]
 
 export const FAQS: FaqItem[] = [
   {
     id: 'tempo',
-    question: 'Quanto tempo leva para desenvolver um site?',
+    question: 'Quanto tempo leva pra fazer um site?',
     answer:
-      'Depende da complexidade. Uma landing page pode ficar pronta em 7 a 10 dias úteis. Sites institucionais levam em média 2 a 4 semanas. Projetos customizados geralmente de 4 a 8 semanas. Você recebe um cronograma detalhado após o briefing.',
+      'Depende do tamanho. Landing page sai em 7 a 10 dias úteis. Site institucional leva de 2 a 4 semanas. Projeto customizado, de 4 a 8 semanas. Depois do briefing você recebe um cronograma fechado.',
   },
   {
     id: 'pagamento',
-    question: 'Como funciona o processo de pagamento?',
+    question: 'Como funciona o pagamento?',
     answer:
-      'Trabalho com pagamento em etapas: normalmente 40% na aprovação do orçamento, 30% na entrega do design e 30% na publicação do site. Aceito Pix, transferência e cartão. Para projetos maiores, podemos combinar um plano de pagamento personalizado.',
+      'Em etapas, sem susto: normalmente 40% na aprovação, 30% na entrega do design e 30% na publicação. Aceito Pix, transferência e cartão. Projeto maior? A gente combina um plano que cabe no seu bolso.',
   },
   {
     id: 'responsivo',
-    question: 'O site será responsivo e otimizado para celulares?',
+    question: 'O site vai ficar bom no celular?',
     answer:
-      'Com certeza. Todo projeto é desenvolvido com abordagem mobile-first e testado em múltiplos dispositivos e navegadores. A experiência no celular é prioridade — afinal, é de lá que vem a maior parte do tráfego.',
+      'Com certeza. Todo projeto é mobile-first e testado em vários aparelhos. Experiência no celular é prioridade — é de lá que vem a maior parte do tráfego.',
   },
   {
     id: 'conteudo',
-    question: 'Vocês fazem o conteúdo e os textos?',
+    question: 'Vocês fazem os textos?',
     answer:
-      'Posso ajudar com copy orientada a conversão e estrutura de conteúdo. Se preferir, também trabalho em parceria com redatores especializados. O ideal é que você traga os materiais da marca (textos, fotos, logos) — e eu cuido da tradução disso em uma experiência digital poderosa.',
+      'Ajudando com copy orientada a conversão, sim. Se preferir, também trampo com redator especializado. O ideal é você trazer o material da marca (textos, fotos, logo) e eu traduzo isso em uma experiência que vende.',
   },
   {
     id: 'suporte',
-    question: 'Vocês oferecem suporte após a entrega?',
+    question: 'Tem suporte depois da entrega?',
     answer:
-      'Sim. Todos os planos incluem um período de suporte pós-lançamento (de 30 a 90 dias, conforme o plano) para correções e ajustes. Também ofereço planos mensais de manutenção com atualizações, backups e alterações sob demanda.',
+      'Tem. Todos os planos incluem suporte pós-lançamento (de 30 a 90 dias, conforme o plano) pra correções e ajustes. E tem plano mensal de manutenção se você quiser ficar tranquilo.',
   },
   {
     id: 'atendimento',
-    question: 'Vocês atendem clientes de todo o Brasil?',
+    question: 'Atendem fora de BH?',
     answer:
-      'Sim! Trabalho 100% remoto com clientes de qualquer lugar do Brasil e também do exterior. Toda a comunicação acontece por WhatsApp, e-mail e videochamadas — de forma clara e organizada.',
+      'Sim! Trampo 100% remoto com clientes de qualquer lugar do Brasil (e do exterior). Comunicação por WhatsApp, e-mail e videochamada — clara e organizada.',
   },
 ]
 

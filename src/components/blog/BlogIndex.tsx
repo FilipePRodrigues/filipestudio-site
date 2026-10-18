@@ -20,7 +20,7 @@ export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
     <section className="relative py-20 sm:py-28" aria-labelledby="blog-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">Blog</p>
+          <span className="pixel-label">Blog</span>
           <h1
             id="blog-title"
             className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
@@ -44,7 +44,7 @@ export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
                 href={`#/blog/${post.slug}`}
                 className="portfolio-card reveal group flex flex-col"
               >
-                <div className="portfolio-thumb bg-gradient-to-br from-violet-500/40 via-blue-500/30 to-cyan-400/40">
+                <div className="portfolio-thumb bg-gradient-to-br from-roxo via-azul to-ciano">
                   {post.cover ? (
                     <img
                       src={post.cover}
@@ -61,7 +61,7 @@ export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   {post.tags.length > 0 ? (
-                    <p className="text-xs font-semibold uppercase tracking-wider text-neon-cyan">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-ciano">
                       {post.tags.slice(0, 2).join(' · ')}
                     </p>
                   ) : null}
@@ -71,7 +71,7 @@ export function BlogIndex({ posts }: { posts: BlogPostMeta[] }) {
                   <p className="mt-2 flex-1 text-sm text-slate-600 dark:text-slate-300">
                     {post.excerpt}
                   </p>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-neon-cyan">
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-ciano">
                     Ler post
                     <svg
                       className="h-4 w-4 transition-transform group-hover:translate-x-0.5"

@@ -95,29 +95,27 @@ export function Contact() {
   return (
     <section id="contato" className="relative overflow-hidden py-20 sm:py-28" aria-labelledby="contato-title">
       <div
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-neon-cyan/[0.06] to-neon-violet/[0.08]"
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-ciano/[0.06] to-roxo/[0.08]"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/50 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ciano/50 to-transparent"
         aria-hidden="true"
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div className="reveal">
-            <p className="text-sm font-semibold uppercase tracking-wider text-neon-cyan">
-              Vamos conversar
-            </p>
+            <span className="pixel-label">Vamos conversar</span>
             <h2
               id="contato-title"
               className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
             >
-              Pronto para levar o seu projeto para o próximo nível?
+              Pronto pra subir de nível?
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Conte um pouco sobre o que você precisa. Retorno em até 24 horas úteis com uma proposta
-              clara, sem compromisso e sem enrolação.
+              Conta um pouco do que você precisa. Retorno em até 24h úteis com uma proposta
+              clara — sem compromisso e sem enrolação.
             </p>
 
             <ul className="mt-8 space-y-4">
@@ -131,13 +129,13 @@ export function Contact() {
                   text: 'Retorno em até 24h úteis — geralmente bem antes.',
                 },
                 {
-                  title: 'Atendimento personalizado',
-                  text: 'Você fala direto com quem vai desenvolver o projeto.',
+                  title: 'Papo direto',
+                  text: 'Você fala com quem vai desenvolver o projeto.',
                 },
               ].map((item) => (
                 <li key={item.title} className="flex items-start gap-3">
                   <span
-                    className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-neon-cyan/15 text-neon-cyan"
+                    className="mt-1 grid h-8 w-8 shrink-0 place-items-center border-2 border-black bg-ciano font-pixel text-[10px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-roxo dark:text-white"
                     aria-hidden="true"
                   >
                     ✓
@@ -170,7 +168,7 @@ export function Contact() {
           <div className="reveal">
             <form
               onSubmit={handleSubmit}
-              className="glass-card rounded-3xl border border-white/15 p-6 shadow-soft sm:p-8"
+              className="border-2 border-black bg-white p-6 shadow-pixel dark:border-white/30 dark:bg-ink-850 sm:p-8"
               noValidate
               aria-describedby="form-note"
             >
@@ -179,7 +177,7 @@ export function Contact() {
               </h3>
               <p id="form-note" className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Campos marcados com{' '}
-                <span className="text-neon-cyan" aria-hidden="true">
+                <span className="text-ciano" aria-hidden="true">
                   *
                 </span>
                 <span className="sr-only">asterisco</span> são obrigatórios.
@@ -189,7 +187,7 @@ export function Contact() {
                 <div>
                   <label htmlFor="name" className="form-label">
                     Nome completo{' '}
-                    <span className="text-neon-cyan" aria-hidden="true">
+                    <span className="text-ciano" aria-hidden="true">
                       *
                     </span>
                   </label>
@@ -217,7 +215,7 @@ export function Contact() {
                 <div>
                   <label htmlFor="email" className="form-label">
                     E-mail{' '}
-                    <span className="text-neon-cyan" aria-hidden="true">
+                    <span className="text-ciano" aria-hidden="true">
                       *
                     </span>
                   </label>
@@ -261,7 +259,7 @@ export function Contact() {
                 <div>
                   <label htmlFor="projectType" className="form-label">
                     Tipo de projeto{' '}
-                    <span className="text-neon-cyan" aria-hidden="true">
+                    <span className="text-ciano" aria-hidden="true">
                       *
                     </span>
                   </label>
@@ -292,7 +290,7 @@ export function Contact() {
                 <div>
                   <label htmlFor="message" className="form-label">
                     Conte sobre o projeto{' '}
-                    <span className="text-neon-cyan" aria-hidden="true">
+                    <span className="text-ciano" aria-hidden="true">
                       *
                     </span>
                   </label>
@@ -325,7 +323,7 @@ export function Contact() {
               <p className="mt-4 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
                 Ao enviar este formulário, você concorda com o uso dos dados apenas para retorno
                 comercial, conforme a{' '}
-                <a href="#privacidade" className="underline hover:text-neon-cyan">
+                <a href="#privacidade" className="underline hover:text-ciano">
                   Política de Privacidade (LGPD)
                 </a>
                 .
@@ -334,7 +332,7 @@ export function Contact() {
               {submitted ? (
                 <div
                   id="form-success"
-                  className="mt-6 rounded-2xl border border-emerald-400/40 bg-emerald-400/10 p-4 text-emerald-700 dark:text-emerald-300"
+                  className="mt-6 border-2 border-black bg-ciano/20 p-4 text-slate-800 dark:border-white/30 dark:bg-roxo/20 dark:text-slate-100"
                   role="status"
                   aria-live="polite"
                 >
