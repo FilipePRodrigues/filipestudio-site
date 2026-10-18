@@ -10,7 +10,7 @@ export function Benefits() {
       aria-labelledby="beneficios-title"
     >
       <div
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-ciano/[0.08] to-transparent dark:via-roxo/[0.1]"
+        className="absolute inset-0 bg-ciano/[0.04] dark:bg-roxo/[0.06]"
         aria-hidden="true"
       />
 

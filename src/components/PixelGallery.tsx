@@ -4,7 +4,7 @@ export function PixelGallery() {
   return (
     <section
       id="pixel-world"
-      className="relative overflow-hidden border-y-2 border-black bg-ink-950 py-14 dark:border-white/20"
+      className="relative overflow-hidden border-y-2 border-black bg-ink-950/85 py-14 dark:border-white/20"
       aria-label="Artes pixel do Filipe"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -76,9 +76,14 @@ html {
   scroll-behavior: smooth;
 }
 
+html {
+  @apply bg-nevoa;
+  @apply dark:bg-ink-950;
+}
+
 body {
-  @apply bg-nevoa text-slate-800 font-sans antialiased;
-  @apply dark:bg-ink-950 dark:text-slate-100;
+  @apply bg-transparent text-slate-800 font-sans antialiased;
+  @apply dark:text-slate-100;
   image-rendering: auto;
 }
 
@@ -267,44 +272,181 @@ body {
   @apply inline-flex shrink-0 items-center border-2 border-black bg-white px-5 py-2 font-pixel text-[10px] text-slate-800 shadow-pixel-sm dark:border-white/30 dark:bg-ink-850 dark:text-slate-200;
 }
 
-/* Pixel background — grid sutil da marca */
-.aurora-bg {
+/* Pixel background animado — só cores da marca */
+.pixel-bg {
   @apply pointer-events-none absolute inset-0 overflow-hidden;
 }
 
-.aurora {
-  @apply absolute rounded-none opacity-60;
+.pixel-bg--site {
+  @apply fixed inset-0;
+  z-index: -1;
 }
 
-.aurora-1 {
-  @apply -left-16 -top-16 h-64 w-64 bg-roxo/30;
-  box-shadow: 12rem 4rem 0 0 rgba(34, 211, 238, 0.18);
+.pixel-bg__blocks,
+.pixel-bg__stars {
+  @apply absolute inset-0;
 }
 
-.aurora-2 {
-  @apply left-1/3 top-8 h-40 w-40 bg-ciano/25;
-  box-shadow: -8rem 12rem 0 0 rgba(124, 58, 237, 0.2);
+.pixel-block {
+  @apply absolute rounded-none;
+  opacity: 0.22;
+  animation-name: pixel-float;
+  animation-timing-function: steps(6, end);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform, opacity;
 }
 
-.aurora-3 {
-  @apply -right-12 bottom-0 h-56 w-56 bg-azul/25;
-  box-shadow: -10rem -6rem 0 0 rgba(34, 211, 238, 0.15);
+.pixel-block--roxo {
+  background: var(--color-roxo);
+  box-shadow: 8px 8px 0 0 rgba(34, 211, 238, 0.15);
 }
 
-.grid-overlay {
+.pixel-block--azul {
+  background: var(--color-azul);
+  box-shadow: -8px 8px 0 0 rgba(124, 58, 237, 0.18);
+}
+
+.pixel-block--ciano {
+  background: var(--color-ciano);
+  box-shadow: 8px -8px 0 0 rgba(59, 130, 246, 0.15);
+}
+
+.pixel-star {
+  @apply absolute rounded-none;
+  width: 6px;
+  height: 6px;
+  background: var(--color-ciano);
+  opacity: 0.35;
+  animation: pixel-blink 1.8s steps(2, start) infinite;
+}
+
+.dark .pixel-star {
+  background: var(--color-nevoa);
+  opacity: 0.45;
+}
+
+.pixel-bg__grid {
   @apply absolute inset-0;
   background-image:
-    linear-gradient(rgba(11, 11, 31, 0.06) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(11, 11, 31, 0.06) 2px, transparent 2px);
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 75%);
+    linear-gradient(rgba(124, 58, 237, 0.12) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.1) 2px, transparent 2px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 10%, black 15%, transparent 78%);
+  animation: pixel-grid-pan 18s steps(8, end) infinite;
 }
 
-.dark .grid-overlay {
+.dark .pixel-bg__grid {
   background-image:
-    linear-gradient(rgba(124, 58, 237, 0.1) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.08) 2px, transparent 2px);
-  background-size: 32px 32px;
+    linear-gradient(rgba(124, 58, 237, 0.16) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.12) 2px, transparent 2px);
+}
+
+/* dither em xadrez, estilo 8-bit */
+.pixel-bg__dither {
+  @apply absolute inset-0 opacity-40;
+  background-image:
+    linear-gradient(45deg, rgba(34, 211, 238, 0.08) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(124, 58, 237, 0.08) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(59, 130, 246, 0.08) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(34, 211, 238, 0.08) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+  animation: pixel-dither 12s steps(4, end) infinite;
+}
+
+.dark .pixel-bg__dither {
+  opacity: 0.55;
+}
+
+.pixel-bg__scanlines {
+  @apply absolute inset-0 opacity-30;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.05) 3px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+}
+
+.dark .pixel-bg__scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(34, 211, 238, 0.035) 3px,
+    rgba(34, 211, 238, 0.035) 4px
+  );
+}
+
+@keyframes pixel-float {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translate(10px, -14px);
+    opacity: 0.32;
+  }
+  100% {
+    transform: translate(-8px, 10px);
+    opacity: 0.22;
+  }
+}
+
+@keyframes pixel-blink {
+  0%,
+  49% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50%,
+  100% {
+    opacity: 0.12;
+    transform: scale(0.75);
+  }
+}
+
+@keyframes pixel-grid-pan {
+  0% {
+    background-position:
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      28px 56px,
+      56px 28px;
+  }
+}
+
+@keyframes pixel-dither {
+  0% {
+    background-position:
+      0 0,
+      0 8px,
+      8px -8px,
+      -8px 0;
+    opacity: 0.35;
+  }
+  50% {
+    background-position:
+      16px 16px,
+      16px 24px,
+      24px 8px,
+      8px 16px;
+    opacity: 0.55;
+  }
+  100% {
+    background-position:
+      0 0,
+      0 8px,
+      8px -8px,
+      -8px 0;
+    opacity: 0.35;
+  }
 }
 
 /* Destaque de texto — sombra pixel nas cores da marca */
@@ -447,5 +589,17 @@ body {
   .animate-marquee,
   .animate-blink {
     animation: none !important;
+  }
+
+  .pixel-block,
+  .pixel-star,
+  .pixel-bg__grid,
+  .pixel-bg__dither {
+    animation: none !important;
+    opacity: 0.28;
+  }
+
+  .pixel-star {
+    opacity: 0.4;
   }
 }

@@ -15,7 +15,7 @@ const YEAR = new Date().getFullYear()
 export function Footer() {
   return (
     <footer
-      className="border-t-2 border-black bg-white dark:border-white/20 dark:bg-ink-950"
+      className="border-t-2 border-black bg-white/85 dark:border-white/20 dark:bg-ink-950/85"
       id="privacidade"
     >
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">

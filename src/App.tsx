@@ -6,6 +6,7 @@ import { FloatingWhatsApp } from './components/FloatingWhatsApp.tsx'
 import { Footer } from './components/Footer.tsx'
 import { Hero } from './components/Hero.tsx'
 import { Navbar } from './components/Navbar.tsx'
+import { PixelBackground } from './components/PixelBackground.tsx'
 import { PixelGallery } from './components/PixelGallery.tsx'
 import { Portfolio } from './components/Portfolio.tsx'
 import { Pricing } from './components/Pricing.tsx'
@@ -139,6 +140,8 @@ export default function App() {
 
   return (
     <>
+      <PixelBackground variant="site" />
+
       <a href="#conteudo" className="skip-link">
         Pular para o conteúdo principal
       </a>

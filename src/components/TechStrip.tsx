@@ -4,7 +4,7 @@ export function TechStrip() {
   const items = [...TECH_STACK, ...TECH_STACK]
   return (
     <section
-      className="border-y-2 border-black bg-white py-10 dark:border-white/20 dark:bg-ink-900"
+      className="border-y-2 border-black bg-white/80 py-10 backdrop-blur-[2px] dark:border-white/20 dark:bg-ink-900/75"
       aria-label="Tecnologias e plataformas"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
