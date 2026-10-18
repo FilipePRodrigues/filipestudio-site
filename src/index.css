@@ -4,7 +4,7 @@
 
 /* FilipeStudio brand — manual: Roxo Código, Azul Deploy, Ciano Neon, Noite, Névoa */
 @theme {
-  --font-display: "Pixelify Sans", "Press Start 2P", monospace;
+  --font-display: "Montserrat", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", "Montserrat", system-ui, sans-serif;
   --font-pixel: "Press Start 2P", "Pixelify Sans", monospace;
 
@@ -110,11 +110,11 @@ body {
 
 /* Navigation */
 .nav-link {
-  @apply border-2 border-transparent px-3 py-2 font-pixel text-[10px] text-slate-600 transition-colors hover:border-black hover:bg-ciano hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:text-slate-300 dark:hover:border-white dark:hover:bg-roxo dark:hover:text-white;
+  @apply border-2 border-transparent px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:border-black hover:bg-ciano hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:text-slate-300 dark:hover:border-white dark:hover:bg-roxo dark:hover:text-white;
 }
 
 .mobile-nav-link {
-  @apply block border-2 border-black px-4 py-3 font-pixel text-[10px] text-slate-800 shadow-pixel-sm transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-100;
+  @apply block border-2 border-black px-4 py-3 text-sm font-semibold text-slate-800 shadow-pixel-sm transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-100;
 }
 
 .footer-link {
@@ -269,7 +269,7 @@ body {
 
 /* Tech chips */
 .tech-chip {
-  @apply inline-flex shrink-0 items-center border-2 border-black bg-white px-5 py-2 font-pixel text-[10px] text-slate-800 shadow-pixel-sm dark:border-white/30 dark:bg-ink-850 dark:text-slate-200;
+  @apply inline-flex shrink-0 items-center border-2 border-black bg-white px-5 py-2 text-sm font-semibold text-slate-800 shadow-pixel-sm dark:border-white/30 dark:bg-ink-850 dark:text-slate-200;
 }
 
 /* Pixel background animado — só cores da marca */
