@@ -18,7 +18,7 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-2">
+        <div className="mt-16 grid gap-6 lg:grid-cols-2 reveal-stagger">
           {PRICING.map((tier) => (
             <article
               key={tier.id}

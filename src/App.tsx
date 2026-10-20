@@ -1,24 +1,31 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Benefits } from './components/Benefits.tsx'
 import { Contact } from './components/Contact.tsx'
+import { CursorFX } from './components/CursorFX.tsx'
 import { FAQ } from './components/FAQ.tsx'
 import { FloatingWhatsApp } from './components/FloatingWhatsApp.tsx'
 import { Footer } from './components/Footer.tsx'
 import { Hero } from './components/Hero.tsx'
+import { Metrics } from './components/Metrics.tsx'
 import { Navbar } from './components/Navbar.tsx'
 import { PixelBackground } from './components/PixelBackground.tsx'
 import { PixelGallery } from './components/PixelGallery.tsx'
 import { Portfolio } from './components/Portfolio.tsx'
 import { Pricing } from './components/Pricing.tsx'
 import { Process } from './components/Process.tsx'
+import { ScrollDepth } from './components/ScrollDepth.tsx'
+import { ScrollProgress } from './components/ScrollProgress.tsx'
 import { Services } from './components/Services.tsx'
 import { TechStrip } from './components/TechStrip.tsx'
+import { useMouseParallax } from './hooks/useMouseParallax.ts'
+import { useScrollFX } from './hooks/useScrollFX.ts'
 import { useScrollReveal } from './hooks/useScrollReveal.ts'
 import { useTheme } from './hooks/useTheme.ts'
 import { getBlogPost, getBlogPosts } from './lib/blog.ts'
 import { setPageMeta } from './lib/seo.ts'
+import { SITE_META } from './lib/siteMeta.ts'
 
-const BASE_URL = 'https://filipeprodrigues.github.io/filipestudio-site/'
+const BASE_URL = SITE_META.url
 
 // Blog components lazy-loaded — marked + dompurify (~150KB) only fetched on blog visit
 const BlogIndex = lazy(() => import('./components/blog/BlogIndex.tsx').then((m) => ({ default: m.BlogIndex })))
@@ -74,6 +81,7 @@ function Landing({ section }: { section: string }) {
       <TechStrip />
       <Services />
       <Benefits />
+      <Metrics />
       <PixelGallery />
       <Process />
       <Portfolio />
@@ -101,13 +109,16 @@ export default function App() {
   }, [route.name])
 
   useScrollReveal(route.name)
+  useScrollFX(route.name)
+  useMouseParallax(route.name)
 
   // Update meta tags dynamically per route (SPA SEO)
   useEffect(() => {
     if (route.name === 'blog') {
       setPageMeta({
-        title: 'Blog — FilipeStudio | Histórias da pista e da vida',
-        description: 'Reflexões sobre atletismo, rotina, constância e o caminho do FilipeStudio.',
+        title: 'Blog — FilipeStudio | Corrida, rotina e vida de dev',
+        description:
+          'Histórias sobre atletismo, constância, rotina e os bastidores do FilipeStudio — sem papo furado.',
         url: `${BASE_URL}#/blog`,
         type: 'blog',
       })
@@ -124,10 +135,9 @@ export default function App() {
       }
     } else {
       setPageMeta({
-        title: 'FilipeStudio — Sites, Landing Pages e Soluções Digitais',
-        description:
-          'Sites institucionais, landing pages e soluções digitais modernos, rápidos e responsivos. Design exclusivo, SEO técnico e suporte contínuo.',
-        url: BASE_URL,
+        title: SITE_META.title,
+        description: SITE_META.description,
+        url: SITE_META.url,
         type: 'website',
       })
     }
@@ -141,6 +151,9 @@ export default function App() {
   return (
     <>
       <PixelBackground variant="site" />
+      <ScrollDepth />
+      <ScrollProgress />
+      <CursorFX />
 
       <a href="#conteudo" className="skip-link">
         Pular para o conteúdo principal

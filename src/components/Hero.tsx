@@ -22,14 +22,14 @@ export function Hero() {
               id="hero-title"
               className="mt-6 font-display text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-white"
             >
-              Sites e landing pages{' '}
-              <span className="gradient-text">com a sua cara</span>
+              Sites e landing pages que{' '}
+              <span className="gradient-text">transformam clique em cliente</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600 sm:text-xl dark:text-slate-300">
-              Sem frescura, sem template genérico. Eu crio experiências digitais que
-              posicionam a sua marca e transformam clique em cliente — com design que
-              tem personalidade e performance que entrega.
+              Eu crio experiências digitais que posicionam a sua marca e transformam
+              clique em cliente — com design que tem personalidade e performance que
+              entrega!
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -46,52 +46,76 @@ export function Hero() {
           </div>
 
           <div className="reveal" aria-hidden="true">
-            <div className="relative mx-auto w-full max-w-lg">
-              <div
-                className="absolute -inset-3 bg-roxo/20"
-                style={{ boxShadow: '12px 12px 0 0 rgba(34, 211, 238, 0.25)' }}
-              />
+            <div className="hero-stage relative mx-auto w-full max-w-lg">
+              <div className="hero-stage__scene">
+                {/* lâminas empilhadas — profundidade */}
+                <div className="hero-slab hero-slab--far" />
+                <div className="hero-slab hero-slab--mid" />
 
-              <div className="character-frame relative overflow-hidden">
-                <div className="flex items-center gap-2 border-b-2 border-black bg-ink-900 px-4 py-3 dark:border-white/30">
-                  <span className="h-3 w-3 border border-black bg-ciano" />
-                  <span className="h-3 w-3 border border-black bg-roxo" />
-                  <span className="h-3 w-3 border border-black bg-azul" />
-                  <div className="ml-3 h-4 flex-1 border border-white/15 bg-white/5" />
-                </div>
-                <div className="relative bg-noite">
-                  <div
-                    className="absolute inset-0 opacity-50"
-                    style={{
-                      background:
-                        'radial-gradient(ellipse at 30% 20%, rgba(124, 58, 237, 0.45), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(34, 211, 238, 0.3), transparent 50%), radial-gradient(ellipse at 60% 90%, rgba(59, 130, 246, 0.25), transparent 45%)',
-                    }}
-                  />
-                  <img
-                    src={PIXEL_ARTS[0].src}
-                    alt="Pixel art do Filipe codando — FilipeStudio"
-                    width={314}
-                    height={418}
-                    className="pixel-art relative mx-auto w-[78%] py-4"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
-                  <div className="relative flex items-center justify-center gap-2 pb-6">
-                    <div className="h-8 w-28 border-2 border-black bg-roxo" />
-                    <div className="h-8 w-20 border-2 border-black bg-ciano" />
-                    <div className="h-8 w-16 border-2 border-black bg-azul" />
+                {/* janela extrudada com a pixel art */}
+                <div className="hero-window">
+                  <div className="hero-window__top" />
+                  <div className="hero-window__side" />
+                  <div className="character-frame relative overflow-hidden">
+                    <div className="flex items-center gap-2 border-b-2 border-black bg-ink-900 px-4 py-3 dark:border-white/30">
+                      <span className="h-3 w-3 border border-black bg-ciano" />
+                      <span className="h-3 w-3 border border-black bg-roxo" />
+                      <span className="h-3 w-3 border border-black bg-azul" />
+                      <div className="ml-3 h-4 flex-1 border border-white/15 bg-white/5" />
+                    </div>
+                    <div className="relative bg-noite">
+                      <div
+                        className="absolute inset-0 opacity-50"
+                        style={{
+                          background:
+                            'radial-gradient(ellipse at 30% 20%, rgba(124, 58, 237, 0.45), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(34, 211, 238, 0.3), transparent 50%), radial-gradient(ellipse at 60% 90%, rgba(59, 130, 246, 0.25), transparent 45%)',
+                        }}
+                      />
+                      <img
+                        src={PIXEL_ARTS[0].src}
+                        alt="Pixel art do Filipe codando — FilipeStudio"
+                        width={314}
+                        height={418}
+                        className="pixel-art relative mx-auto w-[78%] py-4"
+                        fetchPriority="high"
+                        decoding="async"
+                      />
+                      <div className="relative flex items-center justify-center gap-2 pb-6">
+                        <div className="h-8 w-28 border-2 border-black bg-roxo" />
+                        <div className="h-8 w-20 border-2 border-black bg-ciano" />
+                        <div className="h-8 w-16 border-2 border-black bg-azul" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="absolute left-0 top-2 animate-float border-2 border-black bg-white px-3 py-2 font-pixel text-[8px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-ink-800 dark:text-white sm:-left-4 sm:top-10 sm:px-4 sm:py-2.5 sm:text-[9px]">
-                <span className="text-roxo">⚡</span> PageSpeed 98/100
-              </div>
-              <div className="absolute right-0 top-16 animate-float-delayed border-2 border-black bg-white px-3 py-2 font-pixel text-[8px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-ink-800 dark:text-white sm:-right-2 sm:top-1/3 sm:px-4 sm:py-2.5 sm:text-[9px]">
-                <span className="text-ciano">◆</span> Design exclusivo
-              </div>
-              <div className="absolute -bottom-4 left-4 animate-float border-2 border-black bg-white px-3 py-2 font-pixel text-[8px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-ink-800 dark:text-white sm:left-8 sm:px-4 sm:py-2.5 sm:text-[9px]">
-                <span className="text-azul">●</span> +38% conversão média
+                {/* cubos isométricos 3D */}
+                <div className="iso-cube iso-cube--a">
+                  <div className="iso-cube__face iso-cube__face--front" />
+                  <div className="iso-cube__face iso-cube__face--top" />
+                  <div className="iso-cube__face iso-cube__face--side" />
+                </div>
+                <div className="iso-cube iso-cube--b">
+                  <div className="iso-cube__face iso-cube__face--front" />
+                  <div className="iso-cube__face iso-cube__face--top" />
+                  <div className="iso-cube__face iso-cube__face--side" />
+                </div>
+
+                {/* blocos pixel */}
+                <div className="iso-block iso-block--a animate-float" />
+                <div className="iso-block iso-block--b animate-float-delayed" />
+                <div className="iso-block iso-block--c animate-float" />
+
+                {/* chips 3D flutuantes */}
+                <div className="hero-chip hero-chip--1 animate-float">
+                  <span className="text-roxo">⚡</span> PageSpeed 98/100
+                </div>
+                <div className="hero-chip hero-chip--2 animate-float-delayed">
+                  <span className="text-ciano">◆</span> Design exclusivo
+                </div>
+                <div className="hero-chip hero-chip--3 animate-float">
+                  <span className="text-azul">●</span> +38% conversão média
+                </div>
               </div>
             </div>
           </div>

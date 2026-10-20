@@ -9,7 +9,7 @@ export function Services() {
           <span className="pixel-label">Serviços</span>
           <h2
             id="servicos-title"
-            className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
+            className="section-title reveal mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
             O que eu faço por você
           </h2>
@@ -19,7 +19,7 @@ export function Services() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 reveal-stagger">
           {SERVICES.map((service) => (
             <article key={service.id} className="service-card reveal">
               <div className="service-icon">

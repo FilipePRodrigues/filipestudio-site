@@ -35,7 +35,7 @@ export function Benefits() {
             </a>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 reveal-stagger">
             {BENEFITS.map((benefit) => (
               <div key={benefit.id} className="benefit-card reveal">
                 <div className="benefit-icon" aria-hidden="true">

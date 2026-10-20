@@ -2,12 +2,12 @@ import { assetUrl } from '../lib/asset.ts'
 import type {
   Benefit,
   FaqItem,
+  Metric,
   PortfolioItem,
   PricingTier,
   ProcessStep,
   Service,
   TechItem,
-  Testimonial,
 } from '../types/index.ts'
 
 export const BRAND = {
@@ -40,18 +40,18 @@ export const NAV_LINKS = [
 ] as const
 
 export const PIXEL_ARTS = [
-  { id: 'codando', src: assetUrl('/pixel/arts/filipe_pinheiro_01_codando.webp'), alt: 'Pixel art: Filipe codando' },
-  { id: 'treinando', src: assetUrl('/pixel/arts/filipe_pinheiro_02_treinando.webp'), alt: 'Pixel art: Filipe treinando' },
-  { id: 'negociando', src: assetUrl('/pixel/arts/filipe_pinheiro_03_negociando.webp'), alt: 'Pixel art: Filipe negociando' },
-  { id: 'correndo', src: assetUrl('/pixel/arts/filipe_pinheiro_04_correndo.webp'), alt: 'Pixel art: Filipe correndo' },
-  { id: 'pensando', src: assetUrl('/pixel/arts/filipe_pinheiro_05_pensando.webp'), alt: 'Pixel art: Filipe pensando' },
-  { id: 'apontando', src: assetUrl('/pixel/arts/filipe_pinheiro_06_apontando.webp'), alt: 'Pixel art: Filipe apontando' },
-  { id: 'setup', src: assetUrl('/pixel/arts/filipe_pinheiro_07_setup_codigo.webp'), alt: 'Pixel art: setup de código' },
-  { id: 'viagem', src: assetUrl('/pixel/arts/filipe_pinheiro_08_viagem.webp'), alt: 'Pixel art: Filipe viajando' },
-  { id: 'planejando', src: assetUrl('/pixel/arts/filipe_pinheiro_09_planejando.webp'), alt: 'Pixel art: Filipe planejando' },
-  { id: 'comemorando', src: assetUrl('/pixel/arts/filipe_pinheiro_10_comemorando.webp'), alt: 'Pixel art: Filipe comemorando' },
-  { id: 'lifestyle', src: assetUrl('/pixel/arts/filipe_pinheiro_11_lifestyle.webp'), alt: 'Pixel art: Filipe lifestyle' },
-  { id: 'headphone', src: assetUrl('/pixel/arts/filipe_pinheiro_12_headphone.webp'), alt: 'Pixel art: Filipe com headphone' },
+  { id: 'codando', src: assetUrl('/pixel/arts/filipe_pinheiro_01_codando.webp'), alt: 'Pixel art do Filipe Pinheiro codando no notebook — FilipeStudio' },
+  { id: 'treinando', src: assetUrl('/pixel/arts/filipe_pinheiro_02_treinando.webp'), alt: 'Pixel art do Filipe treinando com halteres — rotina de atleta' },
+  { id: 'negociando', src: assetUrl('/pixel/arts/filipe_pinheiro_03_negociando.webp'), alt: 'Pixel art do Filipe em conversa de negócios — processo de briefing' },
+  { id: 'correndo', src: assetUrl('/pixel/arts/filipe_pinheiro_04_correndo.webp'), alt: 'Pixel art do Filipe correndo — disciplina e constância' },
+  { id: 'pensando', src: assetUrl('/pixel/arts/filipe_pinheiro_05_pensando.webp'), alt: 'Pixel art do Filipe pensando em ideias de projeto' },
+  { id: 'apontando', src: assetUrl('/pixel/arts/filipe_pinheiro_06_apontando.webp'), alt: 'Pixel art do Filipe apontando — apresentação de resultado' },
+  { id: 'setup', src: assetUrl('/pixel/arts/filipe_pinheiro_07_setup_codigo.webp'), alt: 'Pixel art do setup de código do Filipe — desenvolvimento web' },
+  { id: 'viagem', src: assetUrl('/pixel/arts/filipe_pinheiro_08_viagem.webp'), alt: 'Pixel art do Filipe em viagem — lifestyle e rotina' },
+  { id: 'planejando', src: assetUrl('/pixel/arts/filipe_pinheiro_09_planejando.webp'), alt: 'Pixel art do Filipe planejando estratégia digital' },
+  { id: 'comemorando', src: assetUrl('/pixel/arts/filipe_pinheiro_10_comemorando.webp'), alt: 'Pixel art do Filipe comemorando entrega de projeto' },
+  { id: 'lifestyle', src: assetUrl('/pixel/arts/filipe_pinheiro_11_lifestyle.webp'), alt: 'Pixel art do Filipe em momento lifestyle' },
+  { id: 'headphone', src: assetUrl('/pixel/arts/filipe_pinheiro_12_headphone.webp'), alt: 'Pixel art do Filipe com headphone — foco no trabalho' },
 ] as const
 
 export const SERVICES: Service[] = [
@@ -207,36 +207,31 @@ export const PORTFOLIO: PortfolioItem[] = [
   },
 ]
 
-export const TESTIMONIALS: Testimonial[] = [
+/** Métricas reais do trabalho — sem depoimentos inventados. */
+export const METRICS: Metric[] = [
   {
-    id: 'ana',
-    quote:
-      'Ficou acima do que eu imaginava. Profissional do início ao fim e o prazo foi cumprido à risca. Já indiquei pra três colegas!',
-    name: 'Ana Souza',
-    role: 'CEO, Startup Tech',
-    initials: 'AS',
-    avatarGradient: 'from-roxo to-ciano',
-    rating: 5,
+    id: 'lighthouse',
+    value: '95+',
+    label: 'Lighthouse',
+    detail: 'Performance e acessibilidade no verde (desktop e mobile).',
   },
   {
-    id: 'carlos',
-    quote:
-      'Nossa landing triplicou a captação de leads em dois meses. Entende de negócio, não só de código. Recomendo demais.',
-    name: 'Carlos Mendes',
-    role: 'Diretor de Marketing',
-    initials: 'CM',
-    avatarGradient: 'from-roxo to-azul',
-    rating: 5,
+    id: 'exclusivo',
+    value: '100%',
+    label: 'Design exclusivo',
+    detail: 'Zero template genérico — cada projeto com identidade própria.',
   },
   {
-    id: 'juliana',
-    quote:
-      'Processo transparente, comunicação clara e um resultado lindo. Minha landing ficou rápida e os leads subiram desde o lançamento.',
-    name: 'Juliana Rocha',
-    role: 'Fundadora, Marca de Lifestyle',
-    initials: 'JR',
-    avatarGradient: 'from-ciano to-azul',
-    rating: 5,
+    id: 'mobile',
+    value: 'Mobile-first',
+    label: 'Responsivo',
+    detail: 'Do celular ao ultrawide, testado em vários aparelhos.',
+  },
+  {
+    id: 'suporte',
+    value: '30–90d',
+    label: 'Suporte incluído',
+    detail: 'Acompanhamento pós-lançamento conforme o plano.',
   },
 ]
 
@@ -296,7 +291,7 @@ export const FAQS: FaqItem[] = [
   },
   {
     id: 'conteudo',
-    question: 'Vocês fazem os textos?',
+    question: 'Você faz os textos?',
     answer:
       'Ajudando com copy orientada a conversão, sim. Se preferir, também trampo com redator especializado. O ideal é você trazer o material da marca (textos, fotos, logo) e eu traduzo isso em uma experiência que vende.',
   },
@@ -308,7 +303,7 @@ export const FAQS: FaqItem[] = [
   },
   {
     id: 'atendimento',
-    question: 'Atendem fora de BH?',
+    question: 'Você atende fora de BH?',
     answer:
       'Sim! Trampo 100% remoto com clientes de qualquer lugar do Brasil (e do exterior). Comunicação por WhatsApp, e-mail e videochamada — clara e organizada.',
   },

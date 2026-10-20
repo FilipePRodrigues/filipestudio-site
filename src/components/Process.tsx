@@ -17,7 +17,7 @@ export function Process() {
           </p>
         </div>
 
-        <ol className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 reveal-stagger">
           {PROCESS_STEPS.map((step) => (
             <li key={step.id} className="process-step reveal">
               <div className="process-num">{step.step}</div>

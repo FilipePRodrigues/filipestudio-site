@@ -33,14 +33,11 @@ export interface PortfolioItem {
   image?: string
 }
 
-export interface Testimonial {
+export interface Metric {
   id: string
-  quote: string
-  name: string
-  role: string
-  initials: string
-  avatarGradient: string
-  rating: number
+  value: string
+  label: string
+  detail: string
 }
 
 export interface PricingTier {

@@ -1,4 +1,4 @@
-const SITE_URL = 'https://filipeprodrigues.github.io/filipestudio-site'
+import { SITE_META } from './siteMeta.ts'
 
 interface PageMeta {
   title: string
@@ -9,11 +9,10 @@ interface PageMeta {
 }
 
 const defaults: PageMeta = {
-  title: 'FilipeStudio — Sites, Landing Pages e Soluções Digitais',
-  description:
-    'Sites institucionais, landing pages e soluções digitais modernos, rápidos e responsivos. Design exclusivo, SEO técnico e suporte contínuo.',
-  url: SITE_URL,
-  image: `${SITE_URL}/og-image.png`,
+  title: SITE_META.title,
+  description: SITE_META.description,
+  url: SITE_META.url,
+  image: SITE_META.image,
   type: 'website',
 }
 
