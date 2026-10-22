@@ -33,6 +33,13 @@ _html-scaffold
 # OS
 .DS_Store
 
+# Agent / playwright artifacts
+.playwright-cli
+output
+
+# IDE
+*.code-workspace
+
 # Backups
 *.bak
 *.backup
