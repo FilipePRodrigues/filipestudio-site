@@ -42,6 +42,17 @@ export function PixelGallery() {
             </div>
           </div>
 
+          {/* título primeiro (mobile e desktop) */}
+          <header className="flight__header">
+            <span className="pixel-label">Pixel world</span>
+            <h2 className="luxury-title font-display text-2xl font-bold text-white sm:text-3xl">
+              Um pouco de mim em pixels
+            </h2>
+            <p className="mx-auto mt-2 max-w-xl text-sm text-slate-300 sm:text-base">
+              Dev, atleta e criador — a mesma energia que eu levo pros projetos.
+            </p>
+          </header>
+
           <div className="flight__lean" data-flight-lean>
             <div className="flight__scene" data-flight-scene>
               <div className="flight__field" aria-hidden="true">
@@ -82,17 +93,6 @@ export function PixelGallery() {
               </ul>
             </div>
           </div>
-
-          {/* título fora do espaço 3D, colado no topo com véu */}
-          <header className="flight__header">
-            <span className="pixel-label">Pixel world</span>
-            <h2 className="luxury-title font-display text-2xl font-bold text-white sm:text-3xl">
-              Um pouco de mim em pixels
-            </h2>
-            <p className="mx-auto mt-2 max-w-xl text-sm text-slate-300 sm:text-base">
-              Dev, atleta e criador — a mesma energia que eu levo pros projetos.
-            </p>
-          </header>
         </div>
       </div>
     </section>

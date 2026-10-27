@@ -2653,3 +2653,130 @@ html:not(.dark) .flight::after {
     opacity: 0.5;
   }
 }
+
+/* ===== Mobile / estático: layout do Pixel World ===== */
+.flight--static .flight__viewport {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 4.5rem 1rem 3.5rem;
+}
+
+.flight--static .flight__header {
+  position: relative;
+  order: -1;
+  z-index: 4;
+  width: 100%;
+}
+
+.flight--static .flight__lean,
+.flight--static .flight__scene {
+  position: relative;
+  inset: auto;
+  width: 100%;
+}
+
+.flight--static .flight__tunnel {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+.flight--static .flight__lean {
+  z-index: 1;
+}
+
+.flight--static .flight__field {
+  z-index: 1;
+}
+
+.flight--static .flight__card {
+  border-radius: 4px;
+}
+
+/* título sempre legível no topo do mobile */
+.flight--static .flight__header .luxury-title {
+  color: #fff;
+}
+
+/* ===== Fallback mobile por media query (não depende do JS) ===== */
+@media (max-width: 767px) {
+  .flight__track {
+    height: auto !important;
+  }
+
+  .flight__viewport {
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 4.5rem 1rem 3.5rem !important;
+    perspective: none;
+  }
+
+  .flight__tunnel {
+    position: absolute !important;
+    inset: 0;
+    opacity: 0.5;
+    z-index: 0;
+  }
+
+  .flight__header {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    order: -1;
+    z-index: 4;
+    width: 100%;
+    padding: 0 !important;
+    background: none !important;
+    text-align: center;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .flight__lean,
+  .flight__scene {
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .flight__field {
+    position: relative !important;
+    inset: auto !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    width: 100%;
+  }
+
+  .flight__card {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  .flight__card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .flight--static .flight__field {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
