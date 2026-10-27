@@ -9,9 +9,9 @@ export function Hero() {
       aria-labelledby="hero-title"
     >
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" data-hero-intro>
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
+      <div className="relative mx-auto w-full min-w-0 max-w-7xl overflow-x-clip px-4 sm:px-6 lg:px-8" data-hero-intro>
+        <div className="grid min-w-0 items-center gap-10 lg:grid-cols-2 lg:gap-12">
+          <div className="min-w-0">
             <div className="pixel-label" data-hero-part>
               <span className="mr-2 inline-block animate-blink" aria-hidden="true">
                 ▶
@@ -31,7 +31,7 @@ export function Hero() {
             </h1>
 
             <p
-              className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600 sm:text-xl dark:text-slate-300"
+              className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg lg:text-xl dark:text-slate-300"
               data-hero-part
             >
               Eu crio experiências digitais que posicionam a sua marca e transformam
@@ -39,21 +39,24 @@ export function Hero() {
               entrega!
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" data-hero-part>
-              <a href="#contato" className="btn-primary">
+            <div
+              className="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:items-center sm:max-w-none"
+              data-hero-part
+            >
+              <a href="#contato" className="btn-primary w-full sm:w-auto">
                 Bora conversar
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </a>
-              <a href="#portfolio" className="btn-secondary">
+              <a href="#portfolio" className="btn-secondary w-full sm:w-auto">
                 Ver portfólio
               </a>
             </div>
           </div>
 
-          <div aria-hidden="true" data-hero-part data-parallax="50">
-            <div className="hero-stage relative mx-auto w-full max-w-lg">
+          <div className="min-w-0" aria-hidden="true" data-hero-part data-parallax="50">
+            <div className="hero-stage relative mx-auto w-full max-w-md lg:max-w-lg">
               <div className="hero-stage__scene">
                 <div className="hero-logo-wrap">
                   <HeroLogo />

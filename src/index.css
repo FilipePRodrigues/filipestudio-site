@@ -1932,7 +1932,7 @@ html.brand-intro-lock [data-hero-part] {
 
 .hero-logo {
   position: relative;
-  width: min(480px, 92vw);
+  width: min(480px, 78vw);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -2778,5 +2778,43 @@ html:not(.dark) .flight::after {
 
   .flight--static .flight__field {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+#topo {
+  overflow-x: clip;
+}
+
+.hero-stage {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  /* anéis da logo não estouram a tela */
+  .hero-logo__orbit-ring--2 {
+    inset: 2%;
+    border-style: solid;
+  }
+
+  .hero-logo {
+    width: min(480px, 74vw);
+  }
+
+  .hero-stage {
+    overflow: visible;
+    max-width: 100%;
+  }
+
+  #topo {
+    overflow-x: hidden;
   }
 }
