@@ -195,6 +195,17 @@ export const PROCESS_STEPS: ProcessStep[] = [
 
 export const PORTFOLIO: PortfolioItem[] = [
   {
+    id: 'precoabsurdo',
+    category: 'SaaS · Ofertas',
+    title: 'Preço Absurdo',
+    description:
+      'Ofertas e cupons do Brasil num só lugar. Ingestão automática de redes de afiliados em Node (Awin e Lomadee), agendador em cron e interface na Vercel.',
+    emoji: '💥',
+    gradient: 'from-azul via-roxo to-ciano',
+    href: 'https://www.precoabsurdo.com.br',
+    image: assetUrl('/portfolio-precoabsurdo.jpg'),
+  },
+  {
     id: 'filipestudio',
     category: 'Este site',
     title: 'FilipeStudio',

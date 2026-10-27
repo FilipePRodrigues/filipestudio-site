@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { BRAND, mailtoLink, whatsappLink } from '../data/content.ts'
 import type { ContactFormData, ProjectType } from '../types/index.ts'
+import { LightRays } from './spell/LightRays.tsx'
 import { ArrowRight, MailIcon, WhatsAppIcon } from './icons.tsx'
 
 const PROJECT_TYPES: { value: ProjectType; label: string }[] = [
@@ -61,6 +62,7 @@ export function Contact() {
   const [form, setForm] = useState<ContactFormData>(EMPTY_FORM)
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [submitState, setSubmitState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [leadMessage, setLeadMessage] = useState('')
   const [leadSubject, setLeadSubject] = useState('')
 
@@ -77,39 +79,45 @@ export function Contact() {
     setErrors(nextErrors)
 
     if (Object.keys(nextErrors).length > 0) {
+      setSubmitState('error')
+      window.setTimeout(() => setSubmitState('idle'), 600)
       const firstField = Object.keys(nextErrors)[0]
       document.getElementById(firstField)?.focus()
       return
     }
 
+    setSubmitState('loading')
     const message = buildLeadMessage(form)
     const subject = `Orçamento — ${projectTypeLabel(form.projectType)} — ${form.name}`
     setLeadMessage(message)
     setLeadSubject(subject)
-    setSubmitted(true)
 
-    // Abre o WhatsApp com o conteúdo já preenchido
-    window.open(whatsappLink(message), '_blank', 'noopener,noreferrer')
+    window.setTimeout(() => {
+      setSubmitState('success')
+      setSubmitted(true)
+      window.open(whatsappLink(message), '_blank', 'noopener,noreferrer')
+    }, 450)
   }
 
   return (
     <section id="contato" className="relative overflow-hidden py-20 sm:py-28" aria-labelledby="contato-title">
+      <LightRays intensity={8} rays={10} position={30} color1="#7C3AED" color2="#22D3EE" />
       <div
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-ciano/[0.06] to-roxo/[0.08]"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-noite/45 via-noite/30 to-noite/55"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ciano/50 to-transparent"
+        className="absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-ciano/50 to-transparent"
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-[2] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div className="reveal">
             <span className="pixel-label">Vamos conversar</span>
             <h2
               id="contato-title"
-              className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
+              className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
             >
               Pronto pra subir de nível?
             </h2>
@@ -315,9 +323,28 @@ export function Contact() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary mt-6 w-full">
-                Enviar solicitação
-                <ArrowRight />
+              <button
+                type="submit"
+                className={`btn-primary mt-6 w-full ${submitState === 'error' ? 'form-shake' : ''}`}
+                disabled={submitState === 'loading'}
+                aria-busy={submitState === 'loading'}
+              >
+                {submitState === 'loading' ? (
+                  <>
+                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" />
+                    Enviando...
+                  </>
+                ) : submitState === 'success' ? (
+                  <>
+                    <span aria-hidden="true">✓</span>
+                    Pronto
+                  </>
+                ) : (
+                  <>
+                    Enviar solicitação
+                    <ArrowRight />
+                  </>
+                )}
               </button>
 
               <p className="mt-4 text-xs leading-relaxed text-slate-500 dark:text-slate-400">

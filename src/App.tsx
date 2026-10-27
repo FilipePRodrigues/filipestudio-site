@@ -9,6 +9,8 @@ import { Hero } from './components/Hero.tsx'
 import { Metrics } from './components/Metrics.tsx'
 import { Navbar } from './components/Navbar.tsx'
 import { PixelBackground } from './components/PixelBackground.tsx'
+import { BrandIntro } from './components/BrandIntro.tsx'
+import { SiteAnimatedGradient } from './components/spell/AnimatedGradient.tsx'
 import { PixelGallery } from './components/PixelGallery.tsx'
 import { Portfolio } from './components/Portfolio.tsx'
 import { Pricing } from './components/Pricing.tsx'
@@ -20,6 +22,7 @@ import { TechStrip } from './components/TechStrip.tsx'
 import { useMouseParallax } from './hooks/useMouseParallax.ts'
 import { useScrollFX } from './hooks/useScrollFX.ts'
 import { useScrollReveal } from './hooks/useScrollReveal.ts'
+import { useLuxuryMotion } from './hooks/useLuxuryMotion.ts'
 import { useTheme } from './hooks/useTheme.ts'
 import { getBlogPost, getBlogPosts } from './lib/blog.ts'
 import { setPageMeta } from './lib/seo.ts'
@@ -111,6 +114,7 @@ export default function App() {
   useScrollReveal(route.name)
   useScrollFX(route.name)
   useMouseParallax(route.name)
+  useLuxuryMotion(route.name)
 
   // Update meta tags dynamically per route (SPA SEO)
   useEffect(() => {
@@ -150,10 +154,12 @@ export default function App() {
 
   return (
     <>
+      <SiteAnimatedGradient />
       <PixelBackground variant="site" />
       <ScrollDepth />
       <ScrollProgress />
       <CursorFX />
+      {route.name === 'home' ? <BrandIntro /> : null}
 
       <a href="#conteudo" className="skip-link">
         Pular para o conteúdo principal

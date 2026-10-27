@@ -1,5 +1,6 @@
 import { SERVICES } from '../data/content.ts'
 import { PixelIcon } from './PixelIcon.tsx'
+import { TiltCard } from './spell/TiltCard.tsx'
 
 export function Services() {
   return (
@@ -9,7 +10,7 @@ export function Services() {
           <span className="pixel-label">Serviços</span>
           <h2
             id="servicos-title"
-            className="section-title reveal mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
+            className="section-title luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
             O que eu faço por você
           </h2>
@@ -21,25 +22,27 @@ export function Services() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 reveal-stagger">
           {SERVICES.map((service) => (
-            <article key={service.id} className="service-card reveal">
-              <div className="service-icon">
-                <PixelIcon name={service.icon} />
-              </div>
-              <h3 className="mt-5 font-display text-xl font-semibold text-slate-900 dark:text-white">
-                {service.title}
-              </h3>
-              <p className="mt-3 text-slate-600 dark:text-slate-300">{service.description}</p>
-              <ul className="mt-4 space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                {service.bullets.map((bullet) => (
-                  <li key={bullet} className="flex items-start gap-2">
-                    <span className="mt-0.5 font-pixel text-[10px] text-roxo" aria-hidden="true">
-                      ►
-                    </span>
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            </article>
+            <TiltCard key={service.id} className="tilt-panel reveal">
+              <article className="service-card h-full">
+                <div className="service-icon">
+                  <PixelIcon name={service.icon} />
+                </div>
+                <h3 className="mt-5 font-display text-xl font-semibold text-slate-900 dark:text-white">
+                  {service.title}
+                </h3>
+                <p className="mt-3 text-slate-600 dark:text-slate-300">{service.description}</p>
+                <ul className="mt-4 space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                  {service.bullets.map((bullet) => (
+                    <li key={bullet} className="flex items-start gap-2">
+                      <span className="mt-0.5 font-pixel text-[10px] text-roxo" aria-hidden="true">
+                        ►
+                      </span>
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </TiltCard>
           ))}
         </div>
       </div>

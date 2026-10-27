@@ -16,7 +16,7 @@ export function FAQ() {
           <span className="pixel-label">FAQ</span>
           <h2
             id="faq-title"
-            className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
+            className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
           >
             Tire suas dúvidas
           </h2>

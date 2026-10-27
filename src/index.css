@@ -44,13 +44,14 @@
   --animate-marquee: marquee 28s linear infinite;
   --animate-blink: blink 1.1s steps(2, start) infinite;
 
+  /* Float preserva a posição 3D de cada peça (vars), sem "achatar" os cards */
   @keyframes float {
     0%,
     100% {
-      transform: translateY(0);
+      transform: translate3d(var(--fx, 0px), var(--fy, 0px), var(--fz, 0px)) rotateZ(var(--frz, 0deg));
     }
     50% {
-      transform: translateY(-10px);
+      transform: translate3d(var(--fx, 0px), calc(var(--fy, 0px) - 10px), var(--fz, 0px)) rotateZ(var(--frz, 0deg));
     }
   }
 
@@ -1199,7 +1200,7 @@ body {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Chips flutuantes */
+/* Chips flutuantes — posições originais, por cima do card grande */
 .hero-chip {
   position: absolute;
   z-index: 3;
@@ -1212,6 +1213,7 @@ body {
   color: #000;
   box-shadow: var(--shadow-extrude);
   transform-style: preserve-3d;
+  white-space: nowrap;
 }
 
 .dark .hero-chip {
@@ -1223,13 +1225,21 @@ body {
 .hero-chip--1 {
   top: 6%;
   left: -4%;
+  --fx: -12px;
+  --fy: -8px;
+  --fz: 90px;
+  --frz: -2deg;
   transform: translate3d(-12px, -8px, 90px) rotateZ(-2deg);
 }
 
 .hero-chip--2 {
   top: 32%;
-  right: -6%;
+  right: 0;
   left: auto;
+  --fx: 10px;
+  --fy: 6px;
+  --fz: 80px;
+  --frz: 2deg;
   transform: translate3d(10px, 6px, 80px) rotateZ(2deg);
 }
 
@@ -1237,6 +1247,10 @@ body {
   bottom: 2%;
   left: 8%;
   top: auto;
+  --fx: -6px;
+  --fy: 10px;
+  --fz: 85px;
+  --frz: -1deg;
   transform: translate3d(-6px, 10px, 85px) rotateZ(-1deg);
 }
 
@@ -1299,6 +1313,10 @@ body {
   right: 16%;
   background: rgba(34, 211, 238, 0.85);
   box-shadow: 5px 5px 0 0 rgba(11, 11, 31, 0.18);
+  --fx: -12px;
+  --fy: -18px;
+  --fz: 110px;
+  --frz: 8deg;
   transform: translate3d(-12px, -18px, 110px) rotateZ(8deg);
 }
 
@@ -1331,6 +1349,79 @@ body {
 .tech-chip {
   box-shadow: var(--shadow-extrude-sm);
   transform: perspective(600px) rotateX(2deg);
+}
+
+/* ===== Spell UI TiltCard — acabamento dos cards ===== */
+.tilt-panel {
+  border-radius: 1rem;
+  /* sombras em camadas, no espírito do demo do Spell, com tom da marca */
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    0 16px 32px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.dark .tilt-panel {
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 16px 32px rgba(0, 0, 0, 0.2),
+    0 24px 48px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* O TiltCard cuida do transform; os cards de dentro não inclinam de novo */
+.tilt-panel .service-card,
+.tilt-panel .pricing-card,
+.tilt-panel .pricing-featured,
+.tilt-panel .metric-card,
+.tilt-panel .portfolio-card,
+.tilt-panel .benefit-card,
+.tilt-panel .process-step,
+.tilt-panel .testimonial-card {
+  transform: none !important;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.tilt-panel .service-card:hover,
+.tilt-panel .benefit-card:hover,
+.tilt-panel .process-step:hover,
+.tilt-panel .portfolio-card:hover,
+.tilt-panel .metric-card:hover,
+.tilt-panel .pricing-card:hover,
+.tilt-panel .pricing-featured:hover,
+.tilt-panel .testimonial-card:hover {
+  transform: none !important;
+}
+
+/* Cantos arredondados + recorte do spotlight */
+.tilt-panel .service-card,
+.tilt-panel .pricing-card,
+.tilt-panel .metric-card,
+.tilt-panel .portfolio-card,
+.tilt-panel .benefit-card,
+.tilt-panel .process-step {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.tilt-panel .pricing-featured {
+  border-radius: 1rem;
+  box-shadow:
+    6px 6px 0 0 rgba(34, 211, 238, 0.35),
+    12px 12px 0 0 rgba(124, 58, 237, 0.18);
+}
+
+/* Hover só no brilho de fundo, sem tremor */
+.tilt-panel .service-card:hover {
+  @apply bg-ciano/10 dark:bg-ink-800;
+}
+.tilt-panel .benefit-card:hover {
+  @apply bg-roxo/10 dark:bg-ink-800;
 }
 
 /* Reduced motion */
@@ -1384,5 +1475,1181 @@ body {
 
   .pixel-star {
     opacity: 0.4;
+  }
+}
+
+/* ===== Spell UI — Shimmer Text (CSS puro) ===== */
+.shimmer-text {
+  display: inline-block;
+  color: #22d3ee;
+  background-image: linear-gradient(
+    110deg,
+    #22d3ee 0%,
+    #22d3ee 38%,
+    #a5f3fc 50%,
+    #a5f3fc 54%,
+    #22d3ee 66%,
+    #22d3ee 100%
+  );
+  background-size: 280% 100%;
+  background-position: 130% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep var(--shimmer-duration, 4s) ease-in-out infinite;
+}
+
+/* Fora do dark mode usa roxo, igual ao resto do texto de destaque */
+html:not(.dark) .shimmer-text {
+  color: #7c3aed;
+  background-image: linear-gradient(
+    110deg,
+    #7c3aed 0%,
+    #7c3aed 38%,
+    #c4b5fd 50%,
+    #c4b5fd 54%,
+    #7c3aed 66%,
+    #7c3aed 100%
+  );
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: 130% 0; }
+  45% { background-position: -50% 0; }
+  100% { background-position: -50% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text {
+    animation: none;
+    -webkit-text-fill-color: currentColor;
+    color: #22d3ee;
+    background: none;
+  }
+}
+
+/* ===== Spell UI — Light Rays (CSS, sem WebGL) ===== */
+.light-rays {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.light-rays__beam {
+  position: absolute;
+  top: -25%;
+  height: 150%;
+  transform-origin: bottom center;
+  transform: rotate(16deg);
+  filter: blur(18px);
+  border-radius: 999px;
+  animation: light-ray-pulse ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+.light-rays__beam:nth-child(odd) {
+  transform: rotate(-12deg);
+  filter: blur(22px);
+}
+
+.light-rays__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@keyframes light-ray-pulse {
+  0% {
+    opacity: 0.04;
+    transform: rotate(16deg) scaleY(0.96) translateX(-6px);
+  }
+  100% {
+    opacity: 0.12;
+    transform: rotate(16deg) scaleY(1.04) translateX(6px);
+  }
+}
+
+.light-rays__beam:nth-child(odd) {
+  animation-name: light-ray-pulse-alt;
+}
+
+@keyframes light-ray-pulse-alt {
+  0% {
+    opacity: 0.05;
+    transform: rotate(-12deg) scaleY(1.04) translateX(5px);
+  }
+  100% {
+    opacity: 0.11;
+    transform: rotate(-12deg) scaleY(0.96) translateX(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light-rays {
+    display: none;
+  }
+}
+
+/* Gradiente fixo — fumaça bem discreta atrás de tudo */
+.site-animated-gradient {
+  mix-blend-mode: normal;
+  opacity: 0.08 !important;
+  filter: blur(12px);
+}
+
+/* Conteúdo acima do canvas fixo */
+body > #root {
+  position: relative;
+  z-index: 1;
+}
+
+.pixel-bg--site {
+  z-index: 0;
+}
+
+/* ===== Luxury motion (GSAP helpers) ===== */
+.luxury-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.luxury-line__in {
+  display: block;
+  will-change: transform;
+}
+
+.luxury-title.is-ready {
+  /* evita flash antes do GSAP set */
+}
+
+.scrub-word {
+  display: inline-block;
+  opacity: 0.15;
+  will-change: opacity;
+}
+
+.sweep-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-roxo, #7c3aed), var(--color-ciano, #22d3ee));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+[data-underline-sweep]:hover .sweep-line,
+[data-underline-sweep]:focus-visible .sweep-line {
+  transform: scaleX(1);
+}
+
+[data-underline-sweep] {
+  position: relative;
+}
+
+/* Statement scrub section */
+.statement {
+  padding: clamp(4rem, 10vw, 7rem) 0;
+}
+
+.statement__text {
+  font-family: var(--font-display, Montserrat, sans-serif);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Horizontal gallery pin stage */
+.horizontal-run {
+  position: relative;
+  overflow: hidden;
+}
+
+.horizontal-run__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.horizontal-run__track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  padding-inline: 1.5rem;
+  will-change: transform;
+}
+
+.horizontal-run__track .character-frame {
+  width: 15rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .horizontal-run__track .character-frame {
+    width: 17rem;
+  }
+}
+
+/* Mobile: scroll nativo */
+@media (max-width: 767px) {
+  .horizontal-run__viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .horizontal-run__track {
+    transform: none !important;
+  }
+}
+
+/* Press feedback não deve brigar com hover do botão */
+.btn-primary,
+.btn-secondary,
+.btn {
+  transform-origin: center;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrub-word {
+    opacity: 1 !important;
+  }
+  .sweep-line {
+    transition: none;
+  }
+  .luxury-line__in {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* stateButton: erro balança o botão */
+.form-shake {
+  animation: form-shake 0.4s ease;
+}
+
+@keyframes form-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-8px); }
+  30% { transform: translateX(7px); }
+  45% { transform: translateX(-5px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+.btn-primary:disabled {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-shake { animation: none; }
+}
+
+/* ===== Luxury extras ===== */
+.spotlight-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    circle 140px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(255, 255, 255, 0.14),
+    transparent 70%
+  );
+  z-index: 4;
+}
+
+.spotlight-layer.is-on {
+  opacity: 1;
+}
+
+[data-velocity-skew] {
+  transform: skewY(var(--skew, 0deg));
+  will-change: transform;
+}
+
+.pull-quote {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.pull-quote__bar {
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--color-roxo, #7c3aed), var(--color-ciano, #22d3ee));
+  transform: scaleY(0);
+}
+
+[data-image-reveal] {
+  overflow: hidden;
+  will-change: clip-path;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-velocity-skew] {
+    transform: none !important;
+  }
+  .spotlight-layer {
+    display: none;
+  }
+  [data-image-reveal] {
+    clip-path: none !important;
+  }
+  .pull-quote__bar {
+    transform: none !important;
+  }
+}
+
+/* ===== Brand intro (Luxury logo entrance) ===== */
+.brand-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: var(--color-noite, #0b0b1f);
+  pointer-events: none;
+}
+
+.brand-intro.is-done {
+  pointer-events: none;
+}
+
+.brand-intro__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.brand-intro__mark {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+}
+
+.brand-intro__mark img {
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 0 28px rgba(59, 130, 246, 0.45));
+  will-change: transform, opacity, filter;
+}
+
+.brand-intro__ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(34, 211, 238, 0.55);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.35), inset 0 0 24px rgba(34, 211, 238, 0.12);
+  will-change: transform, opacity;
+}
+
+.brand-intro__name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  margin: 0;
+  font-family: var(--font-display, Montserrat, sans-serif);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #eef0ff;
+}
+
+.brand-intro__name .luxury-line {
+  overflow: hidden;
+}
+
+.brand-intro__name .luxury-line--accent .luxury-line__in {
+  background: linear-gradient(100deg, #7c3aed, #3b82f6, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand-intro__rule {
+  display: block;
+  width: min(180px, 40vw);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #22d3ee, #7c3aed, transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* trava o scroll durante a intro */
+html.brand-intro-lock,
+html.brand-intro-lock body {
+  overflow: hidden;
+}
+
+/* Hero fica invisível até a intro terminar (evita conteúdo piscar) */
+html.brand-intro-lock [data-hero-part] {
+  opacity: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-intro {
+    display: none !important;
+  }
+  html.brand-intro-lock,
+  html.brand-intro-lock body {
+    overflow: auto;
+  }
+}
+
+/* ===== Hero logo redonda + distort ===== */
+.hero-logo-wrap {
+  position: relative;
+  z-index: 2;
+  transform: translateZ(40px);
+  display: flex;
+  justify-content: center;
+  padding: 0.25rem 0 1rem;
+}
+
+.hero-logo {
+  position: relative;
+  width: min(480px, 92vw);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.hero-logo__svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.hero-logo__orbit {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.hero-logo__orbit-ring {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(34, 211, 238, 0.35);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.18), inset 0 0 30px rgba(124, 58, 237, 0.08);
+  animation: logo-orbit-spin 22s linear infinite;
+}
+
+.hero-logo__orbit-ring--2 {
+  inset: -4%;
+  border-color: rgba(124, 58, 237, 0.28);
+  border-style: dashed;
+  animation-duration: 32s;
+  animation-direction: reverse;
+}
+
+@keyframes logo-orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-logo__disc {
+  position: relative;
+  width: 74%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(59, 130, 246, 0.35), transparent 45%),
+    radial-gradient(circle at 70% 75%, rgba(124, 58, 237, 0.4), transparent 50%),
+    linear-gradient(160deg, #161633, #0b0b1f 60%, #10102a);
+  border: 3px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 50px rgba(3, 3, 18, 0.55),
+    0 0 0 8px rgba(124, 58, 237, 0.12),
+    0 0 60px rgba(59, 130, 246, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.12);
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+
+.hero-logo:hover .hero-logo__disc {
+  transform: perspective(800px) rotateX(6deg) rotateY(-8deg) scale(1.03);
+  box-shadow:
+    0 28px 60px rgba(3, 3, 18, 0.6),
+    0 0 0 8px rgba(34, 211, 238, 0.14),
+    0 0 80px rgba(59, 130, 246, 0.35),
+    inset 0 2px 0 rgba(255, 255, 255, 0.16);
+}
+
+.hero-logo__face {
+  width: 78%;
+  filter: url(#logoDistort);
+  will-change: filter;
+}
+
+.hero-logo__mark {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+}
+
+.hero-logo__glow {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.22), transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+  animation: logo-breathe 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes logo-breathe {
+  from { opacity: 0.55; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1.05); }
+}
+
+.hero-logo__badges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-chip--logo1 {
+  top: 8%;
+  left: -8%;
+}
+
+.hero-chip--logo2 {
+  bottom: 14%;
+  right: -6%;
+}
+
+@media (max-width: 640px) {
+  .hero-chip--logo1,
+  .hero-chip--logo2 {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo__orbit-ring,
+  .hero-logo__glow {
+    animation: none;
+  }
+  .hero-logo__face {
+    filter: none;
+  }
+}
+
+/* Flight icons: lean do mouse + preserve-3d no container */
+.service-icon,
+.benefit-icon {
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+
+[data-flight-icon] {
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+}
+
+.service-icon [data-flight-icon],
+.benefit-icon [data-flight-icon] {
+  transform: perspective(900px) rotateY(var(--lean-y, 0deg)) rotateX(var(--lean-x, 0deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-flight-icon] {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
+
+/* ===== Flight gallery (espiral de posters) ===== */
+.flight {
+  position: relative;
+  background: var(--color-ink-950, #050512);
+  border-block: 2px solid rgba(0, 0, 0, 0.8);
+}
+
+.flight .dark &,
+.dark .flight {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.flight__track {
+  /* altura extra = espaço de scroll para o voo */
+  height: 380vh;
+  position: relative;
+}
+
+.flight__viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.flight__lean {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--lean-x, 0deg)) rotateY(var(--lean-y, 0deg));
+  will-change: transform;
+}
+
+.flight__scene {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  /* GSAP escreve z/scale aqui — não colocar transform no CSS */
+  will-change: transform;
+}
+
+.flight__header {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  text-align: center;
+  padding: calc(5.5rem + 0.5rem) 1.25rem 1.75rem;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 18, 0.96) 0%,
+    rgba(5, 5, 18, 0.78) 55%,
+    rgba(5, 5, 18, 0) 100%
+  );
+  transform: none;
+}
+
+.flight__field {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.flight__card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(160px, 22vw, 240px);
+  margin: 0;
+  border: 2px solid rgba(0, 0, 0, 0.85);
+  background: #0b0b1f;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--angle, 0deg))
+    translateY(calc(var(--radius, 280px) * -1))
+    rotate(calc(var(--angle, 0deg) * -1))
+    translateZ(var(--z, 0px));
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.flight__card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top;
+  image-rendering: pixelated;
+}
+
+/* fog sutil: cartões muito próximos do fim somem */
+.flight__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(5, 5, 18, 0.35));
+  pointer-events: none;
+}
+
+/* estático no mobile */
+.flight--static .flight__track {
+  height: auto;
+}
+
+.flight--static .flight__viewport {
+  position: relative;
+  height: auto;
+  min-height: auto;
+  overflow: visible;
+  padding: 3.5rem 1rem 4rem;
+}
+
+.flight--static .flight__scene {
+  position: relative;
+  transform: none !important;
+}
+
+.flight--static .flight__header {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  margin-bottom: 1.5rem;
+  background: none;
+  padding: 0;
+  text-align: center;
+}
+
+.flight--static .flight__field {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  inset: auto;
+}
+
+.flight--static .flight__card {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight__scene {
+    transform: none !important;
+  }
+  .flight__track {
+    height: auto;
+  }
+  .flight__viewport {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    padding: 3rem 1rem;
+  }
+  .flight__scene {
+    position: relative;
+  }
+  .flight__header {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin-bottom: 1rem;
+  }
+  .flight__field {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+    inset: auto;
+  }
+  .flight__card {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    transform: none !important;
+  }
+}
+
+/* ===== Túnel espacial pixelado no Flight ===== */
+.flight__viewport {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(59, 130, 246, 0.14), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 30% 80%, rgba(124, 58, 237, 0.12), transparent 60%),
+    #050512;
+}
+
+.flight__tunnel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 700px;
+  perspective-origin: 50% 50%;
+}
+
+.flight__tunnel-grid {
+  position: absolute;
+  left: -40%;
+  right: -40%;
+  top: -20%;
+  height: 70%;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.22) 1px, transparent 1px);
+  background-size: 48px 48px;
+  transform: rotateX(72deg);
+  transform-origin: center bottom;
+  mask-image: linear-gradient(to top, transparent 0%, #000 45%, #000 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 45%, #000 100%);
+  animation: tunnel-scroll 4.5s linear infinite;
+  opacity: 0.7;
+}
+
+.flight__tunnel-grid--floor {
+  top: auto;
+  bottom: -20%;
+  height: 70%;
+  transform: rotateX(-72deg);
+  transform-origin: center top;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 100%);
+  animation-name: tunnel-scroll-floor;
+  opacity: 0.55;
+}
+
+@keyframes tunnel-scroll {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 48px, 48px 0; }
+}
+
+@keyframes tunnel-scroll-floor {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 -48px, -48px 0; }
+}
+
+/* estrelas / pixels flutuantes */
+.flight__stars {
+  position: absolute;
+  inset: 0;
+}
+
+.flight__stars i {
+  position: absolute;
+  display: block;
+  background: rgba(238, 240, 255, 0.7);
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+  animation: star-pulse ease-in-out infinite alternate;
+  image-rendering: pixelated;
+}
+
+.flight__stars i:nth-child(3n) {
+  background: rgba(167, 139, 250, 0.75);
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.55);
+}
+
+.flight__stars i:nth-child(4n) {
+  background: rgba(34, 211, 238, 0.85);
+}
+
+@keyframes star-pulse {
+  from { opacity: 0.25; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+.flight__tunnel-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(50vw, 480px);
+  height: min(50vw, 480px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.22), rgba(124, 58, 237, 0.08) 45%, transparent 70%);
+  animation: tunnel-breathe 5s ease-in-out infinite alternate;
+}
+
+@keyframes tunnel-breathe {
+  from { opacity: 0.55; transform: translate(-50%, -50%) scale(0.92); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+}
+
+/* header e cartões acima do túnel */
+.flight__scene {
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight__tunnel-grid,
+  .flight__stars i,
+  .flight__tunnel-glow {
+    animation: none !important;
+  }
+}
+
+/* ===== Túnel circular — anéis simples (barato de repintar) ===== */
+.flight__tunnel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(59, 130, 246, 0.26) 0%, rgba(124, 58, 237, 0.1) 30%, transparent 60%),
+    #050512;
+}
+
+.flight__tunnel-rings {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+}
+
+/* Cada anel é uma borda sólida: transform barato, sem gradientes gigantes */
+.flight__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(70vmin, 520px);
+  height: min(70vmin, 520px);
+  margin-left: calc(min(70vmin, 520px) / -2);
+  margin-top: calc(min(70vmin, 520px) / -2);
+  border-radius: 50%;
+  border: 2px solid rgba(34, 211, 238, 0.4);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.12), inset 0 0 18px rgba(124, 58, 237, 0.08);
+  animation: ring-fly 6.5s linear infinite;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+.flight__ring:nth-child(even) {
+  border-color: rgba(124, 58, 237, 0.45);
+  width: min(85vmin, 640px);
+  height: min(85vmin, 640px);
+  margin-left: calc(min(85vmin, 640px) / -2);
+  margin-top: calc(min(85vmin, 640px) / -2);
+}
+
+@keyframes ring-fly {
+  0% {
+    transform: scale(0.12);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.75;
+  }
+  80% {
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(1.85);
+    opacity: 0;
+  }
+}
+
+/* núcleo do túnel */
+.flight__tunnel-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(42vmin, 280px);
+  height: min(42vmin, 280px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.32) 0%, rgba(59, 130, 246, 0.16) 40%, transparent 70%);
+  animation: tunnel-core 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes tunnel-core {
+  from { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+  to { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
+}
+
+/* Pausa tudo do túnel quando a seção está fora da tela */
+.flight.is-idle .flight__ring,
+.flight.is-idle .flight__tunnel-core,
+.flight.is-idle .flight__stars i {
+  animation-play-state: paused !important;
+}
+
+.flight.is-idle .flight__lean,
+.flight.is-idle .flight__scene {
+  will-change: auto;
+}
+
+.flight__stars i {
+  position: absolute;
+  display: block;
+  width: 3px;
+  height: 3px;
+  background: rgba(238, 240, 255, 0.7);
+  box-shadow: 0 0 5px rgba(34, 211, 238, 0.5);
+  animation: star-pulse ease-in-out infinite alternate;
+}
+
+.flight__stars i:nth-child(3n) {
+  background: rgba(167, 139, 250, 0.7);
+}
+
+@keyframes star-pulse {
+  from { opacity: 0.25; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight__ring,
+  .flight__tunnel-core,
+  .flight__stars i {
+    animation: none !important;
+  }
+  .flight__ring {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+}
+
+/* ===== Transição suave: fim do túnel → próxima seção ===== */
+.flight {
+  position: relative;
+}
+
+.flight::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: min(50vh, 420px);
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(11, 11, 31, 0.35) 40%,
+    rgba(11, 11, 31, 0.85) 75%,
+    var(--color-noite, #0b0b1f) 100%
+  );
+}
+
+.dark .flight::after {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(11, 11, 31, 0.35) 40%,
+    rgba(11, 11, 31, 0.85) 75%,
+    #0b0b1f 100%
+  );
+}
+
+/* tema claro: esvazia para o fundo claro do corpo */
+html:not(.dark) .flight::after {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(238, 240, 255, 0.5) 55%,
+    #eef0ff 100%
+  );
+}
+
+/* Próxima seção chega um pouco mais "em cima" da saída */
+#processo {
+  position: relative;
+  z-index: 1;
+  margin-top: -1px;
+}
+
+/* Marca d'água de continuidade: linha sutil entre as telas */
+#processo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.35), rgba(34, 211, 238, 0.35), transparent);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight::after {
+    height: 80px;
+  }
+}
+
+
+.flight--static .flight__lean {
+  position: relative;
+  inset: auto;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight__lean {
+    transform: none !important;
+  }
+}
+
+/* ===== Home ocupa a tela toda + dica de scroll ===== */
+#topo {
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+.hero-scrollhint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-pixel, monospace);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(238, 240, 255, 0.55);
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.hero-scrollhint.is-visible {
+  opacity: 1;
+}
+
+.hero-scrollhint__line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.8), transparent);
+  animation: scrollhint-drop 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes scrollhint-drop {
+  0% { transform: scaleY(0.2); opacity: 0; transform-origin: top; }
+  40% { opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; transform-origin: top; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scrollhint__line {
+    animation: none;
+    opacity: 0.5;
   }
 }

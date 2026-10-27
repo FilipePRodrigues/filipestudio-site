@@ -53,6 +53,7 @@ export function PixelIcon({
       width={64}
       height={64}
       className={className ?? 'pixel-art h-full w-full object-contain scale-[1.15]'}
+      data-flight-icon
       loading="lazy"
       decoding="async"
       aria-hidden="true"

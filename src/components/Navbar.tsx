@@ -83,6 +83,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
               <li key={link.href}>
                 <a
                   href={link.href}
+                  data-underline-sweep
                   className={`nav-link ${active === link.href ? 'nav-link--active' : ''}`}
                 >
                   {link.label}
@@ -95,7 +96,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
             {/* wrapper: `hidden` não vence o `inline-flex` do .btn-primary */}
             <span className="hidden sm:block">
-              <a href="#contato" className="btn-primary nav-cta px-3 py-2.5 text-[10px] sm:px-4 sm:text-[11px]">
+              <a href="#contato" data-underline-sweep className="btn-primary nav-cta px-3 py-2.5 text-[10px] sm:px-4 sm:text-[11px]">
                 Orçamento
               </a>
             </span>
