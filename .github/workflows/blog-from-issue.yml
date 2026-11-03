@@ -14,16 +14,20 @@ concurrency:
 
 jobs:
   publish:
-    if: contains(github.event.issue.labels.*.name, 'blog')
+    # Só autores internos: a label 'blog' é o gatilho, mas uma issue de terceiro
+    # rotulada por engano (ou editada depois) nunca pode publicar no repo.
+    if: >
+      contains(github.event.issue.labels.*.name, 'blog') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: main
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
 
@@ -47,7 +51,7 @@ jobs:
           git push
 
       - name: Comment on issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const issue_number = context.payload.issue.number;

@@ -53,10 +53,22 @@ function firstParagraph(text) {
   return (para || cleaned).replace(/\s+/g, ' ').slice(0, 180).trim()
 }
 
+// Data precisa ser um calendário real (2026-02-31 não vale)
+function isValidIsoDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const parsed = new Date(`${value}T00:00:00Z`)
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value
+}
+
 const { data, body: contentRaw } = parseFrontmatter(body)
 const slug = slugify(data.slug || title)
-const date = data.date || new Date().toISOString().slice(0, 10)
-const tags = data.tags || 'blog'
+const date = isValidIsoDate(data.date || '') ? data.date : new Date().toISOString().slice(0, 10)
+// tags entram cruas no YAML gerado — manter só letras/números/espaço/hífen
+const tags = String(data.tags || 'blog')
+  .split(',')
+  .map((t) => t.trim().replace(/[^\p{L}\p{N}\s-]/gu, ''))
+  .filter(Boolean)
+  .join(', ') || 'blog'
 const excerpt = data.excerpt || firstParagraph(contentRaw)
 
 const slugDir = path.join('public', 'blog', slug)
@@ -73,8 +85,10 @@ let match
 
 const assetsDir = `blog/${slug}`
 
+// Nunca aceitar .svg: servido no origin do site como image/svg+xml, executaria
+// <script> ao ser aberto diretamente (XSS armazenado).
 async function downloadImage(url, index) {
-  const extGuess = (url.split('?')[0].match(/\.(png|jpe?g|gif|webp|svg)$/i) || [])[1] || 'png'
+  const extGuess = (url.split('?')[0].match(/\.(png|jpe?g|gif|webp)$/i) || [])[1] || 'png'
   const filename = `img-${String(index + 1).padStart(2, '0')}.${extGuess.toLowerCase()}`
   const res = await fetch(url, {
     headers: {
@@ -126,7 +140,7 @@ const frontmatter = [
   `title: ${JSON.stringify(title)}`,
   `date: ${date}`,
   `excerpt: ${JSON.stringify(excerpt)}`,
-  cover ? `cover: ${cover}` : null,
+  cover ? `cover: ${JSON.stringify(cover)}` : null,
   `tags: [${tags
     .split(',')
     .map((t) => t.trim())

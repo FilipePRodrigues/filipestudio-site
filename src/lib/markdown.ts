@@ -7,6 +7,14 @@ marked.setOptions({
   breaks: true,
 })
 
+// Links com target=_blank sempre recebem rel de segurança (evita tabnabbing
+// em conteúdo de terceiros, ex.: links de issues do blog).
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A' && node.getAttribute('target') === '_blank') {
+    node.setAttribute('rel', 'noopener noreferrer')
+  }
+})
+
 function rewriteAssetPaths(html: string): string {
   return html.replace(
     /(src|href)="\/([^"]+)"/g,
