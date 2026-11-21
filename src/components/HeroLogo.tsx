@@ -137,10 +137,10 @@ export function HeroLogo() {
 
       <div className="hero-logo__badges" aria-hidden="true">
         <span className="hero-chip hero-chip--logo1">
-          <span className="text-[#EF4444]">⚡</span> PageSpeed 98/100
+          <span className="text-roxo">⚡</span> PageSpeed 98/100
         </span>
         <span className="hero-chip hero-chip--logo2">
-          <span className="text-[#F97316]">◆</span> Design exclusivo
+          <span className="text-ciano">◆</span> Design exclusivo
         </span>
       </div>
     </div>
