@@ -1,27 +1,44 @@
 import { SERVICES } from '../data/content.ts'
+import type { Service } from '../types/index.ts'
 import { PixelIcon } from './PixelIcon.tsx'
 import { TiltCard } from './spell/TiltCard.tsx'
 
-export function Services() {
+type ServicesProps = {
+  /** Itens exibidos na seção. */
+  services?: Service[]
+  /** Texto do label acima do título. */
+  label?: string
+  /** Título (h2) da seção. */
+  heading?: string
+  /** Descrição (p) da seção. */
+  description?: string
+}
+
+export function Services({
+  services = SERVICES,
+  label = 'Serviços',
+  heading = 'O que eu faço por você',
+  description =
+    'Do conceito ao deploy — e depois também. Cada projeto pensado pra gerar autoridade, leads e vendas de verdade.',
+}: ServicesProps = {}) {
   return (
     <section id="servicos" className="relative py-20 sm:py-28" aria-labelledby="servicos-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <span className="pixel-label">Serviços</span>
+          <span className="pixel-label">{label}</span>
           <h2
             id="servicos-title"
             className="section-title luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
-            O que eu faço por você
+            {heading}
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Do conceito ao deploy — e depois também. Cada projeto pensado pra gerar
-            autoridade, leads e vendas de verdade.
+            {description}
           </p>
         </div>
-
+        
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 reveal-stagger">
-          {SERVICES.map((service) => (
+          {services.map((service) => (
             <TiltCard key={service.id} className="tilt-panel reveal">
               <article className="service-card h-full">
                 <div className="service-icon">
