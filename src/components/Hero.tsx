@@ -25,8 +25,10 @@ export function Hero() {
               data-hero-part
             >
               Sites e landing pages que{' '}
-              <span className="dark:text-ciano text-roxo">
-                <ShimmerText duration={6}>transformam clique em cliente</ShimmerText>
+              <span className="dark:text-red-300 text-red-600">
+                <ShimmerText className="shimmer-text--home-red" duration={6}>
+                  transformam clique em cliente
+                </ShimmerText>
               </span>
             </h1>
 

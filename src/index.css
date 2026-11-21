@@ -1513,6 +1513,33 @@ html:not(.dark) .shimmer-text {
   );
 }
 
+/* HOME — paleta vermelha no title shimmer */
+.shimmer-text--home-red {
+  color: #ef4444;
+  background-image: linear-gradient(
+    110deg,
+    #ef4444 0%,
+    #ef4444 38%,
+    #fca5a5 50%,
+    #fca5a5 54%,
+    #ef4444 66%,
+    #ef4444 100%
+  );
+}
+
+html:not(.dark) .shimmer-text--home-red {
+  color: #dc2626;
+  background-image: linear-gradient(
+    110deg,
+    #dc2626 0%,
+    #dc2626 38%,
+    #fca5a5 50%,
+    #fca5a5 54%,
+    #dc2626 66%,
+    #dc2626 100%
+  );
+}
+
 @keyframes shimmer-sweep {
   0% { background-position: 130% 0; }
   45% { background-position: -50% 0; }
@@ -1525,6 +1552,17 @@ html:not(.dark) .shimmer-text {
     -webkit-text-fill-color: currentColor;
     color: #22d3ee;
     background: none;
+  }
+
+  .shimmer-text--home-red {
+    animation: none;
+    -webkit-text-fill-color: currentColor;
+    color: #ef4444;
+    background: none;
+  }
+
+  html:not(.dark) .shimmer-text--home-red {
+    color: #dc2626;
   }
 }
 
@@ -1850,7 +1888,7 @@ body > #root {
 .brand-intro__mark img {
   width: 72px;
   height: 72px;
-  filter: drop-shadow(0 0 28px rgba(59, 130, 246, 0.45));
+  filter: drop-shadow(0 0 28px rgba(239, 68, 68, 0.55));
   will-change: transform, opacity, filter;
 }
 
@@ -1858,8 +1896,8 @@ body > #root {
   position: absolute;
   inset: -12px;
   border-radius: 50%;
-  border: 1.5px solid rgba(34, 211, 238, 0.55);
-  box-shadow: 0 0 24px rgba(124, 58, 237, 0.35), inset 0 0 24px rgba(34, 211, 238, 0.12);
+  border: 1.5px solid rgba(239, 68, 68, 0.55);
+  box-shadow: 0 0 24px rgba(239, 68, 68, 0.35), inset 0 0 24px rgba(249, 115, 22, 0.12);
   will-change: transform, opacity;
 }
 
@@ -1882,7 +1920,7 @@ body > #root {
 }
 
 .brand-intro__name .luxury-line--accent .luxury-line__in {
-  background: linear-gradient(100deg, #7c3aed, #3b82f6, #22d3ee);
+  background: linear-gradient(100deg, #ef4444, #f97316, #fb7185);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1893,7 +1931,7 @@ body > #root {
   width: min(180px, 40vw);
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, #22d3ee, #7c3aed, transparent);
+  background: linear-gradient(90deg, transparent, #ef4444, #f97316, transparent);
   transform: scaleX(0);
   transform-origin: center;
   will-change: transform;
@@ -1958,14 +1996,14 @@ html.brand-intro-lock [data-hero-part] {
   position: absolute;
   inset: 6%;
   border-radius: 50%;
-  border: 1.5px solid rgba(34, 211, 238, 0.35);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.18), inset 0 0 30px rgba(124, 58, 237, 0.08);
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.18), inset 0 0 30px rgba(248, 113, 113, 0.08);
   animation: logo-orbit-spin 22s linear infinite;
 }
 
 .hero-logo__orbit-ring--2 {
   inset: -4%;
-  border-color: rgba(124, 58, 237, 0.28);
+  border-color: rgba(239, 68, 68, 0.28);
   border-style: dashed;
   animation-duration: 32s;
   animation-direction: reverse;
@@ -1983,14 +2021,14 @@ html.brand-intro-lock [data-hero-part] {
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 32% 28%, rgba(59, 130, 246, 0.35), transparent 45%),
-    radial-gradient(circle at 70% 75%, rgba(124, 58, 237, 0.4), transparent 50%),
+    radial-gradient(circle at 32% 28%, rgba(239, 68, 68, 0.35), transparent 45%),
+    radial-gradient(circle at 70% 75%, rgba(248, 113, 113, 0.4), transparent 50%),
     linear-gradient(160deg, #161633, #0b0b1f 60%, #10102a);
   border: 3px solid rgba(255, 255, 255, 0.12);
   box-shadow:
     0 20px 50px rgba(3, 3, 18, 0.55),
-    0 0 0 8px rgba(124, 58, 237, 0.12),
-    0 0 60px rgba(59, 130, 246, 0.25),
+    0 0 0 8px rgba(239, 68, 68, 0.12),
+    0 0 60px rgba(239, 68, 68, 0.25),
     inset 0 2px 0 rgba(255, 255, 255, 0.12);
   transform-style: preserve-3d;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
@@ -2000,8 +2038,8 @@ html.brand-intro-lock [data-hero-part] {
   transform: perspective(800px) rotateX(6deg) rotateY(-8deg) scale(1.03);
   box-shadow:
     0 28px 60px rgba(3, 3, 18, 0.6),
-    0 0 0 8px rgba(34, 211, 238, 0.14),
-    0 0 80px rgba(59, 130, 246, 0.35),
+    0 0 0 8px rgba(239, 68, 68, 0.14),
+    0 0 80px rgba(239, 68, 68, 0.35),
     inset 0 2px 0 rgba(255, 255, 255, 0.16);
 }
 
@@ -2023,7 +2061,7 @@ html.brand-intro-lock [data-hero-part] {
   position: absolute;
   inset: -30%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.22), transparent 60%);
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.22), transparent 60%);
   pointer-events: none;
   z-index: -1;
   animation: logo-breathe 4.5s ease-in-out infinite alternate;
@@ -2637,7 +2675,7 @@ html:not(.dark) .flight::after {
 .hero-scrollhint__line {
   width: 1px;
   height: 34px;
-  background: linear-gradient(180deg, rgba(34, 211, 238, 0.8), transparent);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.8), transparent);
   animation: scrollhint-drop 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
