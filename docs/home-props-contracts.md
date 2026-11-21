@@ -10,6 +10,29 @@ Objetivo deste documento: definir **contratos de props/types** para tornar a Hom
 
 ---
 
+## Invariantes globais (não-negociáveis) — para não quebrar motion/DOM/hash
+
+1) **IDs âncora + `aria-labelledby`**
+- IDs de navegação da Home devem permanecer: `#topo`, `#servicos`, `#beneficios`, `#processo`, `#portfolio`, `#planos`, `#faq`, `#contato`.
+- Para cada seção, `aria-labelledby` deve apontar para o `id` do título correspondente (ex.: `hero-title`, `servicos-title`, etc.).
+
+2) **Idempotência por dataset/estrutura (evitar re-render “travando” motion)**
+- `BrandIntro` e `HeroIntro` usam `dataset.done`/flags (motion só executa se o guard permitir).
+- `luxury-title` usa `data-split` e faz split via `title.innerHTML` (preferir títulos como texto + `<br>` simples).
+
+3) **Contratos de motion que dependem de detalhes reais do código**
+- **Pull quote**: motion insere uma `.pull-quote__bar` como **primeiro filho** e anima; o conteúdo deve aceitar inserção como primeiro filho.
+- **Scrub statement**: motion reescreve `innerHTML` (exigir texto simples; não passar markup complexo).
+- **Portfolio image contracts**:
+  - `data-image-zoom` exige `img` dentro para zoom.
+  - `data-image-reveal` sempre anima o frame via `clipPath`; `img` é opcional (se não existir, só não escala o `img`).
+- **Flight icon**: `[data-flight-icon]` é provido por `PixelIcon` (tipicamente em Services/Benefits), não pela PixelGallery.
+
+4) **Preservação de estruturas de lazy/SSR**
+- Evitar tornar `data-hero-part`, `data-hero-intro`, `data-flight-*`, `data-image-*`, `data-spotlight` condicionais ou desmontar/remontar em render incremental sem estratégia (motion depende de nós presentes no DOM.
+
+---
+
 ## Convenções de contrato (aplicável a todas as seções)
 
 ### 1) Modelo de dados vs. DOM
