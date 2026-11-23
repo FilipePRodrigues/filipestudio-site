@@ -1,0 +1,19 @@
+/* ── FS-010.2 · stub de seção — chrome ─────────────────────────────────────────
+   Escopo: chrome global (Navbar, Footer, skip-link, WhatsApp flutuante, overlays).
+   CSS ESCOPADO POR SEÇÃO: cada lote do redesign escreve NO SEU próprio arquivo —
+   nunca no index.css — para zerar conflitos de merge entre workers.
+
+   Regras duras (docs/fase-4-plano-implementacao.md §3.2/§3.3):
+   - classes de contrato (.luxury-*, .reveal, .flight__*) não são renomeadas;
+   - títulos: texto + <br> sob .luxury-title (setupTitleMasks divide em
+     .luxury-line; NUNCA spans .h2-l1/.h2-l2 — o split os destrói);
+   - peças novas com movimento: estado final em reduced-motion (regra no bloco
+     global de prefers-reduced-motion do index.css — contagem 17 preservada) +
+     equivalente mobile/coarse-pointer.
+
+   Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
+   --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
+   --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
+   --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
+   Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+*/
