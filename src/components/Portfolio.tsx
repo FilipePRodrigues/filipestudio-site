@@ -86,7 +86,9 @@ export function Portfolio({
   // Microcopy de apoio aprovada no protótipo (§02) — não comercial e sem
   // repetir o headline do H2 (ajuste do revisor, FS-011.2); contrato do prop
   // (description?: string) preservado.
-  description = '// dois arquivos, dois resultados',
+  // Ajuste (B) da integração: a microcopy vive SÓ no `.pf-head__micro` — o
+  // default do prop fica vazio e o render é condicional (sem duplicação).
+  description = '',
   items = PORTFOLIO,
 }: PortfolioProps = {}) {
   const [active, setActive] = useState(0)
@@ -134,7 +136,11 @@ export function Portfolio({
                 </Fragment>
               ))}
             </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">{description}</p>
+            {/* render condicional (ajuste B): descrição só quando não vazia —
+                a microcopy padrão vive no .pf-head__micro abaixo */}
+            {description ? (
+              <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">{description}</p>
+            ) : null}
           </div>
           <p className="micro pf-head__micro">// dois arquivos, dois resultados</p>
         </div>
