@@ -1,5 +1,5 @@
-/* ── FS-010.2 · stub de seção — faq ─────────────────────────────────────────
-   Escopo: FAQ (acordeão de perguntas).
+/* ── FS-011.4 · FAQ (protótipo 06B — acordeão 1-aberto) ─────────────────────
+   Escopo: FAQ do capítulo "decisão" (bloco B): kicker + H2 bicolor + acordeão.
    CSS ESCOPADO POR SEÇÃO: cada lote do redesign escreve NO SEU próprio arquivo —
    nunca no index.css — para zerar conflitos de merge entre workers.
 
@@ -7,13 +7,185 @@
    - classes de contrato (.luxury-*, .reveal, .flight__*) não são renomeadas;
    - títulos: texto + <br> sob .luxury-title (setupTitleMasks divide em
      .luxury-line; NUNCA spans .h2-l1/.h2-l2 — o split os destrói);
-   - peças novas com movimento: estado final em reduced-motion (regra no bloco
-     global de prefers-reduced-motion do index.css — contagem 17 preservada) +
-     equivalente mobile/coarse-pointer.
+   - peças novas com movimento: estado final em reduced-motion + equivalente
+     mobile/coarse-pointer. [FS-011.4] exceção autorizada pelo lote (mesma do
+     FS-010.7): a degradação reduced-motion fica em bloco PRÓPRIO deste arquivo
+     (o index.css e seus 17 blocos permanecem intocados).
 
    Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
    --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+   (Rótulo mono = --font-pixel; rename para --font-mono só em FS-011.6.)
 */
+
+/* ============================================================
+   SEÇÃO + CABEÇALHO (marcador gradiente, kicker, H2 bicolor, micro)
+   ============================================================ */
+.faq {
+  position: relative;
+  padding-block: 6rem;
+}
+
+/* marcador curto gradiente acima do cabeçalho (protótipo .sec-mark) */
+.faq__mark {
+  width: 56px;
+  height: 3px;
+  margin-bottom: 24px;
+  background: var(--grad-marca);
+}
+
+/* cabeçalho editorial: kicker + título à esquerda, micro à direita */
+.faq__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.faq__title {
+  margin-top: 16px;
+}
+
+.faq__count {
+  white-space: nowrap;
+  padding-top: 6px;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   ACORDEÃO — linha "? mono + pergunta H3", 1 item aberto por vez
+   ============================================================ */
+.faq-list {
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+/* vence o legado .faq-item do index.css (border-2 + card bg + overflow-hidden,
+   do design antigo) — o protótipo usa itens transparentes com um único filete
+   inferior --border; index.css é intocável neste lote (dono serial FS-010.x) */
+.faq .faq-item {
+  overflow: visible;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  transition: none;
+}
+
+/* grid do protótipo: marcador ? (32px) | pergunta (1fr) | chev (24px) */
+.faq-q {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px 1fr 24px;
+  gap: 16px;
+  align-items: baseline;
+  text-align: left;
+  padding: 28px 8px;
+  color: var(--fg);
+  transition: color 0.2s ease;
+}
+
+.faq-q:hover {
+  color: var(--roxo-claro);
+}
+
+.faq-q:focus-visible {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 2px;
+}
+
+.faq-q .qmark {
+  font-family: var(--font-pixel);
+  color: var(--accent-neon);
+}
+
+.faq-q h3 {
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* "+" que vira "×" (rotate 45°) quando o item abre */
+.faq-q .chev {
+  font-family: var(--font-pixel);
+  color: var(--fg-com);
+  transition: transform 0.25s ease;
+}
+
+.faq-q[aria-expanded='true'] .chev {
+  transform: rotate(45deg);
+}
+
+/* painel: visibilidade pelo atributo hidden (contrato a11y); entrada fade-up
+   quando abre (classe .open do item = estado do protótipo) */
+.faq-a {
+  padding: 0 8px 28px 56px;
+  color: var(--fg-mut);
+  max-width: 70ch;
+}
+
+.faq-a[hidden] {
+  display: none;
+}
+
+@keyframes faq-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.faq-item.open .faq-a {
+  animation: faq-fade-up 0.3s ease both;
+}
+
+/* ============================================================
+   RESPONSIVO (ritmo do protótipo: 1024 / 768)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .faq {
+    padding-block: 5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .faq {
+    padding-block: 4rem;
+  }
+
+  .faq__head {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .faq__count {
+    padding-top: 0;
+  }
+}
+
+/* ============================================================
+   REDUCED-MOTION / TOUCH — estado final, sem movimento (bloco próprio:
+   o index.css e seus 17 blocos de reduced-motion permanecem intocados)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .faq-item.open .faq-a {
+    animation: none;
+  }
+
+  .faq-q,
+  .faq-q .chev {
+    transition: none;
+  }
+}
