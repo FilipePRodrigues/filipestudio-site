@@ -7,9 +7,9 @@
    - classes de contrato (.luxury-*, .reveal, .flight__*) não são renomeadas;
    - títulos: texto + <br> sob .luxury-title (setupTitleMasks divide em
      .luxury-line; NUNCA spans .h2-l1/.h2-l2 — o split os destrói);
-   - peças novas com movimento: estado final em reduced-motion (regra no bloco
-     global de prefers-reduced-motion do index.css — contagem 17 preservada) +
-     equivalente mobile/coarse-pointer.
+   - peças novas com movimento: estado final em reduced-motion (bloco
+     prefers-reduced-motion NO FIM DESTE ARQUIVO — o index.css permanece com
+     seus 17 blocos intactos) + equivalente mobile/coarse-pointer.
 
    Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
    --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
@@ -17,3 +17,597 @@
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
 */
+
+/* ============================================================
+   FS-010.4 · NAVBAR (fase-2 §5/01 + §6 — mono = metadados)
+   ============================================================ */
+
+/* régua de assinatura (topo) — grad-marca 3px, aria-hidden */
+.chrome-brand-rule {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--grad-marca);
+  z-index: 120;
+}
+
+.chrome-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+}
+
+.chrome-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 76px;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    height 0.25s ease;
+}
+
+.chrome-bar--scrolled {
+  height: 64px;
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  border-bottom-color: var(--border-strong);
+}
+
+/* marca — monograma oficial (public/monogram.svg, <img>) + wordmark texto */
+.chrome-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.nav-logo {
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.chrome-brand__name {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--fg);
+}
+
+.chrome-brand__suffix {
+  background-image: var(--grad-marca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* links — sans (fala humana); sweep no hover via .sweep-line (motion.ts) */
+.chrome-links {
+  display: none;
+  align-items: center;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding: 0.35rem 0;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--fg-mut);
+  transition: color 0.2s ease;
+}
+
+/* Blog = navegação contextual em mono (§6) */
+.nav-blog {
+  font-family: var(--font-pixel);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--fg-com);
+}
+
+/* CTA Contato — pílula com contorno neon (fase-2 §5/01) */
+.nav-cta {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.35rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fg);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.nav-cta:hover {
+  background: color-mix(in srgb, var(--accent-neon) 12%, transparent);
+  border-color: var(--accent-neon);
+}
+
+/* (E) caso compartilhado — .btn-primary:hover legado deixa bg-roxo-claro
+   residual sob o grad-cta do hover FS-010.2. .btn-primary é usado também por
+   Hero/Contact/Pricing/Benefits/Blog (grep), então a regra legada fica no
+   index.css e o resíduo é neutralizado só no escopo do chrome. */
+.chrome-nav .btn-primary:hover,
+.chrome-menu .btn-primary:hover,
+.chrome-footer .btn-primary:hover {
+  background-color: transparent;
+}
+
+.chrome-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* toggle de tema — camada editorial sobre o ThemeToggle (componente preservado) */
+.chrome-toggle button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--fg-mut);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.chrome-toggle button:hover {
+  transform: none;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--accent-neon) 10%, transparent);
+  border-color: var(--accent-neon);
+  color: var(--fg);
+}
+
+/* burger */
+.nav-burger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--fg);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.nav-burger:hover {
+  border-color: var(--accent-neon);
+  background: color-mix(in srgb, var(--accent-neon) 10%, transparent);
+}
+
+@media (min-width: 640px) {
+  .nav-cta {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chrome-links {
+    display: flex;
+  }
+
+  .nav-burger {
+    display: none;
+  }
+}
+
+/* ============================================================
+   MENU MOBILE — overlay, itens numerados 01…08, stagger ≤50ms
+   ============================================================ */
+
+.chrome-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 6rem 2rem 3rem;
+  background: var(--surface-pixel);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0s linear 0.25s;
+}
+
+.chrome-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0s;
+}
+
+.chrome-menu__head {
+  position: absolute;
+  top: 1.15rem;
+  left: clamp(1.5rem, 5vw, 2rem);
+  right: clamp(1.5rem, 5vw, 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chrome-menu__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chrome-menu__logo {
+  display: block;
+  width: 38px;
+  height: 38px;
+}
+
+.chrome-menu__close {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-mut);
+  transition: color 0.2s ease;
+}
+
+.chrome-menu__close:hover {
+  color: var(--accent-neon);
+}
+
+.chrome-menu__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.chrome-menu__item {
+  border-bottom: 1px solid var(--border);
+}
+
+.chrome-menu__item--cta {
+  margin-top: 1.5rem;
+  border-bottom: 0;
+}
+
+.chrome-menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border: 0;
+  font-family: var(--font-sans);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--fg);
+  box-shadow: none;
+  transition: color 0.2s ease;
+}
+
+.chrome-menu__link:hover {
+  transform: none;
+  box-shadow: none;
+  color: var(--roxo-claro);
+}
+
+.chrome-menu__link.is-active {
+  color: var(--accent-neon);
+}
+
+/* numeração editorial mono (§6) */
+.chrome-menu__num {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--fg-mut);
+}
+
+/* CTA Contato destacado — pílula grad-cta */
+.chrome-menu__cta {
+  justify-content: center;
+  margin-top: 0;
+  padding: 1rem;
+  border: 0;
+  border-radius: 999px;
+  background-image: var(--grad-cta);
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--fg);
+  box-shadow: none;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
+}
+
+.chrome-menu__cta:hover {
+  transform: none;
+  box-shadow: none;
+  filter: brightness(1.08);
+}
+
+.chrome-menu__cta .chrome-menu__num {
+  color: rgba(238, 240, 255, 0.82);
+}
+
+/* stagger de entrada: 45ms entre itens (≤50ms) */
+@keyframes chrome-menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.chrome-menu.is-open .chrome-menu__item {
+  animation: chrome-menu-item-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* ============================================================
+   FOOTER (fase-2 §5/08 — régua grad-marca, colunas mono, LGPD)
+   ============================================================ */
+
+.chrome-footer {
+  border-top: 2px solid transparent;
+  border-image: var(--grad-marca) 1;
+  background: var(--surface-pixel);
+  color: var(--fg-mut);
+}
+
+.chrome-footer__inner {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 4rem clamp(1rem, 4vw, 3rem);
+}
+
+.chrome-footer__grid {
+  display: grid;
+  grid-template-columns: 2fr minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 3rem;
+  padding-block: 1.5rem;
+}
+
+.chrome-footer__logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.chrome-footer__logo {
+  display: block;
+  width: 38px;
+  height: 38px;
+}
+
+.chrome-footer__desc {
+  max-width: 38ch;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--fg-mut);
+}
+
+.chrome-footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.social-link {
+  position: relative;
+  font-family: var(--font-pixel);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-com);
+  transition: color 0.2s ease;
+}
+
+.chrome-footer__col-title {
+  margin-bottom: 1.25rem;
+}
+
+.chrome-footer__col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-link {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--fg-mut);
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--roxo-claro);
+}
+
+/* e-mail/WhatsApp em mono (§6 — metadados de contato) */
+.chrome-footer__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-pixel);
+  font-size: 0.8125rem;
+  word-break: break-all;
+}
+
+.chrome-footer__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* bloco LGPD — integral, contrato #privacidade */
+.chrome-lgpd {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--fg-mut);
+}
+
+.chrome-lgpd h2 {
+  margin-bottom: 0.625rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.chrome-lgpd a {
+  color: var(--accent-neon);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+/* barra final — mono (§6): © · links · eco · voltar ao topo */
+.chrome-footer__end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 2rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-pixel);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--fg-com);
+}
+
+.chrome-footer__end-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.chrome-footer__end a:hover {
+  color: var(--accent-neon);
+}
+
+.chrome-footer__eco {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 1024px) {
+  .chrome-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+    padding-block: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .chrome-footer__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    padding-block: 0.5rem;
+  }
+
+  .chrome-footer__inner {
+    padding-block: 3rem;
+  }
+
+  .chrome-menu {
+    padding: 5.5rem 1.5rem 2.5rem;
+  }
+
+  .chrome-menu__link {
+    font-size: 1.375rem;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — estado final, sem movimento
+   (index.css permanece com seus 17 blocos; este é o bloco do chrome.css)
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .chrome-bar,
+  .nav-link,
+  .nav-cta,
+  .nav-burger,
+  .chrome-toggle button,
+  .chrome-menu,
+  .chrome-menu__item,
+  .chrome-menu__link,
+  .chrome-menu__cta,
+  .chrome-menu__close,
+  .social-link,
+  .footer-link,
+  .chrome-footer__end a {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .chrome-menu {
+    transform: none !important;
+  }
+
+  .chrome-menu.is-open .chrome-menu__item {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-cta:hover,
+  .nav-burger:hover,
+  .chrome-toggle button:hover,
+  .chrome-menu__cta:hover {
+    transform: none !important;
+    filter: none;
+  }
+}

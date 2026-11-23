@@ -235,99 +235,19 @@ body {
   image-rendering: crisp-edges;
 }
 
-/* Navigation — dinâmico no scroll */
-.nav-shell {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition:
-    padding 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s ease,
-    margin 0.35s ease,
-    border-radius 0.35s ease;
-  padding: 0.85rem 1.1rem;
-}
+/* FS-010.4 · limpeza dirigida (fase-4 §3.2): regras legadas pixel das classes
+   usadas APENAS por Navbar/Footer removidas (grep confirmado em src/):
+   .nav-shell*, .nav-logo, .nav-cta, .nav-burger, .nav-mobile (+ keyframes),
+   .mobile-nav-link, .footer-link, .social-link e hovers legados de .nav-link.
+   O visual editorial dessas classes vive em src/styles/home/chrome.css.
+   Exceção compartilhada: .btn-primary:hover (bg-roxo-claro residual sob o
+   grad-cta do FS-010.2) é usado por Hero/Contact/Pricing/Benefits/Blog —
+   mantido aqui; o resíduo é neutralizado por sobrescrita em chrome.css. */
 
-.nav-shell--top {
-  margin-top: 0.25rem;
-  border-radius: 2px;
-  box-shadow: 3px 3px 0 0 rgba(11, 11, 31, 0.12);
-}
 
-.nav-shell--scrolled {
-  padding: 0.55rem 1.1rem;
-  margin-top: 0;
-  border-radius: 2px;
-  box-shadow:
-    0 8px 24px rgba(11, 11, 31, 0.1),
-    4px 4px 0 0 rgba(11, 11, 31, 0.16),
-    8px 8px 0 0 rgba(124, 58, 237, 0.1);
-}
 
-.dark .nav-shell--scrolled {
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.35),
-    4px 4px 0 0 rgba(255, 255, 255, 0.08),
-    8px 8px 0 0 rgba(124, 58, 237, 0.18);
-}
-
-.nav-logo {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
-  box-shadow: 2px 2px 0 0 rgba(11, 11, 31, 0.18);
-}
-
-.group:hover .nav-logo {
-  transform: scale(1.08) rotate(-3deg);
-  box-shadow: 3px 3px 0 0 rgba(124, 58, 237, 0.28);
-}
-
-.nav-cta {
-  transition:
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.25s ease !important;
-}
-
-.nav-cta:hover {
-  transform: translate(2px, 2px) scale(1.02);
-}
-
-.nav-burger {
-  box-shadow: 2px 2px 0 0 rgba(11, 11, 31, 0.15);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.2s ease;
-}
-
-.nav-burger:hover {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 0 rgba(11, 11, 31, 0.15);
-  @apply bg-ciano/20;
-}
-
-.dark .nav-burger:hover {
-  @apply bg-roxo/25;
-}
-
-.nav-mobile {
-  animation: nav-mobile-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-origin: top center;
-}
-
-@keyframes nav-mobile-in {
-  0% {
-    opacity: 0;
-    transform: translateY(-8px) scaleY(0.96);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-}
-
-/* Nav links — underline animado */
-.nav-link {
-  @apply border-2 border-transparent px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300;
-  position: relative;
-  transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
-}
-
+/* Nav links — underline animado (base do ::after = indicador do estado ATIVO;
+   hover usa .sweep-line injetada via [data-underline-sweep] — FS-010.4) */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -341,17 +261,8 @@ body {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.nav-link:hover {
-  @apply border-transparent text-slate-900 dark:text-white;
-}
-
-.nav-link:hover::after,
 .nav-link--active::after {
   transform: scaleX(1);
-}
-
-.nav-link--active {
-  @apply border-transparent text-roxo dark:text-ciano;
 }
 
 .nav-link:focus-visible {
@@ -377,18 +288,8 @@ body {
   }
 }
 
-/* Mobile nav */
-.mobile-nav-link {
-  @apply block border-2 border-black px-4 py-3 text-sm font-semibold text-slate-800 shadow-pixel-sm transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-100;
-}
-
-.footer-link {
-  @apply text-slate-600 transition-colors hover:text-roxo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:text-slate-400 dark:hover:text-ciano;
-}
-
-.social-link {
-  @apply grid h-10 w-10 place-items-center border-2 border-black text-slate-700 shadow-pixel-sm transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-roxo hover:text-white hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-300 dark:hover:bg-roxo dark:hover:text-white;
-}
+/* (.mobile-nav-link/.footer-link/.social-link legados removidos — FS-010.4 (E);
+   foco visível segue pelo bloco FS-010.2 abaixo + visual em chrome.css) */
 
 /* Buttons — profundidade limpa, press sóbrio */
 .btn-primary {
