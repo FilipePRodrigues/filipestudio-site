@@ -1,6 +1,8 @@
 import { METRICS } from '../data/content.ts'
 import { TiltCard } from './spell/TiltCard.tsx'
 
+import type { Metric } from '../types/index.ts'
+
 function metricAnim(value: string): { count?: string; suffix?: string } {
   if (value === '95+') return { count: '95', suffix: '+' }
   if (value === '100%') return { count: '100', suffix: '%' }
@@ -8,12 +10,25 @@ function metricAnim(value: string): { count?: string; suffix?: string } {
   return {}
 }
 
-export function Metrics() {
+type MetricsProps = {
+  /** Itens exibidos na seção. */
+  metrics?: Metric[]
+  /** Texto do aria-label da section. */
+  ariaLabel?: string
+}
+
+export function Metrics({
+  metrics = METRICS,
+  ariaLabel = 'Números do FilipeStudio',
+}: MetricsProps = {}) {
   return (
-    <section className="relative border-y-2 border-black/10 bg-white/50 py-14 dark:border-white/10 dark:bg-white/[0.03]" aria-label="Números do FilipeStudio">
+    <section
+      className="relative border-y-2 border-black/10 bg-white/50 py-14 dark:border-white/10 dark:bg-white/[0.03]"
+      aria-label={ariaLabel}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal-stagger grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {METRICS.map((metric) => {
+          {metrics.map((metric) => {
             const anim = metricAnim(metric.value)
             return (
               <TiltCard

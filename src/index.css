@@ -38,11 +38,11 @@
     6px 6px 0 0 rgba(11, 11, 31, 0.14),
     12px 12px 0 0 rgba(124, 58, 237, 0.14);
 
-  --animate-float: float 7s ease-in-out infinite;
-  --animate-float-delayed: float 9s ease-in-out 1.5s infinite;
-  --animate-pulse-soft: pulseSoft 4s ease-in-out infinite;
+  --animate-float: float 10s cubic-bezier(0.22, 0.9, 0.36, 1) infinite;
+  --animate-float-delayed: float 12s cubic-bezier(0.22, 0.9, 0.36, 1) 1.5s infinite;
+  --animate-pulse-soft: pulseSoft 4.5s ease-in-out infinite;
   --animate-marquee: marquee 28s linear infinite;
-  --animate-blink: blink 1.1s steps(2, start) infinite;
+  --animate-blink: blink 1.35s steps(2, start) infinite;
 
   /* Float preserva a posição 3D de cada peça (vars), sem "achatar" os cards */
   @keyframes float {
