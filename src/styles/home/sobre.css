@@ -10,22 +10,28 @@
    - peças novas com movimento: estado final em reduced-motion (regra no bloco
      global de prefers-reduced-motion do index.css — contagem 17 preservada) +
      equivalente mobile/coarse-pointer.
+     [FS-010.8] exceção autorizada (mesmo padrão do hero.css/chrome.css):
+     a degradação reduced-motion/hover do lift da prancha fica em bloco PRÓPRIO
+     no fim deste arquivo — o index.css não é tocado por este lote exceto pela
+     remoção justificada das regras .flight__* (Flight aposentado, plano §1.3;
+     5 blocos reduced-motion que continham SOMENTE regras .flight__* foram
+     removidos junto — documentado em docs/home-dom-contract.md §3.5).
 
    Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
    --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
 */
 
 /* ── FS-010.3 · shell da composição da seção Sobre ────────────────────────────
-   #sobre abriga PixelGallery + Benefits (#beneficios aninhada) + Metrics.
-   Sem peças de movimento novas neste lote (nenhum bloco
-   prefers-reduced-motion adicional — contagem 17 do index.css preservada). */
+   #sobre abriga PixelGallery + Benefits (#beneficios aninhada) + Metrics. */
 
 .sobre {
   position: relative;
   padding: 5rem 0 0;
+  background: var(--surface-deep);
 }
 
 .sobre__head {
@@ -42,6 +48,210 @@
   white-space: nowrap;
 }
 
+/* ============================================================
+   FS-010.8 · SOBRE (fusão — fase-2 §04): bio → prancha →
+   #beneficios → .metrics
+   ============================================================ */
+
+/* bio editorial (parágrafo grande, medida 60ch — fase-2 §3.1) */
+.sobre__bio {
+  margin-top: 3rem;
+  max-width: 60ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--fg);
+}
+
+.sobre__bio strong {
+  font-weight: 700;
+  background-image: var(--grad-marca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sobre__bio em {
+  font-style: italic;
+}
+
+/* ── Prancha de figuras (contrato §3.5 — substitui o Flight) ── */
+.prancha {
+  margin-top: 6rem;
+}
+
+.prancha__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.prancha__title {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.prancha__sub {
+  margin-top: 0.75rem;
+  max-width: 52ch;
+  color: var(--fg-mut);
+}
+
+.prancha__count {
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.prancha__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 3rem;
+}
+
+.prancha__frame {
+  margin: 0;
+  padding: 12px;
+  background: var(--surface-pixel);
+  border: 2px solid var(--border);
+  box-shadow: 6px 6px 0 rgba(124, 58, 237, 0.28);
+  transition: transform 0.25s ease;
+}
+
+.prancha__frame:hover {
+  transform: translateY(-4px);
+}
+
+.prancha__frame img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.prancha__frame figcaption {
+  margin-top: 12px;
+}
+
+/* ── #beneficios — lista editorial numerada (não cards) ── */
+.beneficios {
+  margin-top: 6rem;
+}
+
+.beneficios__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 4rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.beneficio {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.beneficio .num {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  color: var(--fg-com);
+}
+
+.beneficio__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.beneficio__desc {
+  margin-top: 0.375rem;
+  font-size: 0.9875rem;
+  color: var(--fg-mut);
+}
+
+.beneficios__quote {
+  display: block;
+  margin-top: 2rem;
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--fg-com);
+}
+
+.beneficios__cta {
+  margin-top: 3rem;
+}
+
+/* ── faixa .metrics (prova social — 4 itens, 3 animados) ── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 4rem 0 6rem;
+}
+
+.metric {
+  padding-top: 1.5rem;
+  border-top: 2px solid transparent;
+  border-image: var(--grad-marca) 1;
+}
+
+.metric__value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.metric__label {
+  margin-top: 0.5rem;
+  font-family: var(--font-pixel);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-neon);
+}
+
+.metric__detail {
+  margin-top: 0.625rem;
+  font-size: 0.9375rem;
+  color: var(--fg-mut);
+}
+
+/* ── mobile / tablet ── */
+@media (max-width: 900px) {
+  .prancha__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .beneficios__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.5rem;
+  }
+}
+
 @media (max-width: 640px) {
   .sobre {
     padding-top: 3.5rem;
@@ -49,5 +259,32 @@
 
   .sobre__head {
     padding-bottom: 2rem;
+  }
+
+  .sobre__bio {
+    margin-top: 2rem;
+  }
+
+  .prancha,
+  .beneficios {
+    margin-top: 4rem;
+  }
+
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+    margin-bottom: 4rem;
+  }
+}
+
+/* ── degradação de movimento (exceção autorizada — ver cabeçalho):
+   o lift do hover da prancha é a única peça com movimento deste lote
+   (o reveal é GSAP e já tem guarda prefersReducedMotion) ── */
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .prancha__frame {
+    transition: none;
+  }
+
+  .prancha__frame:hover {
+    transform: none;
   }
 }

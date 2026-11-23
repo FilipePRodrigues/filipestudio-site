@@ -1,12 +1,16 @@
 import { METRICS } from '../data/content.ts'
-import { TiltCard } from './spell/TiltCard.tsx'
 
 import type { Metric } from '../types/index.ts'
 
+/**
+ * Formato `data-count` LIMPO (plano §1.2.4, FS-010.8):
+ * `data-count` = número limpo; `data-suffix` = resto; nó SEM filhos
+ * (`setupCountUp` sobrescreve `textContent`).
+ */
 function metricAnim(value: string): { count?: string; suffix?: string } {
   if (value === '95+') return { count: '95', suffix: '+' }
   if (value === '100%') return { count: '100', suffix: '%' }
-  if (value === '30–90d') return { count: '90', suffix: 'd' }
+  if (value === '30–90d') return { count: '30', suffix: '–90d' }
   return {}
 }
 
@@ -17,48 +21,34 @@ type MetricsProps = {
   ariaLabel?: string
 }
 
+/**
+ * Faixa `.metrics` de prova social (FS-010.8 — fase-2 §04): 4 itens, os 3
+ * animados com count-up (`95`+`+`, `100`+`%`, `30`+`–90d`) e "Mobile-first"
+ * como texto estático. Conteúdo = `METRICS` exato do content.ts.
+ */
 export function Metrics({
   metrics = METRICS,
   ariaLabel = 'Números do FilipeStudio',
 }: MetricsProps = {}) {
   return (
-    <section
-      className="relative border-y-2 border-black/10 bg-white/50 py-14 dark:border-white/10 dark:bg-white/[0.03]"
-      aria-label={ariaLabel}
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="reveal-stagger grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {metrics.map((metric) => {
-            const anim = metricAnim(metric.value)
-            return (
-              <TiltCard
-                key={metric.id}
-                tiltLimit={10}
-                scale={1.05}
-                perspective={1200}
-                className="tilt-panel reveal"
-              >
-                <div className="metric-card h-full">
-                  <div
-                    className="font-display text-3xl font-bold tracking-tight text-roxo sm:text-4xl dark:text-ciano"
-                    {...(anim.count
-                      ? { 'data-count': anim.count, 'data-suffix': anim.suffix }
-                      : {})}
-                  >
-                    {metric.value}
-                  </div>
-                  <div className="mt-2 font-display text-sm font-semibold text-slate-900 dark:text-white">
-                    {metric.label}
-                  </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                    {metric.detail}
-                  </p>
-                </div>
-              </TiltCard>
-            )
-          })}
-        </div>
-      </div>
+    <section className="metrics" aria-label={ariaLabel}>
+      {metrics.map((metric) => {
+        const anim = metricAnim(metric.value)
+        return (
+          <div className="metric" key={metric.id}>
+            <p
+              className="metric__value"
+              {...(anim.count
+                ? { 'data-count': anim.count, 'data-suffix': anim.suffix }
+                : {})}
+            >
+              {metric.value}
+            </p>
+            <p className="metric__label">{metric.label}</p>
+            <p className="metric__detail">{metric.detail}</p>
+          </div>
+        )
+      })}
     </section>
   )
 }
