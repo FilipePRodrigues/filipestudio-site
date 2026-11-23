@@ -1,4 +1,15 @@
 @import "tailwindcss";
+/* FS-010.2 · CSS escopado por seção (stubs) — cada lote escreve no seu arquivo */
+@import "./styles/home/intro.css";
+@import "./styles/home/chrome.css";
+@import "./styles/home/hero.css";
+@import "./styles/home/portfolio.css";
+@import "./styles/home/servicos.css";
+@import "./styles/home/sobre.css";
+@import "./styles/home/processo.css";
+@import "./styles/home/planos.css";
+@import "./styles/home/faq.css";
+@import "./styles/home/contato.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -11,8 +22,11 @@
      --font-display / --font-sans : "Space Grotesk" → "Space Grotesk Fallback" → "Montserrat" → Arial → sans-serif
      --font-pixel (mono)          : "JetBrains Mono" → "JetBrains Mono Fallback" → ui-monospace → "Courier New" → monospace
    ("Space Grotesk Fallback"/"JetBrains Mono Fallback" são as faces locais abaixo, com métricas
-   ajustadas — na prática resolvem para Montserrat/Arial e Menlo/Courier New, preservando a ordem
-   de fallback declarada: Space Grotesk > Montserrat > Arial e JetBrains Mono > ui-monospace.)
+   ajustadas — UMA face por família: duas faces com o mesmo nome se sobrepõem e só a última
+   valia (face morta), então a cadeia local vive em um único `src`. "Space Grotesk Fallback"
+   resolve para Montserrat → Arial → Liberation Sans; "JetBrains Mono Fallback" para
+   Menlo/Courier New. Ordem de fallback preservada: Space Grotesk > Montserrat > Arial e
+   JetBrains Mono > ui-monospace.)
 
    Mitigação de CLS (plano §2.4): faces "fallback" locais com size-adjust/ascent-override/
    descent-override derivados de métricas reais (hhea + larguras de avanço medidas em amostra de
@@ -27,25 +41,18 @@
    Dimensões reservadas: imagens já auditadas com width/height explícitos (preview/MOBILE.md) —
    mantidas sem alteração neste lote (tipografia apenas).                           ─────────────── */
 
-/* Fallback métrico de Space Grotesk sobre Montserrat local (prosa: Montserrat ≈ 1.03× SG). */
+/* Fallback métrico de Space Grotesk — UMA face por família (FS-010.2 · correção
+   do revisor: as duas faces "Space Grotesk Fallback" tinham descritores idênticos
+   e só a última valia — face morta). Cadeia local em um único src: Montserrat →
+   Arial → Liberation Sans; size-adjust/ascent/descent-override da família primária
+   da cadeia (Montserrat; prosa: Montserrat ≈ 1.03× SG). */
 @font-face {
   font-family: "Space Grotesk Fallback";
-  src: local("Montserrat");
+  src: local("Montserrat"), local("Arial"), local("Liberation Sans");
   font-weight: 400 700;
   size-adjust: 97.1%;
   ascent-override: 101.3%;
   descent-override: 30.1%;
-  line-gap-override: 0%;
-}
-
-/* Fallback métrico de Space Grotesk sobre Arial/Liberation Sans local (prosa: Arial ≈ 0.92× SG). */
-@font-face {
-  font-family: "Space Grotesk Fallback";
-  src: local("Arial"), local("Liberation Sans");
-  font-weight: 400 700;
-  size-adjust: 108.7%;
-  ascent-override: 90.5%;
-  descent-override: 26.9%;
   line-gap-override: 0%;
 }
 
@@ -141,6 +148,54 @@
       opacity: 0;
     }
   }
+}
+
+/* ============================================================
+   FS-010.2 · TOKENS VISUAIS (fase-2-direcao-criativa.md §2.1/§2.2)
+   Colunas dark (default) e light; valores conforme o protótipo de
+   referência (preview/filipestudio-home-preview.html). Nomes de token
+   de fonte (--font-display/--font-sans/--font-pixel) NÃO mudam
+   (rename --font-pixel → --font-mono só em FS-011.6).
+   ============================================================ */
+:root {
+  /* superfícies */
+  --bg: #0b0b1f; /* Noite — fundo base */
+  --surface: #12122e; /* superfície elevada: cards, faixas */
+  --surface-deep: #1b1550; /* Índigo Profundo: seções com identidade própria */
+  --surface-pixel: #070714; /* trilhos/molduras de pixel art */
+  /* texto */
+  --fg: #eef0ff; /* Névoa */
+  --fg-mut: rgba(238, 240, 255, 0.62);
+  /* fg-com elevado para AA em textos mono pequenos (12px): ≥5.9:1 em todos os fundos dark */
+  --fg-com: rgba(238, 240, 255, 0.6);
+  /* destaque */
+  --accent: #7c3aed; /* Roxo Código */
+  --accent-2: #3b82f6; /* Azul Deploy */
+  --accent-neon: #22d3ee; /* Ciano Neon */
+  --roxo-claro: #a78bfa;
+  /* bordas (névoa sobre noite) */
+  --border: rgba(238, 240, 255, 0.1);
+  --border-strong: rgba(34, 211, 238, 0.35); /* contorno neon */
+  /* gradientes autorizados (§2.2) — exatamente 3, nada além */
+  --grad-marca: linear-gradient(90deg, #7c3aed 0%, #3b82f6 50%, #22d3ee 100%);
+  --grad-cta: linear-gradient(135deg, #7c3aed, #22d3ee);
+  --grad-voile: radial-gradient(60% 50% at 50% 0%, rgba(124, 58, 237, 0.18), transparent);
+}
+
+/* Coluna light (§2.1) — contrato html.dark + useTheme: light = sem .dark;
+   `html.light` aceito por paridade com o protótipo. FS-010.12 fecha a ligação. */
+html.light,
+html:not(.dark) {
+  --bg: #eef0ff; /* Névoa */
+  --surface: #ffffff;
+  --surface-deep: #e4e7fa;
+  --surface-pixel: #f5f6ff;
+  --fg: #0b0b1f; /* Noite */
+  --fg-mut: rgba(11, 11, 31, 0.62);
+  --fg-com: rgba(11, 11, 31, 0.62);
+  --accent-neon: #0891b2; /* ciano escurecido p/ contraste AA em fundo claro */
+  --border: rgba(11, 11, 31, 0.12); /* noite */
+  --border-strong: rgba(124, 58, 237, 0.35);
 }
 
 /* Base */
@@ -2705,10 +2760,182 @@ html:not(.dark) .flight::after {
   100% { transform: scaleY(1); opacity: 0; transform-origin: top; }
 }
 
+/* ============================================================
+   FS-010.2 · ESTADOS INTERATIVOS (fase-2 §2.3)
+   ============================================================ */
+
+/* Focus-visible acessível (ambos os temas, via token --accent-neon) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 3px;
+}
+
+/* controles com outline próprio — mesmo contorno neon */
+.nav-link:focus-visible,
+.mobile-nav-link:focus-visible,
+.footer-link:focus-visible,
+.social-link:focus-visible {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 3px;
+}
+
+/* hover (link): cor → --roxo-claro; underline sweep (.sweep-line) 0.25s */
+[data-underline-sweep]:hover {
+  color: var(--roxo-claro);
+}
+.sweep-line {
+  transition-duration: 0.25s;
+}
+
+/* hover (CTA primário): grad-cta → brilho + lift + glow */
+.btn-primary:hover {
+  background-image: var(--grad-cta);
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.25);
+}
+
+/* hover (CTA secundário): borda → --accent-neon, texto → --fg */
+.btn-secondary:hover {
+  border-color: var(--accent-neon);
+  color: var(--fg);
+}
+
+/* hover (card): borda neon + lift 0.25s; spotlight sutil reusa setupSpotlight */
+[data-spotlight] {
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+[data-spotlight]:hover {
+  border-color: rgba(34, 211, 238, 0.35);
+  transform: translateY(-4px);
+}
+
+/* pressed: scale(.97) — press-feedback (setupPressFeedback) mantém o inline */
+.btn-primary:active,
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+/* ativo (nav): texto --accent-neon + underline grad-marca */
+.nav-link--active {
+  color: var(--accent-neon);
+}
+.nav-link::after {
+  background-image: var(--grad-marca);
+}
+
+/* ============================================================
+   FS-010.2 · KIT EDITORIAL (fase-2 §3.2/§3.3/§3.4)
+   ============================================================ */
+
+/* kicker mono "// secao" (12px) */
+.kicker {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  color: var(--fg-com);
+}
+
+/* micro-copy mono (instrução/legenda) */
+.micro {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--fg-com);
+}
+
+/* legenda de figura — conteúdo "fig. NN · legenda" */
+.fig {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--fg-com);
+}
+
+/* status bar mono (faixa de metadados) */
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--fg-com);
+}
+.status-bar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.status-bar__sep {
+  color: var(--border-strong);
+}
+
+/* H2 bicolor (§3.4) — PADRÃO OBRIGATÓRIO: texto + <br> sob .luxury-title.
+   setupTitleMasks (motion.ts) divide cada linha em
+   .luxury-title > .luxury-line > .luxury-line__in — NUNCA spans de linha
+   partidos no markup (ex.: classes de linha .h2-… — o split os destrói).
+   Linha 1: peso 500 + --fg; linha 2: peso 700
+   com fill de grad-marca (background-size 0→100% em .is-visible). */
+.luxury-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.luxury-title .luxury-line:nth-of-type(1) .luxury-line__in {
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.luxury-title .luxury-line:nth-of-type(2) .luxury-line__in {
+  font-weight: 700;
+  background-image: var(--grad-marca);
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-size 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.luxury-title.is-visible .luxury-line:nth-of-type(2) .luxury-line__in {
+  background-size: 100% 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-scrollhint__line {
     animation: none;
     opacity: 0.5;
+  }
+
+  /* FS-010.2 — estados §2.3 e fill do H2 em estado final, sem movimento
+     (regra acrescida a este bloco existente: a contagem de blocos de
+     reduced-motion do arquivo permanece 17) */
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .btn-primary:active,
+  .btn-secondary:active,
+  [data-spotlight]:hover {
+    transform: none;
+    transition: none;
+    filter: none;
+  }
+
+  .luxury-title .luxury-line:nth-of-type(2) .luxury-line__in {
+    transition: none;
+    background-size: 100% 100%;
   }
 }
 
