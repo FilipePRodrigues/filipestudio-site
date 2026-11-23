@@ -1,6 +1,7 @@
 import { BRAND, NAV_LINKS, SOCIAL_LINKS, whatsappLink } from '../data/content.ts'
 import { assetUrl } from '../lib/asset.ts'
 import { MailIcon, WhatsAppIcon } from './icons.tsx'
+import { StatusClock } from './StatusClock.tsx'
 
 const SERVICE_LINKS = [
   'Sites Institucionais',
@@ -141,6 +142,8 @@ export function Footer() {
             </a>
           </div>
           <p className="chrome-footer__eco">// treina · programa · negocia</p>
+          {/* FS-011.2 — relógio/status autoral na barra final (decisão 5) */}
+          <StatusClock />
           <a href="#topo" className="footer-link chrome-footer__top">
             Voltar ao topo ↑
           </a>

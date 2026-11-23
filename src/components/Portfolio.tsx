@@ -83,7 +83,10 @@ export function Portfolio({
   // prop (title?: string) preservado — strings de linha única renderizam como
   // antes.
   title = 'Projetos reais,\ndo design ao deploy.',
-  description = 'Projetos reais, do design ao deploy. Clica pra abrir.',
+  // Microcopy de apoio aprovada no protótipo (§02) — não comercial e sem
+  // repetir o headline do H2 (ajuste do revisor, FS-011.2); contrato do prop
+  // (description?: string) preservado.
+  description = '// dois arquivos, dois resultados',
   items = PORTFOLIO,
 }: PortfolioProps = {}) {
   const [active, setActive] = useState(0)
