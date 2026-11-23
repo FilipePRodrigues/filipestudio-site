@@ -10,10 +10,285 @@
    - peças novas com movimento: estado final em reduced-motion (regra no bloco
      global de prefers-reduced-motion do index.css — contagem 17 preservada) +
      equivalente mobile/coarse-pointer.
+     [FS-010.7] exceção autorizada pelo lote: a degradação reduced-motion do
+     marquee da TechStrip fica em bloco PRÓPRIO deste arquivo (o index.css e
+     seus 17 blocos permanecem intocados).
 
    Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
    --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
 */
+
+/* ============================================================
+   FS-010.7 · SERVIÇOS (fase-2 §5.03 — grid editorial D 3×2)
+   ============================================================ */
+
+.servicos {
+  position: relative;
+  padding: 5rem 0 0;
+}
+
+.servicos__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-bottom: 3rem;
+}
+
+.servicos__count {
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* grid editorial 3×2 (padrão D — fase-2 §3.1) */
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.svc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  /* hover (lift + borda) vem do kit [data-spotlight] no index.css */
+}
+
+/* destaque editorial (fase-2 §5.03): "Landing Pages que Convertem" ganha
+   borda grad-marca de 2px no topo */
+.svc-card--feature {
+  border-top: none;
+}
+
+.svc-card--feature::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--grad-marca);
+  border-radius: 12px 12px 0 0;
+}
+
+/* linha superior: numeração mono 01–06 + prancha fig. com PixelIcon */
+.svc-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.svc-num {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  color: var(--fg-com);
+}
+
+.svc-fig {
+  min-width: 0;
+  margin: 0;
+}
+
+/* frame pixel do ícone (refaz a caixa legacy .service-icon neste escopo;
+   mantém o wrapper para o lean de [data-flight-icon] do index.css) */
+.svc-fig .service-icon {
+  box-sizing: border-box;
+  width: 76px;
+  height: auto;
+  aspect-ratio: 244 / 165;
+  padding: 6px;
+  border: 2px solid var(--border);
+  background: var(--surface-pixel);
+  box-shadow: none;
+  transform: none;
+}
+
+.svc-fig .service-icon .svc-fig__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transform: none;
+  scale: none;
+}
+
+.svc-fig figcaption {
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+
+.svc-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--fg);
+}
+
+.svc-card > p {
+  font-size: 1rem;
+  color: var(--fg-mut);
+}
+
+.svc-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: auto 0 0;
+  padding: 8px 0 0;
+  list-style: none;
+}
+
+.svc-bullets li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.9375rem;
+  color: var(--fg-mut);
+}
+
+.svc-bullets li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  font-family: var(--font-pixel);
+  color: var(--accent-neon);
+}
+
+.svc-cta {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   FS-010.7 · TECHSTRIP — régua fina full-bleed (fusão §5.03)
+   ============================================================ */
+
+.tech-strip {
+  overflow: hidden;
+  margin-top: 96px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-pixel);
+}
+
+.tech-track {
+  display: flex;
+  gap: 56px;
+  width: max-content;
+  margin: 0;
+  padding: 18px 0;
+  list-style: none;
+  animation: tech-marquee 36s linear infinite;
+}
+
+.tech-strip:hover .tech-track,
+.tech-strip:focus-within .tech-track {
+  animation-play-state: paused;
+}
+
+.tech-item {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  letter-spacing: 0.14em;
+  color: var(--fg-com);
+  white-space: nowrap;
+}
+
+.tech-item::before {
+  content: '◆';
+  margin-right: 56px;
+  font-size: 0.6rem;
+  vertical-align: 2px;
+  color: var(--accent);
+}
+
+@keyframes tech-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* degradação do marquee: estado final + overflow scroll estático; a metade
+   de loop (aria-hidden) some para não duplicar conteúdo rolável */
+@media (prefers-reduced-motion: reduce) {
+  .tech-track {
+    animation: none;
+  }
+
+  .tech-strip {
+    overflow-x: auto;
+  }
+
+  .tech-item[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* equivalente mobile/coarse-pointer (regra dura do stub): sem marquee */
+@media (max-width: 767px), (pointer: coarse) {
+  .tech-track {
+    animation: none;
+  }
+
+  .tech-strip {
+    overflow-x: auto;
+  }
+
+  .tech-item[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* ============================================================
+   RESPONSIVO — grid 3 → 2 → 1 (breakpoints do protótipo)
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .svc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .servicos__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 2rem;
+  }
+
+  .svc-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .servicos {
+    padding-top: 3.5rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .tech-track {
+    gap: 36px;
+  }
+
+  .tech-item::before {
+    margin-right: 36px;
+  }
+}
