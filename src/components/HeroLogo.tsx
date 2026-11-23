@@ -2,9 +2,12 @@ import { useEffect, useRef } from 'react'
 import { assetUrl } from '../lib/asset.ts'
 
 /**
- * Logo redonda do hero.
- * Entrada 3D + distort líquido no hover (estilo Museum of Motion / Distort),
- * via filtro SVG feTurbulence + feDisplacementMap. Sem WebGL pesado.
+ * Monograma do palco do hero (FS-010.5 — recomposição editorial do disco).
+ * Disco + distort líquido no hover (estilo Museum of Motion / Distort) via
+ * filtro SVG feTurbulence + feDisplacementMap. Sem WebGL pesado.
+ *
+ * CONTRATO (docs/fase-4-plano-implementacao.md §3.2):
+ * `[data-image-zoom]` no disco com `<img>` DIRETO filho (sem wrapper).
  */
 export function HeroLogo() {
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -81,7 +84,6 @@ export function HeroLogo() {
     wrap.addEventListener('pointerenter', () => {
       lastT = performance.now()
     })
-
     return () => {
       wrap.removeEventListener('pointermove', onMove)
       wrap.removeEventListener('pointerleave', onLeave)
@@ -114,34 +116,17 @@ export function HeroLogo() {
         </defs>
       </svg>
 
-      <div className="hero-logo__orbit" aria-hidden="true">
-        <span className="hero-logo__orbit-ring" />
-        <span className="hero-logo__orbit-ring hero-logo__orbit-ring--2" />
-      </div>
-
       <div className="hero-logo__disc" data-image-zoom>
-        <div className="hero-logo__face">
-          <img
-            src={assetUrl('/monogram.svg')}
-            alt="Símbolo FilipeStudio"
-            width={280}
-            height={280}
-            className="hero-logo__mark"
-            draggable={false}
-            fetchPriority="high"
-            decoding="async"
-          />
-        </div>
-        <div className="hero-logo__glow" aria-hidden="true" />
-      </div>
-
-      <div className="hero-logo__badges" aria-hidden="true">
-        <span className="hero-chip hero-chip--logo1">
-          <span className="text-roxo">⚡</span> PageSpeed 98/100
-        </span>
-        <span className="hero-chip hero-chip--logo2">
-          <span className="text-ciano">◆</span> Design exclusivo
-        </span>
+        <img
+          src={assetUrl('/monogram.svg')}
+          alt="Símbolo FilipeStudio"
+          width={280}
+          height={280}
+          className="hero-logo__mark"
+          draggable={false}
+          fetchPriority="high"
+          decoding="async"
+        />
       </div>
     </div>
   )
