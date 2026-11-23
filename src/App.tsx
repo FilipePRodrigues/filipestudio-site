@@ -1,23 +1,21 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Benefits } from './components/Benefits.tsx'
 import { Contact } from './components/Contact.tsx'
 import { CursorFX } from './components/CursorFX.tsx'
 import { FAQ } from './components/FAQ.tsx'
 import { FloatingWhatsApp } from './components/FloatingWhatsApp.tsx'
 import { Footer } from './components/Footer.tsx'
 import { Hero } from './components/Hero.tsx'
-import { Metrics } from './components/Metrics.tsx'
 import { Navbar } from './components/Navbar.tsx'
 import { PixelBackground } from './components/PixelBackground.tsx'
 import { BrandIntro } from './components/BrandIntro.tsx'
 import { SiteAnimatedGradient } from './components/spell/AnimatedGradient.tsx'
-import { PixelGallery } from './components/PixelGallery.tsx'
 import { Portfolio } from './components/Portfolio.tsx'
 import { Pricing } from './components/Pricing.tsx'
 import { Process } from './components/Process.tsx'
 import { ScrollDepth } from './components/ScrollDepth.tsx'
 import { ScrollProgress } from './components/ScrollProgress.tsx'
 import { Services } from './components/Services.tsx'
+import { Sobre } from './components/Sobre.tsx'
 import { TechStrip } from './components/TechStrip.tsx'
 import { useMouseParallax } from './hooks/useMouseParallax.ts'
 import { useScrollFX } from './hooks/useScrollFX.ts'
@@ -78,18 +76,30 @@ function Landing({ section }: { section: string }) {
     }
   }, [section])
 
+  // Ordem aprovada (FS-010.3): Hero → Portfolio → Serviços (TechStrip como régua
+  // no rodapé do bloco) → Sobre (shell da fusão) → Processo → capítulo "decisão"
+  // (Planos → FAQ) → Contato. Fusões são de composição/posição — componentes e
+  // conteúdo intactos.
   return (
     <main id="conteudo">
+      {/* 01 — Hero (#topo) */}
       <Hero />
-      <TechStrip />
-      <Services />
-      <Benefits />
-      <Metrics />
-      <PixelGallery />
-      <Process />
+      {/* 02 — Portfolio (#portfolio) */}
       <Portfolio />
+      {/* 03 — Serviços (#servicos) · TechStrip reposicionada como régua no
+          rodapé do bloco (composição via App.tsx; TechStrip.tsx intacto) */}
+      <Services />
+      <TechStrip />
+      {/* 04 — Sobre (#sobre): shell editorial com PixelGallery + Benefits
+          (#beneficios aninhada) + Metrics */}
+      <Sobre />
+      {/* 05 — Processo (#processo) */}
+      <Process />
+      {/* Capítulo "decisão" — 06 Planos (#planos) → 07 FAQ (#faq); fusão só de
+          posição/ritmo, seções e âncoras próprias preservadas */}
       <Pricing />
       <FAQ />
+      {/* 08 — Contato (#contato) */}
       <Contact />
     </main>
   )

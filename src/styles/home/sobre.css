@@ -17,3 +17,37 @@
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
 */
+
+/* ── FS-010.3 · shell da composição da seção Sobre ────────────────────────────
+   #sobre abriga PixelGallery + Benefits (#beneficios aninhada) + Metrics.
+   Sem peças de movimento novas neste lote (nenhum bloco
+   prefers-reduced-motion adicional — contagem 17 do index.css preservada). */
+
+.sobre {
+  position: relative;
+  padding: 5rem 0 0;
+}
+
+.sobre__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-bottom: 3rem;
+}
+
+.sobre__count {
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .sobre {
+    padding-top: 3.5rem;
+  }
+
+  .sobre__head {
+    padding-bottom: 2rem;
+  }
+}
