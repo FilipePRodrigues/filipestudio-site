@@ -10,10 +10,289 @@
    - peças novas com movimento: estado final em reduced-motion (regra no bloco
      global de prefers-reduced-motion do index.css — contagem 17 preservada) +
      equivalente mobile/coarse-pointer.
+     [FS-010.9] exceção autorizada pelo lote: a degradação reduced-motion do
+     stepper (troca de etapa instantânea, sem fade/lift) fica em bloco PRÓPRIO
+     deste arquivo (o index.css e seus 17 blocos permanecem intocados).
 
    Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
    --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
 */
+
+/* ============================================================
+   FS-010.9 · PROCESSO (fase-2 §5.05 — padrão E 4/8: stepper + grade)
+   Stepper 01–04 por radios `:checked` (teclado nativo, sem JS novo);
+   grade semana/dia decorativa como "dado visual" do cronograma.
+   ============================================================ */
+
+.processo {
+  position: relative;
+  padding: 5rem 0;
+}
+
+/* barra de identidade da seção (sec-mark do protótipo — decorativa) */
+.processo__mark {
+  width: 56px;
+  height: 3px;
+  margin-bottom: 24px;
+  background: var(--grad-marca);
+}
+
+.processo__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.processo__count {
+  padding-top: 6px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.processo__lead {
+  margin-top: 24px;
+  max-width: 60ch;
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--fg-mut);
+}
+
+.processo__foot {
+  margin-top: 32px;
+}
+
+/* ── stepper 4/8 (padrão E — fase-2 §3.1) ─────────────────────────────────────
+   Seletores `~` canônicos para as 4 etapas de PROCESS_STEPS (01–04).
+   Os radios são irmãos de .stepper/.proc-panels dentro de .process-grid. */
+.process-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 48px;
+  margin-top: 48px;
+}
+
+.processo .proc-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.processo .stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.processo .stepper li label {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.processo .num {
+  font-family: var(--font-pixel);
+  font-size: 0.875rem;
+  color: var(--fg-com);
+}
+
+.processo .step-title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* hover (lift) só em pointer fino — coarse/mobile fica sem hover "presa" */
+@media (hover: hover) and (pointer: fine) {
+  .processo .stepper li label:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+  }
+}
+
+/* etapa ativa: borda grad-marca + num neon (fase-2 §5.05) */
+.processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1) label,
+.processo .proc-radio:nth-of-type(2):checked ~ .stepper li:nth-child(2) label,
+.processo .proc-radio:nth-of-type(3):checked ~ .stepper li:nth-child(3) label,
+.processo .proc-radio:nth-of-type(4):checked ~ .stepper li:nth-child(4) label {
+  border-color: var(--border-strong);
+  background: var(--surface);
+  border-top: 2px solid transparent;
+  border-image: var(--grad-marca) 1;
+}
+
+.processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1) label .num,
+.processo .proc-radio:nth-of-type(2):checked ~ .stepper li:nth-child(2) label .num,
+.processo .proc-radio:nth-of-type(3):checked ~ .stepper li:nth-child(3) label .num,
+.processo .proc-radio:nth-of-type(4):checked ~ .stepper li:nth-child(4) label .num {
+  color: var(--accent-neon);
+}
+
+/* anel de foco no label do radio focado (teclado) */
+.processo .proc-radio:nth-of-type(1):focus-visible ~ .stepper li:nth-child(1) label,
+.processo .proc-radio:nth-of-type(2):focus-visible ~ .stepper li:nth-child(2) label,
+.processo .proc-radio:nth-of-type(3):focus-visible ~ .stepper li:nth-child(3) label,
+.processo .proc-radio:nth-of-type(4):focus-visible ~ .stepper li:nth-child(4) label {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 3px;
+}
+
+/* painéis de descrição (à direita) */
+.processo .proc-panels {
+  position: relative;
+}
+
+.processo .proc-panel {
+  display: none;
+}
+
+.processo .proc-panel h3 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.processo .proc-panel p {
+  margin-top: 16px;
+  max-width: 56ch;
+  color: var(--fg-mut);
+}
+
+.processo .proc-radio:nth-of-type(1):checked ~ .proc-panels .proc-panel:nth-child(1),
+.processo .proc-radio:nth-of-type(2):checked ~ .proc-panels .proc-panel:nth-child(2),
+.processo .proc-radio:nth-of-type(3):checked ~ .proc-panels .proc-panel:nth-child(3),
+.processo .proc-radio:nth-of-type(4):checked ~ .proc-panels .proc-panel:nth-child(4) {
+  display: block;
+  animation: processo-fade-up 0.35s ease both;
+}
+
+@keyframes processo-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── grade semana/dia (decorativa — "dado visual" do cronograma) ────────────── */
+.processo .week-grid {
+  margin-top: 48px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.processo .week-cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.processo .week h4 {
+  margin-bottom: 12px;
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--fg-com);
+}
+
+.processo .days {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.processo .days i {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* dia preenchido: fill grad-marca (progressivo até o dia 15) */
+.processo .days i.on {
+  border-color: transparent;
+  background: var(--grad-marca);
+}
+
+.processo .week-marker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+}
+
+.processo .week-note {
+  margin-top: 16px;
+}
+
+/* ── responsivo (protótipo §RESPONSIVO — 768) ───────────────────────────────── */
+@media (max-width: 768px) {
+  .processo {
+    padding: 4rem 0;
+  }
+
+  .processo__head {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .process-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .processo .week-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── prefers-reduced-motion: stepper/painel instantâneos (bloco próprio) ──────
+   Estado final direto: sem lift no hover e sem fade na troca de etapa.
+   Mesmos seletores das regras que neutraliza (mesma especificidade, depois
+   delas) — senão :checked/:hover vencem o bloco.
+   Os 17 blocos do index.css permanecem intocados (contagem preservada). */
+@media (prefers-reduced-motion: reduce) {
+  .processo .stepper li label {
+    transition: none;
+    transform: none;
+  }
+
+  .processo .stepper li label:hover {
+    transform: none;
+  }
+
+  .processo .proc-radio:nth-of-type(1):checked ~ .proc-panels .proc-panel:nth-child(1),
+  .processo .proc-radio:nth-of-type(2):checked ~ .proc-panels .proc-panel:nth-child(2),
+  .processo .proc-radio:nth-of-type(3):checked ~ .proc-panels .proc-panel:nth-child(3),
+  .processo .proc-radio:nth-of-type(4):checked ~ .proc-panels .proc-panel:nth-child(4) {
+    animation: none;
+  }
+}
