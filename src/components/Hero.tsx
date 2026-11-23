@@ -71,9 +71,13 @@ export function Hero({
             </div>
           </div>
 
-          <div className="min-w-0" aria-hidden="true" data-hero-part data-parallax="50">
+          <div className="min-w-0" aria-hidden="true" data-hero-part data-parallax="65">
             <div className="hero-stage relative mx-auto w-full max-w-md lg:max-w-lg">
-              <div className="hero-stage__scene">
+              <div className="hero-stage__scene relative">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-roxo/20 via-ciano/10 to-transparent blur-2xl opacity-70"
+                />
                 <div className="hero-logo-wrap">
                   <HeroLogo />
                 </div>
