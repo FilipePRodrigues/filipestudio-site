@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { BRAND, mailtoLink, whatsappLink } from '../data/content.ts'
 import type { ContactFormData, ProjectType } from '../types/index.ts'
 import { LightRays } from './spell/LightRays.tsx'
-import { ArrowRight, MailIcon, WhatsAppIcon } from './icons.tsx'
+import { MailIcon, WhatsAppIcon } from './icons.tsx'
 
 const PROJECT_TYPES: { value: ProjectType; label: string }[] = [
   { value: '', label: 'Selecione uma opção' },
@@ -20,6 +20,25 @@ const EMPTY_FORM: ContactFormData = {
   projectType: '',
   message: '',
 }
+
+/** Régua mono de 3 colunas de apoio (fase-2 §5.07) — textos reais do inventário. */
+const APOIO: { num: string; title: string; text: string }[] = [
+  {
+    num: '01',
+    title: 'Orçamento gratuito',
+    text: 'Análise do seu projeto sem custo e sem compromisso.',
+  },
+  {
+    num: '02',
+    title: 'Resposta rápida',
+    text: 'Retorno em até 24h úteis — geralmente bem antes.',
+  },
+  {
+    num: '03',
+    title: 'Papo direto',
+    text: 'Você fala com quem vai desenvolver o projeto.',
+  },
+]
 
 function projectTypeLabel(value: string): string {
   return PROJECT_TYPES.find((option) => option.value === value)?.label ?? value
@@ -100,304 +119,285 @@ export function Contact() {
   }
 
   return (
-    <section id="contato" className="relative overflow-hidden py-20 sm:py-28" aria-labelledby="contato-title">
+    <section id="contato" className="contact" aria-labelledby="contato-title">
+      {/* feixes da marca (reuso LightRays — sem glow pesado) + véu grad-voile */}
       <LightRays intensity={8} rays={10} position={30} color1="#7C3AED" color2="#22D3EE" />
-      <div
-        className="absolute inset-0 z-[1] bg-gradient-to-b from-noite/45 via-noite/30 to-noite/55"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-ciano/50 to-transparent"
-        aria-hidden="true"
-      />
+      <div className="contact__veil" aria-hidden="true" />
 
-      <div className="relative z-[2] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-          <div className="reveal">
-            <span className="pixel-label">Vamos conversar</span>
-            <h2
-              id="contato-title"
-              className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
+      <div className="contact__inner mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <header className="contact__head reveal">
+          <p className="kicker">// contato</p>
+          <h2
+            id="contato-title"
+            className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
+          >
+            Pronto pra
+            <br />
+            subir de nível?
+          </h2>
+          <p className="contact__lead">
+            Conta um pouco do que você precisa. Retorno em até 24h úteis com uma proposta
+            clara — sem compromisso e sem enrolação.
+          </p>
+          <p className="micro contact__count">07/08</p>
+        </header>
+
+        {/* régua mono de 3 colunas de apoio */}
+        <ul className="contact__apoio reveal-stagger">
+          {APOIO.map((item) => (
+            <li key={item.title} className="contact__apoio-item reveal">
+              <span className="contact__apoio-num" aria-hidden="true">
+                {item.num}
+              </span>
+              <h3 className="contact__apoio-title">{item.title}</h3>
+              <p className="contact__apoio-text">{item.text}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div className="contact__cta reveal">
+          <div className="contact__cta-row">
+            <a
+              href={whatsappLink('Olá! Gostaria de solicitar um orçamento para um site.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp contact__btn"
             >
-              Pronto pra subir de nível?
-            </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-              Conta um pouco do que você precisa. Retorno em até 24h úteis com uma proposta
-              clara — sem compromisso e sem enrolação.
+              <WhatsAppIcon />
+              Falar no WhatsApp
+            </a>
+            <a href={`mailto:${BRAND.email}`} className="btn-secondary contact__btn">
+              <MailIcon />
+              Enviar e-mail
+            </a>
+          </div>
+          <p className="micro contact__sla">
+            // retorno em até 24h úteis · {BRAND.email} · {BRAND.phoneDisplay}
+          </p>
+        </div>
+
+        <div className="contact__formwrap reveal">
+          <form
+            onSubmit={handleSubmit}
+            className="contact__form"
+            noValidate
+            aria-label="Solicite seu orçamento"
+            aria-describedby="form-note"
+          >
+            <h3 className="contact__form-title">Solicite seu orçamento</h3>
+            <p id="form-note" className="contact__form-note">
+              Campos marcados com{' '}
+              <span className="req" aria-hidden="true">
+                *
+              </span>
+              <span className="sr-only">asterisco</span> são obrigatórios.
             </p>
 
-            <ul className="mt-8 space-y-4">
-              {[
-                {
-                  title: 'Orçamento gratuito',
-                  text: 'Análise do seu projeto sem custo e sem compromisso.',
-                },
-                {
-                  title: 'Resposta rápida',
-                  text: 'Retorno em até 24h úteis — geralmente bem antes.',
-                },
-                {
-                  title: 'Papo direto',
-                  text: 'Você fala com quem vai desenvolver o projeto.',
-                },
-              ].map((item) => (
-                <li key={item.title} className="flex items-start gap-3">
-                  <span
-                    className="mt-1 grid h-8 w-8 shrink-0 place-items-center border-2 border-black bg-ciano font-pixel text-[10px] text-black shadow-pixel-sm dark:border-white/30 dark:bg-roxo dark:text-white"
-                    aria-hidden="true"
-                  >
-                    ✓
+            <div className="contact__fields">
+              <div className="contact__field">
+                <label htmlFor="name" className="form-label contact__label">
+                  ? nome completo{' '}
+                  <span className="req" aria-hidden="true">
+                    *
                   </span>
-                  <div>
-                    <p className="font-semibold text-slate-900 dark:text-white">{item.title}</p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">{item.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={whatsappLink('Olá! Gostaria de solicitar um orçamento para um site.')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-whatsapp"
-              >
-                <WhatsAppIcon />
-                Falar no WhatsApp
-              </a>
-              <a href={`mailto:${BRAND.email}`} className="btn-secondary">
-                <MailIcon />
-                Enviar e-mail
-              </a>
-            </div>
-          </div>
-
-          <div className="reveal">
-            <form
-              onSubmit={handleSubmit}
-              className="border-2 border-black bg-white p-6 shadow-pixel dark:border-white/30 dark:bg-ink-850 sm:p-8"
-              noValidate
-              aria-describedby="form-note"
-            >
-              <h3 className="font-display text-xl font-semibold text-slate-900 dark:text-white">
-                Solicite seu orçamento
-              </h3>
-              <p id="form-note" className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Campos marcados com{' '}
-                <span className="text-ciano" aria-hidden="true">
-                  *
-                </span>
-                <span className="sr-only">asterisco</span> são obrigatórios.
-              </p>
-
-              <div className="mt-6 space-y-5">
-                <div>
-                  <label htmlFor="name" className="form-label">
-                    Nome completo{' '}
-                    <span className="text-ciano" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    autoComplete="name"
-                    className="form-input"
-                    placeholder="Como devo te chamar?"
-                    aria-required="true"
-                    aria-invalid={Boolean(errors.name)}
-                    aria-describedby={errors.name ? 'name-error' : undefined}
-                    value={form.name}
-                    onChange={(e) => updateField('name', e.target.value)}
-                  />
-                  {errors.name ? (
-                    <p className="form-error" id="name-error" role="alert">
-                      {errors.name}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="form-label">
-                    E-mail{' '}
-                    <span className="text-ciano" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    className="form-input"
-                    placeholder="voce@empresa.com.br"
-                    aria-required="true"
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? 'email-error' : undefined}
-                    value={form.email}
-                    onChange={(e) => updateField('email', e.target.value)}
-                  />
-                  {errors.email ? (
-                    <p className="form-error" id="email-error" role="alert">
-                      {errors.email}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div>
-                  <label htmlFor="whatsapp" className="form-label">
-                    WhatsApp
-                  </label>
-                  <input
-                    id="whatsapp"
-                    name="whatsapp"
-                    type="tel"
-                    autoComplete="tel"
-                    className="form-input"
-                    placeholder="(31) 9XXXX-XXXX"
-                    value={form.whatsapp}
-                    onChange={(e) => updateField('whatsapp', e.target.value)}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="projectType" className="form-label">
-                    Tipo de projeto{' '}
-                    <span className="text-ciano" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <select
-                    id="projectType"
-                    name="projectType"
-                    required
-                    className="form-input"
-                    aria-required="true"
-                    aria-invalid={Boolean(errors.projectType)}
-                    aria-describedby={errors.projectType ? 'projectType-error' : undefined}
-                    value={form.projectType}
-                    onChange={(e) => updateField('projectType', e.target.value)}
-                  >
-                    {PROJECT_TYPES.map((option) => (
-                      <option key={option.value} value={option.value} disabled={option.value === ''}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.projectType ? (
-                    <p className="form-error" id="projectType-error" role="alert">
-                      {errors.projectType}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="form-label">
-                    Conte sobre o projeto{' '}
-                    <span className="text-ciano" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    required
-                    className="form-input resize-y"
-                    placeholder="Objetivo, prazo, referências... quanto mais detalhes, melhor!"
-                    aria-required="true"
-                    aria-invalid={Boolean(errors.message)}
-                    aria-describedby={errors.message ? 'message-error' : undefined}
-                    value={form.message}
-                    onChange={(e) => updateField('message', e.target.value)}
-                  />
-                  {errors.message ? (
-                    <p className="form-error" id="message-error" role="alert">
-                      {errors.message}
-                    </p>
-                  ) : null}
-                </div>
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  autoComplete="name"
+                  className="form-input contact__input"
+                  placeholder="Como devo te chamar?"
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby={errors.name ? 'name-error' : undefined}
+                  value={form.name}
+                  onChange={(e) => updateField('name', e.target.value)}
+                />
+                {errors.name ? (
+                  <p className="form-error" id="name-error" role="alert">
+                    {errors.name}
+                  </p>
+                ) : null}
               </div>
 
-              <button
-                type="submit"
-                className={`btn-primary mt-6 w-full ${submitState === 'error' ? 'form-shake' : ''}`}
-                disabled={submitState === 'loading'}
-                aria-busy={submitState === 'loading'}
-              >
-                {submitState === 'loading' ? (
-                  <>
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" />
-                    Enviando...
-                  </>
-                ) : submitState === 'success' ? (
-                  <>
-                    <span aria-hidden="true">✓</span>
-                    Pronto
-                  </>
-                ) : (
-                  <>
-                    Enviar solicitação
-                    <ArrowRight />
-                  </>
-                )}
-              </button>
-
-              <p className="mt-4 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-                Ao enviar este formulário, você concorda com o uso dos dados apenas para retorno
-                comercial, conforme a{' '}
-                <a href="#privacidade" className="underline hover:text-ciano">
-                  Política de Privacidade (LGPD)
-                </a>
-                .
-              </p>
-
-              {submitted ? (
-                <div
-                  id="form-success"
-                  className="mt-6 border-2 border-black bg-ciano/20 p-4 text-slate-800 dark:border-white/30 dark:bg-roxo/20 dark:text-slate-100"
-                  role="status"
-                  aria-live="polite"
-                >
-                  <p className="font-semibold">Quase lá! 🎉</p>
-                  <p className="mt-1 text-sm">
-                    Escolha como enviar a sua mensagem — o conteúdo já está preenchido.
+              <div className="contact__field">
+                <label htmlFor="email" className="form-label contact__label">
+                  ? e-mail{' '}
+                  <span className="req" aria-hidden="true">
+                    *
+                  </span>
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  className="form-input contact__input"
+                  placeholder="voce@empresa.com.br"
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  value={form.email}
+                  onChange={(e) => updateField('email', e.target.value)}
+                />
+                {errors.email ? (
+                  <p className="form-error" id="email-error" role="alert">
+                    {errors.email}
                   </p>
-                  <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                    <a
-                      href={whatsappLink(leadMessage)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-primary"
-                    >
-                      <WhatsAppIcon className="h-4 w-4" />
-                      Enviar no WhatsApp
-                    </a>
-                    <a href={mailtoLink(leadSubject, leadMessage)} className="btn-secondary">
-                      <MailIcon className="h-4 w-4" />
-                      Enviar por e-mail
-                    </a>
-                  </div>
-                  <button
-                    type="button"
-                    className="mt-3 text-sm underline opacity-80 hover:opacity-100"
-                    onClick={() => {
-                      setSubmitted(false)
-                      setForm(EMPTY_FORM)
-                      setLeadMessage('')
-                      setLeadSubject('')
-                    }}
+                ) : null}
+              </div>
+
+              <div className="contact__field">
+                <label htmlFor="whatsapp" className="form-label contact__label">
+                  ? whatsapp
+                </label>
+                <input
+                  id="whatsapp"
+                  name="whatsapp"
+                  type="tel"
+                  autoComplete="tel"
+                  className="form-input contact__input"
+                  placeholder="(31) 9XXXX-XXXX"
+                  value={form.whatsapp}
+                  onChange={(e) => updateField('whatsapp', e.target.value)}
+                />
+              </div>
+
+              <div className="contact__field">
+                <label htmlFor="projectType" className="form-label contact__label">
+                  ? tipo de projeto{' '}
+                  <span className="req" aria-hidden="true">
+                    *
+                  </span>
+                </label>
+                <select
+                  id="projectType"
+                  name="projectType"
+                  required
+                  className="form-input contact__input contact__select"
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.projectType)}
+                  aria-describedby={errors.projectType ? 'projectType-error' : undefined}
+                  value={form.projectType}
+                  onChange={(e) => updateField('projectType', e.target.value)}
+                >
+                  {PROJECT_TYPES.map((option) => (
+                    <option key={option.value} value={option.value} disabled={option.value === ''}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.projectType ? (
+                  <p className="form-error" id="projectType-error" role="alert">
+                    {errors.projectType}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="contact__field">
+                <label htmlFor="message" className="form-label contact__label">
+                  ? conte sobre o projeto{' '}
+                  <span className="req" aria-hidden="true">
+                    *
+                  </span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  required
+                  className="form-input contact__input contact__textarea"
+                  placeholder="Objetivo, prazo, referências... quanto mais detalhes, melhor!"
+                  aria-required="true"
+                  aria-invalid={Boolean(errors.message)}
+                  aria-describedby={errors.message ? 'message-error' : undefined}
+                  value={form.message}
+                  onChange={(e) => updateField('message', e.target.value)}
+                />
+                {errors.message ? (
+                  <p className="form-error" id="message-error" role="alert">
+                    {errors.message}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className={`btn-primary contact__submit${submitState === 'error' ? ' form-shake' : ''}`}
+              disabled={submitState === 'loading'}
+              aria-busy={submitState === 'loading'}
+            >
+              {submitState === 'loading' ? (
+                <>
+                  <span
+                    className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                    aria-hidden="true"
+                  />
+                  Enviando...
+                </>
+              ) : submitState === 'success' ? (
+                <>
+                  <span aria-hidden="true">✓</span>
+                  Pronto
+                </>
+              ) : (
+                <>
+                  Enviar <span aria-hidden="true">↩</span>
+                </>
+              )}
+            </button>
+
+            <p className="contact__lgpd">
+              Ao enviar este formulário, você concorda com o uso dos dados apenas para retorno
+              comercial, conforme a{' '}
+              <a href="#privacidade">Política de Privacidade (LGPD)</a>.
+            </p>
+
+            {submitted ? (
+              <div
+                id="form-success"
+                className="contact__success"
+                role="status"
+                aria-live="polite"
+              >
+                <p className="contact__success-title">Quase lá! 🎉</p>
+                <p className="contact__success-text">
+                  Escolha como enviar a sua mensagem — o conteúdo já está preenchido.
+                </p>
+                <div className="contact__success-actions">
+                  <a
+                    href={whatsappLink(leadMessage)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary"
                   >
-                    Preencher outro formulário
-                  </button>
+                    <WhatsAppIcon className="h-4 w-4" />
+                    Enviar no WhatsApp
+                  </a>
+                  <a href={mailtoLink(leadSubject, leadMessage)} className="btn-secondary">
+                    <MailIcon className="h-4 w-4" />
+                    Enviar por e-mail
+                  </a>
                 </div>
-              ) : null}
-            </form>
-          </div>
+                <button
+                  type="button"
+                  className="contact__success-reset"
+                  onClick={() => {
+                    setSubmitted(false)
+                    setForm(EMPTY_FORM)
+                    setLeadMessage('')
+                    setLeadSubject('')
+                  }}
+                >
+                  Preencher outro formulário
+                </button>
+              </div>
+            ) : null}
+          </form>
         </div>
       </div>
     </section>
