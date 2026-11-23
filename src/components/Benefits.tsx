@@ -60,14 +60,23 @@ export function Benefits({
           <div className="grid gap-5 sm:grid-cols-2 reveal-stagger">
             {benefits.map((benefit) => (
               <TiltCard key={benefit.id} className="tilt-panel reveal" tiltLimit={8} scale={1.04}>
-                <div className="benefit-card h-full">
-                  <div className="benefit-icon" aria-hidden="true">
-                    <PixelIcon name={benefit.icon} />
+                {/* Visual notes ("Notes from the people I build for") */}
+                <div className="benefit-card h-full flex flex-col justify-between">
+                  <div className="min-w-0">
+                    <p className="note-quote relative border-l-2 border-roxo pl-4 font-display text-sm font-medium text-slate-700 dark:text-slate-200">
+                      “{benefit.description}”
+                    </p>
                   </div>
-                  <h3 className="mt-4 font-display text-lg font-semibold text-slate-900 dark:text-white">
-                    {benefit.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{benefit.description}</p>
+
+                  <div className="mt-6 flex items-center gap-3">
+                    {/* opcional: PixelIcon decorativo pequeno */}
+                    <div className="benefit-icon h-10 w-10" aria-hidden="true">
+                      <PixelIcon name={benefit.icon} />
+                    </div>
+                    <p className="font-display text-xs font-semibold tracking-tight text-roxo">
+                      {benefit.title}
+                    </p>
+                  </div>
                 </div>
               </TiltCard>
             ))}
