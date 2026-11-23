@@ -17,3 +17,82 @@
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
 */
+
+/* ── FS-011.1 · splash curto (BrandIntro) ────────────────────────────────────
+   Escopo do lote: src/components/BrandIntro.tsx + este arquivo.
+   - Splash ≤ 1,2 s: a coreografia continua 100% no setupBrandIntro (motion.ts,
+     intocado); o BrandIntro acelera a timeline criada por ele (timeScale) para
+     caber no orçamento.
+   - Base visual do painel (.brand-intro*) permanece no index.css (limpeza de
+     duplicação prevista para o lote final FS-011.6). Como o index.css importa
+     este arquivo no topo e as regras dele vêm DEPOIS no cascade, os overrides
+     abaixo usam especificidade maior (html + atributos de contrato) em vez de
+     editar o index.css — júnior não toca em index.css.
+
+   Contratos preservados (fase-4 §3.2): [data-brand-intro], [data-brand-mark],
+   [data-brand-ring], [data-brand-rule], .luxury-line__in, #brandIntro,
+   html.brand-intro-lock (anti-piscada: some com o hero até o splash sair).
+*/
+
+/* O splash é decorativo (aria-hidden) e nunca bloqueia o conteúdo: ele apenas
+   cobre visualmente o hero durante a entrada — cliques/teclado/A.T. seguem
+   no hero (conteúdo acessível durante todo o splash). */
+html [data-brand-intro] {
+  pointer-events: none;
+}
+
+/* ── fallback prefers-reduced-motion: logo estático 200 ms e segue ───────────
+   Redução própria deste lote (bloco do intro.css): os 17 blocos
+   prefers-reduced-motion do index.css permanecem intactos. Espelha o hook
+   prefersReducedMotion() de motion.ts — `data-motion="reduced"` força redução
+   e `data-motion="full"` força movimento, independentemente do media query. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='full']) [data-brand-intro] {
+    /* vence o display:none do index.css (e qualquer inline do motion.ts) */
+    display: grid !important;
+    /* estático por 200 ms e some em corte seco — sem movimento */
+    animation: brand-intro-static 200ms steps(1, end) forwards;
+  }
+
+  html:not([data-motion='full']) [data-brand-intro] .luxury-line__in,
+  html:not([data-motion='full']) [data-brand-intro] [data-brand-rule] {
+    /* estado final imediato: sem máscara de linha, sem régua recolhida */
+    transform: none;
+    opacity: 1;
+  }
+
+  /* data-motion="full" é o escape hatch de motion.ts para forçar movimento
+     mesmo com o media query ativo: mantém o splash visível e o scroll travado */
+  html[data-motion='full'] [data-brand-intro] {
+    display: grid !important;
+    animation: none;
+  }
+
+  html[data-motion='full'].brand-intro-lock,
+  html[data-motion='full'].brand-intro-lock body {
+    overflow: hidden !important;
+  }
+}
+
+html[data-motion='reduced'] [data-brand-intro] {
+  display: grid !important;
+  animation: brand-intro-static 200ms steps(1, end) forwards;
+}
+
+html[data-motion='reduced'] [data-brand-intro] .luxury-line__in,
+html[data-motion='reduced'] [data-brand-intro] [data-brand-rule] {
+  transform: none;
+  opacity: 1;
+}
+
+/* logo estático por 200 ms e some (corte seco — sem animação de movimento) */
+@keyframes brand-intro-static {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
