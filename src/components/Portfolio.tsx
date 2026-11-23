@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { PORTFOLIO } from '../data/content.ts'
 import type { PortfolioItem } from '../types/index.ts'
@@ -77,7 +77,12 @@ function splitDescription(description: string): { result: string; desc: string }
 
 export function Portfolio({
   casesLabel = 'Cases',
-  title = 'Portfólio',
+  // Decisão do manager (A) — headline aprovado do protótipo como H2 bicolor
+  // padrão kit (§3.4: texto + <br> sob .luxury-title). '\n' marca a quebra de
+  // linha editorial ("Projetos reais," / "do design ao deploy."); contrato do
+  // prop (title?: string) preservado — strings de linha única renderizam como
+  // antes.
+  title = 'Projetos reais,\ndo design ao deploy.',
   description = 'Projetos reais, do design ao deploy. Clica pra abrir.',
   items = PORTFOLIO,
 }: PortfolioProps = {}) {
@@ -117,7 +122,14 @@ export function Portfolio({
               id="portfolio-title"
               className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
             >
-              {title}
+              {/* padrão kit §3.4: texto + <br> sob .luxury-title — o split do
+                  setupTitleMasks exige texto puro por linha */}
+              {title.split('\n').map((line, i) => (
+                <Fragment key={i}>
+                  {i > 0 ? <br /> : null}
+                  {line}
+                </Fragment>
+              ))}
             </h2>
             <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">{description}</p>
           </div>
