@@ -1,26 +1,30 @@
 import { TECH_STACK } from '../data/content.ts'
 
+/**
+ * TechStrip (FS-010.7 — fusão §5.03): era faixa isolada entre hero e serviços;
+ * agora é a régua fina full-bleed no rodapé do bloco Serviços (composição via
+ * `App.tsx`, logo após `<Services />`). `TECH_STACK` íntegro (8 tecnologias) em
+ * fita mono; a repetição `aria-hidden` existe só para o loop do marquee.
+ *
+ * Motion: marquee CSS leve com pausa em `:hover`/`:focus-within` e degradação
+ * reduced-motion/coarse-pointer (bloco próprio em src/styles/home/servicos.css
+ * — o index.css preserva seus 17 blocos de reduced-motion).
+ */
 export function TechStrip() {
-  const items = [...TECH_STACK, ...TECH_STACK]
   return (
-    <section
-      className="border-y-2 border-black bg-white/80 py-10 backdrop-blur-[2px] dark:border-white/20 dark:bg-ink-900/75"
-      aria-label="Tecnologias e plataformas"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <p className="text-center font-pixel text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          Stack e ferramentas que domino
-        </p>
-        <div className="mt-6 overflow-hidden">
-          <div className="flex w-max animate-marquee items-center gap-10">
-            {items.map((tech, index) => (
-              <span key={`${tech.id}-${index}`} className="tech-chip">
-                {tech.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+    <section className="tech-strip" aria-label="Tecnologias e plataformas">
+      <ul className="tech-track">
+        {TECH_STACK.map((tech) => (
+          <li key={tech.id} className="tech-item">
+            {tech.name}
+          </li>
+        ))}
+        {TECH_STACK.map((tech) => (
+          <li key={`${tech.id}--loop`} className="tech-item" aria-hidden="true">
+            {tech.name}
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }
