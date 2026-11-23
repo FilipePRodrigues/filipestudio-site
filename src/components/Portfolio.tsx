@@ -1,25 +1,38 @@
 import { PORTFOLIO } from '../data/content.ts'
+import type { PortfolioItem } from '../types/index.ts'
 import { TiltCard } from './spell/TiltCard.tsx'
 
-export function Portfolio() {
+export type PortfolioProps = {
+  casesLabel?: string
+  title?: string
+  description?: string
+  items?: PortfolioItem[]
+}
+
+export function Portfolio({
+  casesLabel = 'Cases',
+  title = 'Portfólio',
+  description = 'Projetos reais, do design ao deploy. Clica pra abrir.',
+  items = PORTFOLIO,
+}: PortfolioProps = {}) {
   return (
     <section id="portfolio" className="relative py-20 sm:py-28" aria-labelledby="portfolio-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="reveal mx-auto max-w-2xl text-center">
-          <span className="pixel-label">Cases</span>
+          <span className="pixel-label">{casesLabel}</span>
           <h2
             id="portfolio-title"
             className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
           >
-            Portfólio
+            {title}
           </h2>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Projetos reais, do design ao deploy. Clica pra abrir.
+            {description}
           </p>
         </div>
 
         <div className="mx-auto mt-14 grid max-w-5xl gap-6 sm:grid-cols-2">
-          {PORTFOLIO.map((item) => (
+          {items.map((item) => (
             <TiltCard key={item.id} className="tilt-panel reveal">
               <a
                 href={item.href ?? '#contato'}
