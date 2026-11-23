@@ -144,7 +144,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
             <span className="chrome-toggle">
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
             </span>
-            <a href="#contato" className="nav-cta" onClick={closeMenu}>
+            <a href="#contato" data-underline-sweep className="nav-cta" onClick={closeMenu}>
               Contato
             </a>
             <button
