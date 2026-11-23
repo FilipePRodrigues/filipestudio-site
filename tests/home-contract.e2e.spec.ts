@@ -183,48 +183,55 @@ test.describe('Home — DOM & motion contracts', () => {
     expect(after.x !== before.x || after.y !== before.y).toBe(true)
   })
 
-  test('7) flight minimal: nodes exist; scene receives updates after scroll (when not static)', async ({ page }) => {
+  test('7) prancha de figuras: 12 figures with fig. NN · + data-image-reveal; flight retired', async ({ page }) => {
     await gotoHome(page)
     await waitForLuxuryInit(page)
 
-    const section = page.locator('[data-flight-section]').first()
-    await expect(section).toHaveCount(1)
+    // Flight aposentado (FS-010.8, plano §1.3): nenhum nó do contrato antigo
+    // permanece no DOM (setupFlightScene também foi removido de motion.ts).
+    expect(await page.locator('[data-flight-section]').count()).toBe(0)
+    expect(
+      await page
+        .locator('[data-flight-track], [data-flight-lean], [data-flight-scene], [data-flight-card]')
+        .count(),
+    ).toBe(0)
 
-    await expect(section.locator('[data-flight-track]')).toHaveCount(1)
-    await expect(section.locator('[data-flight-lean]')).toHaveCount(1)
-    await expect(section.locator('[data-flight-scene]')).toHaveCount(1)
+    // Prancha (contrato §3.5): 12 figure catalogadas, cada frame com
+    // data-image-reveal e figcaption "fig. NN · <legenda>".
+    const frames = page.locator('#pixel-world figure[data-image-reveal]')
+    await expect(frames).toHaveCount(12)
 
-    const cardsCount = await section.locator('[data-flight-card]').count()
-    expect(cardsCount).toBeGreaterThan(0)
-
-    const isStatic = await section.evaluate((el: HTMLElement) => el.classList.contains('flight--static'))
-    if (isStatic) {
-      test.skip(true, 'Flight is static on this pointer/viewport; skipping scene update assertion')
-    }
-
-    const scene = section.locator('[data-flight-scene]').first()
-    const sceneHandle = await scene.elementHandle()
-    expect(sceneHandle).toBeTruthy()
-
-    const beforeOpacity = await scene.evaluate((el: HTMLElement) => getComputedStyle(el).opacity)
-
-    await page.evaluate((el: HTMLElement) => el.scrollIntoView({ block: 'end' }), await section.elementHandle())
-
-    await page.waitForFunction(
-      (el: any) => parseFloat(getComputedStyle(el).opacity) < 0.999,
-      sceneHandle,
-    )
-
-    const afterOpacity = await scene.evaluate((el: HTMLElement) => getComputedStyle(el).opacity)
-    expect(parseFloat(afterOpacity)).toBeLessThanOrEqual(1)
+    const captions = await frames.locator('figcaption').allTextContents()
+    expect(captions).toHaveLength(12)
+    captions.forEach((text, index) => {
+      const nn = String(index + 1).padStart(2, '0')
+      expect(text.trim().startsWith(`fig. ${nn} · `)).toBe(true)
+    })
   })
 
   test('8) reduced motion emulation does not crash', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
 
+    // Causa raiz do pageerror pré-existente ("Cannot read properties of null
+    // (reading dataset)"): o init script lia `document.documentElement.dataset`
+    // antes de <html> existir (documentElement === null em addInitScript).
+    // Correção: guard null + aplicação assim que o elemento for inserido.
+    // (motion.ts também ganhou null-guard em prefersReducedMotion.)
     await page.addInitScript(() => {
-      document.documentElement.dataset.motion = 'reduced'
+      const apply = () => {
+        const el = document.documentElement
+        if (el) el.dataset.motion = 'reduced'
+      }
+      apply()
+      if (!document.documentElement) {
+        new MutationObserver((_, obs) => {
+          if (document.documentElement) {
+            apply()
+            obs.disconnect()
+          }
+        }).observe(document, { childList: true })
+      }
     })
 
     await gotoHome(page)
@@ -234,5 +241,6 @@ test.describe('Home — DOM & motion contracts', () => {
     if (errors.length) {
       console.log('[reduced motion] pageerror(s):', errors)
     }
+    expect(errors).toEqual([])
   })
 })

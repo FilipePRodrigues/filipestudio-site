@@ -16,15 +16,35 @@ type PixelGalleryProps = {
 }
 
 const DEFAULT_HEADER: PixelGalleryHeader = {
-  pixelLabel: 'Pixel world',
+  pixelLabel: '// pixel gallery',
   title: 'Um pouco de mim em pixels',
   description: 'Dev, atleta e criador — a mesma energia que eu levo pros projetos.',
 }
 
 /**
- * Galeria em espiral estilo Flight (Museum of Motion).
- * O scroll voa a câmera entre as artes; o mouse inclina a cena.
- * Sem WebGL: CSS 3D + GSAP, mais leve e suficiente para 12 posters.
+ * Legendas `fig. NN ·` da prancha (fase-2 §6 — "prancha de catálogo técnico").
+ * Ordem idêntica a `PIXEL_ARTS` (content.ts intocado).
+ */
+const FIG_LABELS = [
+  'codando',
+  'treinando',
+  'negociando',
+  'correndo',
+  'pensando',
+  'apontando',
+  'setup_codigo',
+  'viagem',
+  'planejando',
+  'comemorando',
+  'lifestyle',
+  'headphone',
+] as const
+
+/**
+ * Prancha de figuras estática (FS-010.8 — aposentadoria do Flight, plano §1.3).
+ * 12 `figure` catalogadas `fig. 01 · codando` … `fig. 12 · headphone`, cada
+ * frame com `data-image-reveal` (contrato motion §3.5). SEM `[data-flight-section]`:
+ * a câmera 3D (`setupFlightScene`) foi removida de `motion.ts`.
  */
 export function PixelGallery({ header, arts }: PixelGalleryProps = {}) {
   const resolvedHeader: PixelGalleryHeader = {
@@ -36,93 +56,32 @@ export function PixelGallery({ header, arts }: PixelGalleryProps = {}) {
   const resolvedArts: readonly PixelArt[] = arts ?? PIXEL_ARTS
 
   return (
-    <section
-      id="pixel-world"
-      className="flight"
-      aria-label="Artes pixel do Filipe"
-      data-flight-section
-    >
-      <div className="flight__track" data-flight-track>
-        <div className="flight__viewport" data-flight-viewport>
-          {/* túnel circular pixelado */}
-          <div className="flight__tunnel" data-flight-tunnel aria-hidden="true">
-            <div className="flight__tunnel-rings">
-              {Array.from({ length: 8 }, (_, i) => (
-                <span
-                  key={i}
-                  className="flight__ring"
-                  style={{ animationDelay: `${i * -0.85}s` }}
-                />
-              ))}
-            </div>
-            <div className="flight__tunnel-core" />
-            <div className="flight__stars">
-              {Array.from({ length: 20 }, (_, i) => (
-                <i
-                  key={i}
-                  style={{
-                    left: `${(i * 41) % 100}%`,
-                    top: `${(i * 53) % 100}%`,
-                    animationDelay: `${(i * 0.4) % 5}s`,
-                    animationDuration: `${3 + (i % 4)}s`,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* título primeiro (mobile e desktop) */}
-          <header className="flight__header">
-            <span className="pixel-label">{resolvedHeader.pixelLabel}</span>
-            <h2 className="luxury-title font-display text-2xl font-bold text-white sm:text-3xl">
-              {resolvedHeader.title}
-            </h2>
-            <p className="mx-auto mt-2 max-w-xl text-sm text-slate-300 sm:text-base">
-              {resolvedHeader.description}
-            </p>
-          </header>
-
-          <div className="flight__lean" data-flight-lean>
-            <div className="flight__scene" data-flight-scene>
-              <div className="flight__field" aria-hidden="true">
-                {resolvedArts.map((art, index) => {
-                  const golden = index * 137.508
-                  const radius = 280 + (index % 3) * 40
-                  const z = -index * 340
-                  return (
-                    <figure
-                      key={art.id}
-                      className="flight__card"
-                      style={{
-                        ['--i' as string]: String(index),
-                        ['--angle' as string]: `${golden}deg`,
-                        ['--radius' as string]: `${radius}px`,
-                        ['--z' as string]: `${z}px`,
-                      }}
-                      data-flight-card
-                    >
-                      <img
-                        src={art.src}
-                        alt={index === 0 ? art.alt : ''}
-                        width={314}
-                        height={418}
-                        className="pixel-art"
-                        loading={index < 4 ? 'eager' : 'lazy'}
-                        decoding="async"
-                      />
-                    </figure>
-                  )
-                })}
-              </div>
-
-              <ul className="sr-only">
-                {resolvedArts.map((art) => (
-                  <li key={art.id}>{art.alt}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+    <section id="pixel-world" className="prancha" aria-label="Artes pixel do Filipe">
+      <header className="prancha__head">
+        <div className="min-w-0">
+          <p className="kicker">{resolvedHeader.pixelLabel}</p>
+          <h3 className="prancha__title">{resolvedHeader.title}</h3>
+          <p className="prancha__sub">{resolvedHeader.description}</p>
         </div>
+        <p className="micro prancha__count">// 12 figuras · catálogo pessoal</p>
+      </header>
+
+      <div className="prancha__grid">
+        {resolvedArts.map((art, index) => (
+          <figure key={art.id} className="prancha__frame" data-image-reveal>
+            <img
+              src={art.src}
+              alt={art.alt}
+              width={314}
+              height={418}
+              loading={index < 4 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            <figcaption className="fig">
+              {`fig. ${String(index + 1).padStart(2, '0')} · ${FIG_LABELS[index] ?? art.id}`}
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   )

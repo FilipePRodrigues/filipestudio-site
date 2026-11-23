@@ -3,9 +3,11 @@ import { Metrics } from './Metrics.tsx'
 import { PixelGallery } from './PixelGallery.tsx'
 
 /**
- * Shell da seção Sobre (FS-010.3) — composição da fusão aprovada
- * (fase-2 §5.04): bloco editorial → PixelGallery → #beneficios (Benefits) →
- * faixa .metrics (Metrics). Componentes compostos sem modificação.
+ * Seção Sobre (FS-010.8 — fusão aprovada, fase-2 §04):
+ * bio editorial (fatias reais — dev de BH que treina/programa/negocia,
+ * autor do blog "Treino, disciplina e constância", one-person studio) →
+ * prancha de fig. (PixelGallery) → bloco `#beneficios` (Benefits) →
+ * faixa `.metrics` (Metrics).
  *
  * Contratos preservados: `section#sobre`, `#sobre-title`, e o bloco de
  * benefícios permanece `<section id="beneficios" aria-labelledby="beneficios-title">`
@@ -27,16 +29,26 @@ export function Sobre() {
           </div>
           <p className="micro sobre__count">04/08</p>
         </header>
+
+        {/* bio editorial — apenas fatos reais (fase-2 §04) */}
+        <p className="sobre__bio">
+          Eu sou o Filipe — dev criativo de Belo Horizonte que{' '}
+          <strong>treina, programa e negocia</strong>. Autor do blog{' '}
+          <em>Treino, disciplina e constância</em>, atleta fora do teclado e o time
+          inteiro por trás do FilipeStudio: um one-person studio que entrega do
+          design ao deploy. Este site aqui é a prova — React + TypeScript,
+          Lighthouse 95+, blog automatizado e CI/CD.
+        </p>
+
+        {/* prancha de fig. (contrato Flight aposentado — plano §1.3) */}
+        <PixelGallery />
+
+        {/* Bloco de diferenciais — âncora #beneficios preservada */}
+        <Benefits />
+
+        {/* Faixa de métricas (prova social) */}
+        <Metrics />
       </div>
-
-      {/* Galeria de pixel art (contrato Flight intacto) */}
-      <PixelGallery />
-
-      {/* Bloco de diferenciais — âncora #beneficios preservada */}
-      <Benefits />
-
-      {/* Faixa de métricas (prova social) */}
-      <Metrics />
     </section>
   )
 }
