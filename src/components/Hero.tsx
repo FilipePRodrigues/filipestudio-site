@@ -120,7 +120,7 @@ export function Hero({
       </div>
 
       <div className="hero-scrollhint" id="heroScrollHint" aria-hidden="true">
-        <span>Role para continuar</span>
+        <span>↓ role para continuar</span>
         <div className="hero-scrollhint__line" />
       </div>
     </section>
