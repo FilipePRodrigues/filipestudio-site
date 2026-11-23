@@ -86,16 +86,20 @@ export function Portfolio({
                   ) : null}
                 </div>
                 <div className="p-5">
-                  <p className="font-pixel text-[9px] uppercase tracking-wider text-roxo dark:text-ciano">
-                    {item.category}
-                  </p>
-                  <h3 className="mt-2 font-display text-lg font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-1 font-display text-lg font-semibold text-slate-900 dark:text-white">
                     {item.title}
                   </h3>
                   <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{item.description}</p>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="inline-flex items-center rounded-full border border-black/20 bg-white/5 px-2.5 py-1 font-pixel text-[10px] text-roxo dark:border-white/20 dark:bg-ink-800 dark:text-ciano">
+                      {item.category}
+                    </span>
+                  </div>
+
                   {item.href ? (
-                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-roxo dark:text-ciano">
-                      Abrir projeto
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-roxo dark:text-ciano">
+                      Case study
                       <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
                       </svg>
