@@ -1,59 +1,83 @@
-import { useId, useState } from 'react'
+import { useState } from 'react'
 import { FAQS } from '../data/content.ts'
 
+/**
+ * FAQ (FS-011.4 — protótipo 06B, fase-2 §5.06): bloco B do capítulo "decisão".
+ * Kicker `// duvidas frequentes` + H2 bicolor "Antes de fechar," / "as respostas."
+ * (padrão do kit: texto + `<br>` sob `.luxury-title` — o split do
+ * `setupTitleMasks` exige texto puro por linha, nunca spans de linha) +
+ * acordeão com os 6 `FAQS` reais (linha `?` mono + pergunta `<h3>`).
+ *
+ * Comportamento (contrato FS-011.4): 1 item aberto por vez — abrir fecha os
+ * demais; clicar no item aberto fecha tudo (comportamento do protótipo).
+ * `aria-expanded`/`aria-controls` por botão; teclado nativo de `<button>`
+ * (Enter/Espaço); painel `role="region"` + `hidden` quando fechado.
+ *
+ * Textos vindos de `FAQS` (src/data/content.ts — intocado): mesma fonte do
+ * JSON-LD `FAQPage` (siteMeta.ts), garantindo sync palavra a palavra.
+ *
+ * Contratos preservados (docs/home-dom-contract.md §2):
+ * - `section#faq` + `aria-labelledby="faq-title"`;
+ * - `h2#faq-title.luxury-title` (texto + `<br>`);
+ * - `.reveal` no cabeçalho e nos itens (scroll reveal do motion.ts).
+ */
 export function FAQ() {
-  const [openId, setOpenId] = useState<string | null>(null)
-  const baseId = useId()
+  // protótipo: o primeiro item já nasce aberto
+  const [openId, setOpenId] = useState<string | null>(FAQS[0]?.id ?? null)
 
   const toggle = (id: string) => {
     setOpenId((current) => (current === id ? null : id))
   }
 
   return (
-    <section id="faq" className="relative py-20 sm:py-28" aria-labelledby="faq-title">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="reveal text-center">
-          <span className="pixel-label">FAQ</span>
-          <h2
-            id="faq-title"
-            className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
-          >
-            Tire suas dúvidas
-          </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300">
-            Não achou o que precisava? Chama no formulário ou no WhatsApp.
-          </p>
-        </div>
+    <section id="faq" className="section faq" aria-labelledby="faq-title">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="faq__mark" aria-hidden="true" />
+        <header className="faq__head reveal">
+          <div className="min-w-0">
+            <p className="kicker">// duvidas frequentes</p>
+            <h2 id="faq-title" className="luxury-title faq__title">
+              Antes de fechar,
+              <br />
+              as respostas.
+            </h2>
+          </div>
+          <p className="micro faq__count">// abre uma por vez</p>
+        </header>
 
-        <div className="mt-12 space-y-3">
-          {FAQS.map((item) => {
-            const panelId = `${baseId}-${item.id}-panel`
-            const buttonId = `${baseId}-${item.id}-button`
+        <div className="faq-list">
+          {FAQS.map((item, index) => {
+            const n = index + 1
+            const questionId = `faq-q-${n}`
+            const panelId = `faq-a-${n}`
             const isOpen = openId === item.id
 
             return (
-              <div key={item.id} className="faq-item reveal">
-                <h3>
-                  <button
-                    type="button"
-                    id={buttonId}
-                    className="faq-trigger"
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    onClick={() => toggle(item.id)}
-                  >
-                    <span>{item.question}</span>
-                    <span className="faq-icon" aria-hidden="true" />
-                  </button>
-                </h3>
+              <div key={item.id} className={`faq-item${isOpen ? ' open' : ''} reveal`}>
+                <button
+                  type="button"
+                  className="faq-q"
+                  id={questionId}
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  onClick={() => toggle(item.id)}
+                >
+                  <span className="qmark" aria-hidden="true">
+                    ?
+                  </span>
+                  <h3>{item.question}</h3>
+                  <span className="chev" aria-hidden="true">
+                    +
+                  </span>
+                </button>
                 <div
+                  className="faq-a"
                   id={panelId}
                   role="region"
-                  aria-labelledby={buttonId}
+                  aria-labelledby={questionId}
                   hidden={!isOpen}
-                  className="faq-panel"
                 >
-                  <p>{item.answer}</p>
+                  {item.answer}
                 </div>
               </div>
             )
