@@ -176,6 +176,7 @@
    ============================================================ */
 
 .tech-strip {
+  position: relative;
   overflow: hidden;
   margin-top: 96px;
   border-top: 1px solid var(--border);
@@ -196,6 +197,43 @@
 .tech-strip:hover .tech-track,
 .tech-strip:focus-within .tech-track {
   animation-play-state: paused;
+}
+
+/* FS-011.7 · I3b (fidelidade FS-013): controle de pausa alcançável por
+   teclado (o escopo exige "controles de pausa quando houver animações
+   contínuas relevantes"; antes a fita tinha 0 elementos focáveis). Botão no
+   canto direito da fita; focus-visible vem do kit global (index.css). */
+.tech-strip--paused .tech-track {
+  animation-play-state: paused;
+}
+
+.tech-pause {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-pixel);
+  color: var(--fg-com);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tech-pause:hover {
+  border-color: var(--border-strong);
+  color: var(--fg);
 }
 
 .tech-item {
@@ -237,6 +275,11 @@
   .tech-item[aria-hidden='true'] {
     display: none;
   }
+
+  /* sem marquee não há o que pausar (FS-011.7 · I3b) */
+  .tech-pause {
+    display: none;
+  }
 }
 
 /* equivalente mobile/coarse-pointer (regra dura do stub): sem marquee */
@@ -250,6 +293,11 @@
   }
 
   .tech-item[aria-hidden='true'] {
+    display: none;
+  }
+
+  /* sem marquee não há o que pausar (FS-011.7 · I3b) */
+  .tech-pause {
     display: none;
   }
 }

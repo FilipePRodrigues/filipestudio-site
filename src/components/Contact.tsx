@@ -21,20 +21,20 @@ const EMPTY_FORM: ContactFormData = {
   message: '',
 }
 
-/** Régua mono de 3 colunas de apoio (fase-2 §5.07) — textos reais do inventário. */
-const APOIO: { num: string; title: string; text: string }[] = [
+/** Régua mono de 3 colunas de apoio (fase-2 §5.07) — textos reais do inventário.
+ *  FS-011.7 · I3a (fidelidade FS-013): marcador `✓` do protótipo aprovado
+ *  (<span class="check">) no lugar da numeração mono 01/02/03 — títulos e
+ *  descrições idênticos; o marcador é comum aos 3 blocos (render fixo abaixo). */
+const APOIO: { title: string; text: string }[] = [
   {
-    num: '01',
     title: 'Orçamento gratuito',
     text: 'Análise do seu projeto sem custo e sem compromisso.',
   },
   {
-    num: '02',
     title: 'Resposta rápida',
     text: 'Retorno em até 24h úteis — geralmente bem antes.',
   },
   {
-    num: '03',
     title: 'Papo direto',
     text: 'Você fala com quem vai desenvolver o projeto.',
   },
@@ -146,8 +146,9 @@ export function Contact() {
         <ul className="contact__apoio reveal-stagger">
           {APOIO.map((item) => (
             <li key={item.title} className="contact__apoio-item reveal">
-              <span className="contact__apoio-num" aria-hidden="true">
-                {item.num}
+              {/* I3a (FS-011.7): marcador `✓` do protótipo (<span class="check">) */}
+              <span className="contact__apoio-check" aria-hidden="true">
+                ✓
               </span>
               <h3 className="contact__apoio-title">{item.title}</h3>
               <p className="contact__apoio-text">{item.text}</p>

@@ -76,7 +76,10 @@ function splitDescription(description: string): { result: string; desc: string }
 }
 
 export function Portfolio({
-  casesLabel = 'Cases',
+  // FS-011.7 · I1 (fidelidade FS-013): kicker mono `// portfolio` do protótipo
+  // aprovado no lugar do chip .pixel-label "Cases" — padrão .kicker das demais
+  // seções (Services/Hero). Contrato do prop preservado (nome/tipo/opcional).
+  casesLabel = '// portfolio',
   // Decisão do manager (A) — headline aprovado do protótipo como H2 bicolor
   // padrão kit (§3.4: texto + <br> sob .luxury-title). '\n' marca a quebra de
   // linha editorial ("Projetos reais," / "do design ao deploy."); contrato do
@@ -122,7 +125,8 @@ export function Portfolio({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="pf-head reveal">
           <div>
-            <span className="pixel-label">{casesLabel}</span>
+            {/* I1 (FS-011.7): kicker mono do protótipo — era <span className="pixel-label"> */}
+            <p className="kicker">{casesLabel}</p>
             <h2
               id="portfolio-title"
               className="luxury-title mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
