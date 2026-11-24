@@ -324,6 +324,13 @@
   color: var(--roxo-claro);
 }
 
+/* FS-010.12 · paridade light: hover --roxo-claro (2.5:1 sobre o overlay
+   claro) vira --accent (5.3:1) — estado interativo legível nos 2 temas. */
+html.light .chrome-menu__link:hover,
+html:not(.dark) .chrome-menu__link:hover {
+  color: var(--accent);
+}
+
 .chrome-menu__link.is-active {
   color: var(--accent-neon);
 }
@@ -466,6 +473,12 @@
 
 .footer-link:hover {
   color: var(--roxo-claro);
+}
+
+/* FS-010.12 · paridade light: hover --roxo-claro vira --accent (5.3:1). */
+html.light .footer-link:hover,
+html:not(.dark) .footer-link:hover {
+  color: var(--accent);
 }
 
 /* e-mail/WhatsApp em mono (§6 — metadados de contato) */

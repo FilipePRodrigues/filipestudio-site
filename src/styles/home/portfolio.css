@@ -157,6 +157,14 @@
   color: var(--roxo-claro);
 }
 
+/* FS-010.12 · paridade light: --roxo-claro (#a78bfa) rende 2.7:1 sobre
+   --surface claro — texto real (stack do projeto), então no light vira
+   --accent (#7c3aed, 5.7:1). Dark preservado (6.7:1). */
+html.light .pf-stack,
+html:not(.dark) .pf-stack {
+  color: var(--accent);
+}
+
 .pf-desc {
   color: var(--fg-mut);
   font-size: 1.0625rem;

@@ -95,6 +95,13 @@
   color: var(--roxo-claro);
 }
 
+/* FS-010.12 · paridade light: hover --roxo-claro (2.4–2.7:1 no claro) vira
+   --accent (5.0–5.7:1) — estado interativo legível nos 2 temas. */
+html.light .faq-q:hover,
+html:not(.dark) .faq-q:hover {
+  color: var(--accent);
+}
+
 .faq-q:focus-visible {
   outline: 2px solid var(--accent-neon);
   outline-offset: 2px;
