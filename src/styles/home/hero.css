@@ -131,11 +131,14 @@
 
 #topo .hero__title:hover .hero__title-accent,
 #topo .hero__title:focus-within .hero__title-accent {
+  /* FS-010.12 · paridade light: a faixa do shimmer usa --fg (no dark resolve
+     igual a rgba(238,240,255,…); no light vira faixa escura — clarear texto
+     já escuro sobre fundo claro derrubaria o contraste do fill). */
   background-image: linear-gradient(
       110deg,
-      rgba(238, 240, 255, 0) 35%,
-      rgba(238, 240, 255, 0.55) 50%,
-      rgba(238, 240, 255, 0) 65%
+      color-mix(in srgb, var(--fg) 0%, transparent) 35%,
+      color-mix(in srgb, var(--fg) 55%, transparent) 50%,
+      color-mix(in srgb, var(--fg) 0%, transparent) 65%
     ),
     var(--grad-marca);
   background-size: 280% 100%, 100% 100%;

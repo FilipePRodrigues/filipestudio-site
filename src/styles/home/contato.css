@@ -291,6 +291,14 @@
   border-bottom-color: #f87171;
 }
 
+/* FS-010.12 · paridade light: vermelho de erro #f87171 rende 2.8:1 sobre
+   --surface claro — no light vira #b91c1c (6.5:1 no texto, AA). Dark
+   preservado (#f87171 = 6.6:1 sobre --surface dark). */
+html.light .contact .contact__input[aria-invalid='true'],
+html:not(.dark) .contact .contact__input[aria-invalid='true'] {
+  border-bottom-color: #b91c1c;
+}
+
 .contact .contact__textarea {
   min-height: 110px;
   resize: vertical;
@@ -320,6 +328,12 @@
   font-family: var(--font-sans);
   font-size: 0.75rem;
   color: #f87171;
+}
+
+/* FS-010.12 · paridade light: erro 12px legível (ver nota acima). */
+html.light .contact .form-error,
+html:not(.dark) .contact .form-error {
+  color: #b91c1c;
 }
 
 /* botão de envio "Enviar ↩" */
