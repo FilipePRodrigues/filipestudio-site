@@ -117,13 +117,24 @@
   border-left: 0;
 }
 
-.contact__apoio-num {
-  display: block;
+/* FS-011.7 · I3a (fidelidade FS-013): marcador `✓` do protótipo aprovado
+   (<span class="check"> — caixa 34px, borda 2px, fundo roxo da marca, glifo
+   branco mono) no lugar da numeração mono 01/02/03. --accent = #7C3AED = --roxo
+   do protótipo; borda literal do protótipo (névoa 28%). */
+.contact__apoio-check {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
   margin-bottom: 0.875rem;
+  border: 2px solid rgba(238, 240, 255, 0.28);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  color: var(--fg-com);
+  font-size: 0.8125rem;
+  line-height: 1;
 }
 
 .contact__apoio-title {
