@@ -120,7 +120,7 @@
 .contact__apoio-num {
   display: block;
   margin-bottom: 0.875rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   color: var(--fg-com);
@@ -228,7 +228,7 @@
 
 .contact__form-note {
   margin-top: 0.5rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--fg-com);
 }
@@ -253,7 +253,7 @@
 .contact .contact__label {
   display: block;
   margin: 0 0 0.625rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 400;
   letter-spacing: 0.06em;

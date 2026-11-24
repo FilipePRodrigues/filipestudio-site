@@ -19,7 +19,7 @@
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
-   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
+   Mono = --font-mono (renomeado de --font-pixel em FS-011.6).
 */
 
 /* ============================================================
@@ -89,7 +89,7 @@
 }
 
 .svc-num {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   letter-spacing: 0.08em;
   color: var(--fg-com);
@@ -161,7 +161,7 @@
   content: '›';
   position: absolute;
   left: 0;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   color: var(--accent-neon);
 }
 
@@ -199,7 +199,7 @@
 }
 
 .tech-item {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   letter-spacing: 0.14em;
   color: var(--fg-com);

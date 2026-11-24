@@ -81,7 +81,7 @@
   padding: 0.45rem 1rem;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
   color: var(--accent-neon);
@@ -229,7 +229,7 @@
   padding: 0.45rem 0.95rem;
   border: 1px solid var(--border);
   border-radius: 999px;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--fg-com);

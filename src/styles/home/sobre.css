@@ -22,7 +22,7 @@
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
-   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
+   Mono = --font-mono (renomeado de --font-pixel em FS-011.6).
 */
 
 /* ── FS-010.3 · shell da composição da seção Sobre ────────────────────────────
@@ -165,7 +165,7 @@
 }
 
 .beneficio .num {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--fg-com);
 }
@@ -186,7 +186,7 @@
 .beneficios__quote {
   display: block;
   margin-top: 2rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -222,7 +222,7 @@
 
 .metric__label {
   margin-top: 0.5rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.08em;
   color: var(--accent-neon);

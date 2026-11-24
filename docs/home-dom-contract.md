@@ -41,15 +41,20 @@ Cada seção abaixo **deve existir** na Home e seguir o padrão:
 | Seção | ID obrigatório | `aria-labelledby` obrigatório (na implementação atual) |
 |---|---|---|
 | Hero | `#topo` | `hero-title` |
+| Portfolio | `#portfolio` | `portfolio-title` |
 | Serviços | `#servicos` | `servicos-title` |
+| Sobre | `#sobre` | `sobre-title` |
 | Benefícios | `#beneficios` | `beneficios-title` |
 | Processo | `#processo` | `processo-title` |
-| Portfolio | `#portfolio` | `portfolio-title` |
 | Planos | `#planos` | `planos-title` |
 | FAQ | `#faq` | `faq-title` |
 | Contato | `#contato` | `contato-title` |
 
 > Observação: `Navbar` e CTAs usam hashes como `href="#contato"`, `href="#portfolio"`, etc. Se os IDs mudarem, navegar/ativar estados também quebra.
+
+IDs suplementares presentes no DOM final (verificados em FS-011.6): `main#conteudo` (App.tsx), `#privacidade`/`#privacidade-title` (Footer), `#pixel-world` (prancha), `#brandIntro` (splash), `#heroScrollHint` (Hero) e os ids do formulário (`name`, `email`, `whatsapp`, `projectType`, `message`, `*-error`, `#form-success`, `#form-note`).
+
+> Atributos `data-*` de estilo (não contratos de motion): `data-hero-logo` (HeroLogo), `data-active` (ScrollProgress), `data-hover` (CursorFX) e `data-motion` (dataset do `documentElement` para reduced-motion). Os contratos de motion são exclusivamente os das §§3–4.
 
 ---
 

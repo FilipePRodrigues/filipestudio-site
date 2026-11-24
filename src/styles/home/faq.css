@@ -17,7 +17,7 @@
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
-   (Rótulo mono = --font-pixel; rename para --font-mono só em FS-011.6.)
+   (Rótulo mono = --font-mono; renomeado de --font-pixel em FS-011.6.)
 */
 
 /* ============================================================
@@ -108,7 +108,7 @@ html:not(.dark) .faq-q:hover {
 }
 
 .faq-q .qmark {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   color: var(--accent-neon);
 }
 
@@ -121,7 +121,7 @@ html:not(.dark) .faq-q:hover {
 
 /* "+" que vira "×" (rotate 45°) quando o item abre */
 .faq-q .chev {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   color: var(--fg-com);
   transition: transform 0.25s ease;
 }

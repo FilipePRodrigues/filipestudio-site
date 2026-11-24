@@ -19,7 +19,7 @@
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
-   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
+   Mono = --font-mono (renomeado de --font-pixel em FS-011.6).
 */
 
 /* ============================================================
@@ -110,7 +110,7 @@
 }
 
 .processo .num {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--fg-com);
 }
@@ -214,7 +214,7 @@
 
 .processo .week h4 {
   margin-bottom: 12px;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.08em;

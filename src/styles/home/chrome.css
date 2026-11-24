@@ -114,7 +114,7 @@
 
 /* Blog = navegação contextual em mono (§6) */
 .nav-blog {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   color: var(--fg-com);
@@ -274,7 +274,7 @@
 }
 
 .chrome-menu__close {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   letter-spacing: 0.04em;
   color: var(--fg-mut);
@@ -337,7 +337,7 @@ html:not(.dark) .chrome-menu__link:hover {
 
 /* numeração editorial mono (§6) */
 .chrome-menu__num {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.08em;
@@ -444,7 +444,7 @@ html:not(.dark) .chrome-menu__link:hover {
 
 .social-link {
   position: relative;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
   color: var(--fg-com);
@@ -486,7 +486,7 @@ html:not(.dark) .footer-link:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   word-break: break-all;
 }
@@ -534,7 +534,7 @@ html:not(.dark) .footer-link:hover {
   padding-block: 2rem;
   margin-top: 2rem;
   border-top: 1px solid var(--border);
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   color: var(--fg-com);
@@ -551,7 +551,7 @@ html:not(.dark) .footer-link:hover {
 }
 
 .chrome-footer__eco {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   letter-spacing: 0.06em;
 }
 
