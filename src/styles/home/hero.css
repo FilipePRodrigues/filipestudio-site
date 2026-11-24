@@ -359,8 +359,72 @@
     width: 100%;
   }
 
+  /* hotfix fold: folga para a linha de chips não ser fatiada pela dobra
+     em telas ~844px de altura (margens encolhem ~24px — sem perda de
+     legibilidade; nada é ocultado) */
+  .hero__actions {
+    margin-top: 2rem;
+  }
+
+  .hero__chips {
+    margin-top: 1.5rem;
+  }
+
   #topo .hero-stage {
     min-height: 400px;
+  }
+}
+
+/* ============================================================
+   VIEWPORTS BAIXOS (≥1024px de largura) — HOTFIX do corte na dobra
+   Em telas de ~760–850px de altura a soma padding 15vh + gaps + H1
+   6vw + lead + CTAs + chips passava de 100vh: chips e scroll hint
+   caíam na dobra e pareciam "comidos". Aqui a composição encolhe
+   conscientemente com a ALTURA do viewport:
+
+   - 850–949px: só o padding-block da seção (espaço invisível) —
+     tipografia e gaps internos idênticos ao aprovado; suficiente para
+     o scroll hint voltar a caber acima da dobra (hero ≤ dobra + 20px);
+   - ≤849px: paddings/gaps menores + H1 e lead um ponto menores
+     (clamp por vw com teto menor) + conteúdo alinhado ao topo para o
+     bloco fechar até os chips sem fatiar nada. Hierarquia, contraste e
+     contratos (DOM, data-*, reduced-motion) permanecem intactos.
+
+   Alturas ≥950px (900px em larguras que já cabem): composição original
+   byte a byte — nenhum override alcança essas telas.
+   ============================================================ */
+@media (min-width: 1024px) and (min-height: 850px) and (max-height: 949px) {
+  .hero {
+    padding-block: clamp(6.5rem, 12vh, 10.5rem) clamp(2.5rem, 5vh, 6rem);
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 849px) {
+  .hero {
+    justify-content: flex-start;
+    padding-block: clamp(5rem, 10vh, 6.5rem) clamp(2.5rem, 5vh, 4rem);
+  }
+
+  .hero__agenda {
+    margin-top: 0.75rem;
+  }
+
+  #topo .hero__title {
+    margin-top: 1rem;
+    font-size: clamp(2.25rem, 5vw, 4.25rem);
+  }
+
+  .hero__lead {
+    margin-top: 1rem;
+    font-size: clamp(1.25rem, 2vw, 1.375rem);
+  }
+
+  .hero__actions {
+    margin-top: 2rem;
+  }
+
+  .hero__chips {
+    margin-top: 1.25rem;
   }
 }
 
