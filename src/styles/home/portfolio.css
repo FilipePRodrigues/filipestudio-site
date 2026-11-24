@@ -46,7 +46,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--fg-com);
   padding: 0.85rem 1.35rem;
@@ -131,7 +131,7 @@
 }
 
 .pf-row__num {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--fg-com);
@@ -148,7 +148,7 @@
 }
 
 .pf-context {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--fg-com);
 }
@@ -198,7 +198,7 @@ html:not(.dark) .pf-stack {
   margin-left: 10px;
   flex: 1;
   min-width: 0;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   color: rgba(238, 240, 255, 0.75);
   background: rgba(238, 240, 255, 0.05);

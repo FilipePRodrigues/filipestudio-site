@@ -16,7 +16,7 @@
    --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
    --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
    Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
-   Mono = --font-pixel (rename para --font-mono só em FS-011.6).
+   Mono = --font-mono (renomeado de --font-pixel em FS-011.6).
 */
 
 /* ============================================================
@@ -108,7 +108,7 @@
   border-radius: 999px;
   background: var(--grad-marca);
   color: #0b0b1f;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -146,7 +146,7 @@
 }
 
 .planos .plan-price__note {
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--fg-com);
 }
@@ -171,7 +171,7 @@
   content: '✓';
   position: absolute;
   left: 0;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--accent-neon);
 }

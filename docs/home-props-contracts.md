@@ -1,459 +1,417 @@
-# Home — Props/Types Contracts por Seção (Luxury/GSAP)
+# Home — Props/Types Contracts (estado real pós-redesign)
 
-Objetivo deste documento: definir **contratos de props/types** para tornar a Home **data-driven e incremental**, sem quebrar o que já existe de **DOM/motion** no redesign aprovado.
+Espelho do estado **real** das props dos componentes da Home após o redesign
+(FS-010.3–FS-010.12 + FS-011.x). Este documento foi ressincronizado em
+**FS-011.6** lendo os `.tsx` — nada aqui é proposta: é o que o código faz hoje.
 
-- **Não é refactor**: é documentação para orientar a futura implementação.
-- **Regra de ouro (DOM estável):** IDs âncora, `aria-labelledby` e seletores `data-*`/classes que o motion usa **devem continuar existindo** com a mesma estrutura mínima.
-- **Fonte de defaults (compatibilidade incremental):** sempre que existir, o default vem de `src/data/content.ts`.
+- **Não é refactor**: é documentação de contrato para manter a Home estável em
+  mudanças futuras.
+- **Regra de ouro (DOM estável):** IDs âncora, `aria-labelledby` e seletores
+  `data-*`/classes que o `src/lib/motion.ts` usa **devem continuar existindo**
+  com a mesma estrutura mínima (ver `docs/home-dom-contract.md`).
+- **Fonte de defaults:** sempre que existe, o default vem de
+  `src/data/content.ts` (intocado) ou é literal no componente (defaults das
+  props). `content.ts` continua sendo a única fonte de conteúdo comercial.
 
 > Referência de DOM/motion: `docs/home-dom-contract.md`.
+> Tipos compartilhados: `src/types/index.ts` (`Service`, `Benefit`,
+> `ProcessStep`, `PortfolioItem`, `Metric`, `PricingTier`, `FaqItem`,
+> `TechItem`, `ContactFormData`, `ProjectType`, `Theme`).
 
 ---
 
 ## Invariantes globais (não-negociáveis) — para não quebrar motion/DOM/hash
 
 1) **IDs âncora + `aria-labelledby`**
-- IDs de navegação da Home devem permanecer: `#topo`, `#servicos`, `#beneficios`, `#processo`, `#portfolio`, `#planos`, `#faq`, `#contato`.
-- Para cada seção, `aria-labelledby` deve apontar para o `id` do título correspondente (ex.: `hero-title`, `servicos-title`, etc.).
+- IDs de navegação da Home permanecem: `#topo`, `#servicos`, `#beneficios`,
+  `#processo`, `#portfolio`, `#planos`, `#faq`, `#contato` (mais `#sobre`,
+  `#privacidade`, `#pixel-world`, `#brandIntro`, `#heroScrollHint`, `#conteudo`).
+- Para cada seção, `aria-labelledby` aponta para o `id` do título
+  (`hero-title`, `servicos-title`, `beneficios-title`, `processo-title`,
+  `portfolio-title`, `planos-title`, `faq-title`, `contato-title`,
+  `sobre-title`, `privacidade-title`).
 
 2) **Idempotência por dataset/estrutura (evitar re-render “travando” motion)**
-- `BrandIntro` e `HeroIntro` usam `dataset.done`/flags (motion só executa se o guard permitir).
-- `luxury-title` usa `data-split` e faz split via `title.innerHTML` (preferir títulos como texto + `<br>` simples).
+- `BrandIntro` e `HeroIntro` usam `dataset.done`/flags (motion só executa se o
+  guard permitir).
+- `.luxury-title` usa `data-split` e faz split via `innerHTML` — títulos são
+  **texto + `<br>`** (nunca spans por linha).
 
 3) **Contratos de motion que dependem de detalhes reais do código**
-- **Pull quote**: motion insere uma `.pull-quote__bar` como **primeiro filho** e anima; o conteúdo deve aceitar inserção como primeiro filho.
-- **Scrub statement**: motion reescreve `innerHTML` (exigir texto simples; não passar markup complexo).
-- **Portfolio image contracts**:
-  - `data-image-zoom` exige `img` dentro para zoom.
-  - `data-image-reveal` sempre anima o frame via `clipPath`; `img` é opcional (se não existir, só não escala o `img`).
-- **Flight icon**: `[data-flight-icon]` é provido por `PixelIcon` (tipicamente em Services/Benefits), não pela PixelGallery.
+- **Pull quote**: motion insere `.pull-quote__bar` como primeiro filho; o nó
+  (`p[data-pull-quote]`) deve aceitar inserção e conter texto simples.
+- **Scrub statement** (`[data-scrub-statement]`): inexistente no DOM atual;
+  contrato vale só se voltar (motion reescreve `innerHTML`).
+- **Portfolio image contracts**: `data-image-zoom` exige `<img>` direto dentro
+  do frame; `data-image-reveal` anima o frame via `clipPath` (`img` opcional).
+- **Icon flight**: `[data-flight-icon]` é provido por `PixelIcon` (usado em
+  Services/Benefits), **não** pela PixelGallery (prancha).
+- **Count-up**: `data-count` = número limpo, `data-suffix` = resto, nó **sem
+  filhos** (motion sobrescreve `textContent`).
 
-4) **Preservação de estruturas de lazy/SSR**
-- Evitar tornar `data-hero-part`, `data-hero-intro`, `data-flight-*`, `data-image-*`, `data-spotlight` condicionais ou desmontar/remontar em render incremental sem estratégia (motion depende de nós presentes no DOM.
+4) **Preservação de nós do DOM**
+- Evitar tornar `data-hero-part`, `data-hero-intro`, `data-brand-*`,
+  `data-image-*`, `data-spotlight` condicionais ou desmontar/remontar sem
+  estratégia (motion depende de nós presentes no DOM).
+- Ausência garantida do contrato antigo do Flight de cena: nenhum
+  `data-flight-section/track/lean/scene/card` (só `data-flight-icon`, §3.15 do
+  contrato de DOM).
 
 ---
 
 ## Convenções de contrato (aplicável a todas as seções)
 
 ### 1) Modelo de dados vs. DOM
-- As props devem fornecer **conteúdo** (textos, arrays, links, imagens, etc.).
-- A renderização deve manter:
-  - `section#<id>` + `aria-labelledby="<id>-title"` (quando aplicável)
-  - títulos com classes que suportam **Title masks** (motion): `.luxury-title` (e preservação de `<br>` quando usado no split)
-  - nós `data-*` que o motion procura (Hero intro, Flight, Count-up, Pull quote, Image zoom/reveal, Spotlight, Underline sweep, Brand intro).
+- Props fornecem **conteúdo** (textos, arrays, links); a renderização mantém
+  `section#<id>` + `aria-labelledby="<id>-title"`, `.luxury-title` (texto +
+  `<br>`) e os nós `data-*` do motion.
+- Todos os componentes de seção têm props **opcionais com defaults** — a Home é
+  renderizada hoje sem repasse de props (os defaults reproduzem o conteúdo
+  real).
 
 ### 2) Obrigatório vs opcional
-- **Obrigatória:** campos que sustentam integridade do DOM/motion (ex.: arrays não-vazios do Flight, IDs/aria, chaves para erros do Contact).
-- **Opcional:** variações de conteúdo (ex.: imagem pode ser ausente em cards de Portfolio, mas preserve o contrato se houver motion sobre esse nó).
+- **Obrigatória:** campos que sustentam integridade do DOM/motion (IDs/aria,
+  arrays de itens, chaves do formulário).
+- **Opcional:** variações de conteúdo (ex.: `description` do Portfolio pode ser
+  vazio; o render é condicional).
 
 ---
 
-## BrandIntro (opcional, fora do `main#conteudo`)
+## BrandIntro (splash; fora do `main#conteudo`)
 
-### 1) Proposta de interface de props (texto)
-- `BrandIntroProps`
-  - `name` (**Obrigatória**): nome (ex.: "Filipe")
-  - `nameSuffix` (**Obrigatória**): sufixo (ex.: "Studio")
-  - `monogramSrc` (**Obrigatória**): URL do monograma (svg)
+### Props reais (`BrandIntro.tsx`)
+- **Nenhuma props** — `export function BrandIntro()`.
 
-> Observação: hoje o componente também renderiza `data-brand-ring` e `data-brand-rule` como elementos vazios (sem texto). Eles devem continuar existindo no DOM.
+### Fonte de conteúdo
+- Monograma: `assetUrl('/monogram.svg')` (embutido no componente).
+- Nome/sufixo: literais no JSX (`Filipe` / `Studio`), com `data-brand-name`.
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `name` ← `BRAND.name`
-- `nameSuffix` ← `BRAND.nameSuffix`
-- `monogramSrc` ← **não existe em** `content.ts` (o src do svg é atualmente embutido em `BrandIntro.tsx` via `assetUrl('/monogram.svg')`)
-
-### 3) Contrato DOM/motion a preservar (home-dom-contract)
-- Motion/IDs (dentro do nó):
-  - raiz com `data-brand-intro` (no home atual: `div#brandIntro`)
-  - filhos:
-    - `[data-brand-mark]` (imagem)
-    - `[data-brand-ring]`
-    - `[data-brand-rule]`
-
-### 4) Riscos & validações recomendadas
-- Se `data-brand-intro` ou algum `data-brand-*` for removido/renomeado, o splash pode não executar/ficar inconsistente.
-- `data-brand-mark` deve ser um nó existente com mídia renderizada (img ou equivalente); evite condicional que some no primeiro render.
+### Contrato DOM/motion a preservar
+- Raiz `div#brandIntro[aria-hidden="true"][data-brand-intro]`.
+- `[data-brand-mark]` (img 96×96), `[data-brand-ring]`, `[data-brand-rule]`,
+  `[data-brand-name]`.
+- Guards do motion: `dataset.done === '1'`; lock via classe
+  `brand-intro-lock` no `documentElement` (removida no cleanup).
 
 ---
 
-## Navbar (opcional)
+## Navbar (chrome)
 
-### 1) Proposta de interface de props (texto)
-- `NavbarProps`
-  - `theme` (**Obrigatória**): `'light' | 'dark'`
-  - `onToggleTheme` (**Obrigatória**): callback
-  - `links` (**Obrigatória**): lista de links { `href`, `label` }
-  - `ctaHref` (**Opcional**): default pode ser `#contato`
+### Props reais (`Navbar.tsx`)
+```ts
+interface NavbarProps {
+  theme: 'light' | 'dark'        // obrigatória
+  onToggleTheme: () => void      // obrigatória
+}
+```
+- Não há props de links: `ALL_LINKS = [...NAV_LINKS, { href: '#/blog', label:
+  'Blog ↗' }]` é montado internamente (o item do Blog é literal local).
 
-> Para manter o contrato atual de motion, os links devem renderizar `data-underline-sweep`.
+### Fonte de conteúdo
+- `BRAND` (monograma/nome), `NAV_LINKS` — `src/data/content.ts`.
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `links` ← `NAV_LINKS` (e o componente atual ainda adiciona "#/blog" localmente)
-
-### 3) Contrato DOM/motion a preservar
-- Para underline sweep (motion):
-  - cada link/CTA que usa o efeito deve ter `data-underline-sweep`.
-- IDs/hashtags estáveis:
-  - `href` precisa bater com as âncoras da Home (`#servicos`, `#beneficios`, `#processo`, `#portfolio`, `#planos`, `#faq`, `#contato`).
-
-### 4) Riscos & validações recomendadas
-- Links com `href` inválido quebram navegação e estado ativo por scroll.
-- Evitar duplicar `href` (pode causar listas com `key` duplicado e UI inconsistente).
+### Contrato DOM/motion a preservar
+- Links do menu com `data-underline-sweep` (motion injeta `.sweep-line`).
+- `href` estáveis casando com as âncoras da Home (+ `#/blog`).
+- Estados internos: `data-active`/`data-hover` são hooks de estilo (ScrollProgress/
+  CursorFX), não contratos de motion.
 
 ---
 
-## 1) Hero (seção âncora: `#topo`)
+## Hero (seção `#topo`)
 
-### 1) Proposta de interface de props (texto)
-- `HeroProps`
-  - `introTag` (**Obrigatória**): string do rótulo "Agenda aberta..."
-  - `title` (**Obrigatória**): string do `h1` (ou estrutura com destaques, ex.: spans)
-  - `subtitle` (**Obrigatória**): string do parágrafo
-  - `primaryCta` (**Obrigatória**): { `href`, `label` }
-  - `secondaryCta` (**Obrigatória**): { `href`, `label` }
-  - `scrollHint` (**Opcional**): string do hint (hoje aparece como "Role para continuar")
+### Props reais (`Hero.tsx`)
+```ts
+export type HeroProps = {
+  agendaText?: string        // default: 'Agenda aberta pra novos projetos'
+  titlePrefix?: string       // default: 'Sites e landing pages que'
+  titleHighlight?: string    // default: 'transformam clique em cliente'
+  introText?: string         // default: lead real ("Eu crio experiências digitais…")
+  primaryCtaText?: string    // default: 'Bora conversar'
+  secondaryCtaText?: string  // default: 'Ver portfólio'
+  shimmerDuration?: number   // default: 6 (segundos do ShimmerText)
+}
+```
+- Todos opcionais, com defaults literais = conteúdo real renderizado.
+- O `titlePrefix` é quebrado editorialmente (última palavra fecha a linha 2 do
+  H2 bicolor); o texto renderizado permanece idêntico ao default.
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `subtitle` pode defaultar para `BRAND.tagline` **(proposta)**
-- `primaryCta.href` default ← `#contato`
-- `secondaryCta.href` default ← `#portfolio`
+### Fonte de conteúdo
+- Literais das props + `PIXEL_ARTS[0]` (figura de apoio da cena) do
+  `content.ts`.
 
-> Nota: `content.ts` não contém os textos literais atuais do Hero (ex.: "Agenda aberta...", "Sites e landing pages..."). Para compatibilidade incremental, o contrato deve permitir override, mantendo o layout/DOM. Quando o redesign migrar o texto, a fonte pode passar a ser `content.ts`.
-
-### 3) Contrato DOM/motion a preservar
-- IDs e aria:
-  - `section#topo`
-  - `aria-labelledby="hero-title"`
-  - `id="hero-title"` no `h1`
-- Motion intro (Luxury Motion):
-  - contêiner com `data-hero-intro` **deve conter** elementos com `data-hero-part`
-  - partes devem existir para stagger (o motion usa `[data-hero-part]` dentro do intro)
-
-### 4) Riscos & validações recomendadas
-- `data-hero-part` não deve virar condicional (ou o stagger pode falhar no ciclo inicial).
-- Se CTAs mudarem para outro elemento sem preservar `href` com `#contato`/`#portfolio`, quebra navegação por hash.
+### Contrato DOM/motion a preservar
+- `section#topo` + `aria-labelledby="hero-title"` + `h1#hero-title`
+  (`.luxury-title`, texto + `<br>`).
+- `[data-hero-intro]` contendo `[data-hero-part]` (5 nós) para o stagger.
+- `#heroScrollHint` (`.hero-scrollhint`, `aria-hidden`).
+- `HeroLogo` (`[data-hero-logo]` + `[data-image-zoom]` com `<img>` direto).
 
 ---
 
-## 2) Services (seção `#servicos`)
+## Portfolio (seção `#portfolio`)
 
-### 1) Proposta de interface de props (texto)
-- `ServicesProps`
-  - `title` (**Obrigatória**): string do `h2#servicos-title`
-  - `description` (**Opcional**): string do parágrafo abaixo do título
-  - `items` (**Obrigatória**): lista de `Service` (ver `src/types/index.ts`)
+### Props reais (`Portfolio.tsx`)
+```ts
+export type PortfolioProps = {
+  casesLabel?: string        // default: 'Cases' (pixel-label do cabeçalho)
+  title?: string             // default: 'Projetos reais,\ndo design ao deploy.'
+  description?: string       // default: '' (render condicional; microcopy real
+                             // vive só no `.pf-head__micro`)
+  items?: PortfolioItem[]    // default: PORTFOLIO (content.ts intocado)
+}
+```
+- `title` aceita `\n` como quebra editorial (linha 1/linha 2 do bicolor);
+  strings de linha única renderizam como antes.
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `items` ← `SERVICES`
+### Fonte de conteúdo
+- `PORTFOLIO` (`src/data/content.ts`) + microcopy de apresentação por case em
+  `CASE_META` interno (arquivo/stack/legenda `fig.`), literal no componente.
 
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#servicos`
-  - `aria-labelledby="servicos-title"`
-  - `h2#servicos-title` deve existir
-- Title masks (split):
-  - manter `.luxury-title` no `h2` (o motion procura `.luxury-title[data-split]`)
-
-### 4) Riscos & validações recomendadas
-- `items` deve ser array (e normalmente não vazio para layout). Se vazio, evitar render “silencioso” que deixa a seção sem conteúdo.
-- Validar strings básicas:
-  - `service.bullets` deve ser array de strings
-  - `service.icon` deve ser um id suportado por `PixelIcon` (senão ícone quebra visualmente)
-
----
-
-## 3) Benefits (seção `#beneficios`)
-
-### 1) Proposta de interface de props (texto)
-- `BenefitsProps`
-  - `title` (**Obrigatória**): string do `h2#beneficios-title`
-  - `pullQuote` (**Obrigatória**): string do pull quote
-  - `items` (**Obrigatória**): lista de `Benefit`
-  - `cta` (**Opcional**): { `href`, `label` }
-
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `items` ← `BENEFITS`
-
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#beneficios`
-  - `aria-labelledby="beneficios-title"`
-  - `h2#beneficios-title` deve existir
-- Pull quote (motion):
-  - nó com `data-pull-quote` deve conter texto simples (o motion injeta `.pull-quote__bar` e reprocessa conteúdo)
-
-### 4) Riscos & validações recomendadas
-- Se `pullQuote` contiver HTML/markup embutido (ex.: strings com tags), o motion pode reescrever e destruir estrutura.
-- Validar `items[*].id/title/description/icon` (icons suportados pelo `PixelIcon`).
+### Contrato DOM/motion a preservar
+- `section#portfolio` + `aria-labelledby="portfolio-title"`.
+- Painel de abas: `role` de tablist/tab/tabpanel + teclado (←/→/Home/End);
+  `ScrollTrigger.refresh()` ao trocar de aba (re-calcula os reveals).
+- Cards: `data-spotlight`; frames de preview com `data-image-zoom` (com
+  `<img>` direto) + `data-image-reveal` reanexados por aba.
 
 ---
 
-## 4) Metrics (contagem com Count-up)
+## Services (seção `#servicos`)
 
-### 1) Proposta de interface de props (texto)
-- `MetricsProps`
-  - `items` (**Obrigatória**): lista de `Metric`
-  - `countMapping` (**Opcional**): regra para derivar `count`/`suffix` do `value`
+### Props reais (`Services.tsx`)
+```ts
+type ServicesProps = {
+  services?: Service[]          // default: SERVICES (6 itens reais)
+  label?: string                // default: '// servicos' (kicker mono)
+  titleLines?: [string, string] // default: ['O que eu faço', 'por você']
+}
+```
+- **Nota FS-010.7:** não existem props `heading`/`description` — o H2 bicolor
+  é `titleLines` (linha 1 peso 500, linha 2 com fill `grad-marca`), renderizado
+  como texto + `<br>` sob `.luxury-title`.
 
-> Hoje, o componente deriva `data-count`/`data-suffix` via função `metricAnim()` (mapeia strings específicas como `"95+"`). No contrato proposto, você pode:
-> - (a) manter derivação interna (mais simples), ou
-> - (b) receber `count`/`suffix` já prontos em props para reduzir acoplamento.
+### Fonte de conteúdo
+- `SERVICES` (`content.ts`) — 6 itens, destaque editorial em
+  "Landing Pages que Convertem", numeração mono 01–06.
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `items` ← `METRICS`
-- (proposta) `countMapping` inicial pode replicar o mapeamento atual:
-  - `95+` → `data-count=95`, `data-suffix='+'`
-  - `100%` → `data-count=100`, `data-suffix='%'`
-  - `30–90d` → `data-count=90`, `data-suffix='d'`
-
-### 3) Contrato DOM/motion a preservar
-- Count-up (motion):
-  - todo elemento que deve animar tem `data-count` (string numérica “limpa”) e opcional `data-suffix`
-  - motion sobrescreve `textContent` no onUpdate (evitar colocar markup dentro desse nó)
-
-### 4) Riscos & validações recomendadas
-- `data-count` deve ser numérico compatível com o parser do motion (evitar letras/formatos exóticos).
-- Garantir que `items` não seja vazia para evitar grid sem conteúdo.
+### Contrato DOM/motion a preservar
+- `section#servicos` + `aria-labelledby="servicos-title"` +
+  `h2#servicos-title.section-title.luxury-title`.
+- `data-spotlight` nos cards; `data-flight-icon` nos ícones (via `PixelIcon`).
+- CTA único "Quero um projeto assim" → `#contato`.
 
 ---
 
-## 5) PixelGallery (Flight Scene: `data-flight-section`)
+## TechStrip (régua de tecnologias)
 
-### 1) Proposta de interface de props (texto)
-- `PixelGalleryProps`
-  - `heading` (**Obrigatória**): string do `h2`
-  - `subheading` (**Obrigatória**): string do `p`
-  - `cards` (**Obrigatória**): lista de artes { `id`, `src`, `alt` }
-
-> O contrato do Flight depende de haver uma lista com pelo menos 1 card.
-
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `cards` ← `PIXEL_ARTS`
-
-### 3) Contrato DOM/motion a preservar
-- Raiz do Flight:
-  - elemento com `data-flight-section`
-- Dentro dele, os nós obrigatórios:
-  - `[data-flight-track]`
-  - `[data-flight-lean]`
-  - `[data-flight-scene]`
-  - pelo menos 1 nó `[data-flight-card]` dentro do scene/field
-
-### 4) Riscos & validações recomendadas
-- Se `cards.length < 1`, o motion pode abortar (contrato exige lista não vazia).
-- Cada card deve renderizar `img` com `src` válido (o motion e layout dependem das dimensões/visual).
-- Em mobile/coarse pointer, a UI pode aplicar modo estático: valide que o conteúdo ainda fica legível.
+### Props reais (`TechStrip.tsx`)
+- **Nenhuma props** — `export function TechStrip()`.
+- Conteúdo: `TECH_STACK` (`TechItem[]` do `content.ts`),
+  `aria-label="Tecnologias e plataformas"`. Sem contrato de motion.
 
 ---
 
-## 6) Process (seção `#processo`)
+## Sobre (seção `#sobre`; abriga a prancha, Benefits e Metrics)
 
-### 1) Proposta de interface de props (texto)
-- `ProcessProps`
-  - `title` (**Obrigatória**): string do `h2#processo-title`
-  - `description` (**Opcional**): parágrafo abaixo do título
-  - `steps` (**Obrigatória**): lista de `ProcessStep`
-
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `steps` ← `PROCESS_STEPS`
-
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#processo`
-  - `aria-labelledby="processo-title"`
-  - `h2#processo-title` deve existir
-- Title masks (split):
-  - manter classe `.luxury-title` no título
-
-### 4) Riscos & validações recomendadas
-- `steps` deve conter `id/step/title/description` (evita chaves e texto vazio).
-- Evitar mudar o elemento que recebe o stagger/reveal (ex.: se você trocar `li`/`TiltCard`, o reveal pode “sumir”).
+### Props reais (`Sobre.tsx`)
+- **Nenhuma props** — `export function Sobre()`.
+- `section#sobre` + `aria-labelledby="sobre-title"`; composição fixa:
+  bio editorial → `PixelGallery` → `Benefits` (`#beneficios` aninhada) →
+  `Metrics` (faixa `.metrics`).
 
 ---
 
-## 7) Portfolio (seção `#portfolio`)
+## PixelGallery (prancha de figuras — `#pixel-world`)
 
-### 1) Proposta de interface de props (texto)
-- `PortfolioProps`
-  - `title` (**Obrigatória**): string do `h2#portfolio-title`
-  - `description` (**Opcional**): parágrafo abaixo do título
-  - `items` (**Obrigatória**): lista de `PortfolioItem`
+### Props reais (`PixelGallery.tsx`)
+```ts
+type PixelGalleryHeader = { pixelLabel: string; title: string; description: string }
+type PixelGalleryProps = {
+  header?: Partial<PixelGalleryHeader>  // default: DEFAULT_HEADER
+  arts?: readonly PixelArt[]            // default: PIXEL_ARTS (12 artes)
+}
+```
+- `DEFAULT_HEADER`: `// pixel gallery` / `Um pouco de mim em pixels` /
+  `Dev, atleta e criador — a mesma energia que eu levo pros projetos.`
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `items` ← `PORTFOLIO`
+### Fonte de conteúdo
+- `PIXEL_ARTS` (`content.ts`) + `FIG_LABELS` interno (`codando` … `headphone`,
+  ordem idêntica ao catálogo).
 
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#portfolio`
-  - `aria-labelledby="portfolio-title"`
-- Cards (motion e interação):
-  - link/card deve ter `data-spotlight`
-  - container de imagem deve manter `data-image-zoom` **e** `data-image-reveal`
-  - o nó `data-image-zoom` deve conter um `img` (o motion procura `frame.querySelector('img')`)
-
-### 4) Riscos & validações recomendadas
-- Se `items[*].image` vier vazio/undefined e ainda assim `data-image-zoom/data-image-reveal` estiver presente, o motion pode não encontrar `img`.
-- Validar `href`:
-  - se `href` existe: abrir em nova aba e `rel="noopener noreferrer"`
-  - se `href` não existe: garantir que o CTA ainda é coerente (o card atual muda o texto de acordo)
+### Contrato DOM/motion a preservar
+- `section#pixel-world.prancha` (`aria-label="Artes pixel do Filipe"`).
+- 12 `figure.prancha__frame` com `data-image-reveal`; `figcaption.fig` no
+  formato `fig. NN · <legenda>` (01–12).
+- **Sem** qualquer `[data-flight-section|track|lean|scene|card]` — Flight de
+  cena aposentado em FS-010.8 (`setupFlightScene` removido do motion).
 
 ---
 
-## 8) Pricing (seção `#planos`)
+## Benefits (seção `#beneficios`, aninhada em `#sobre`)
 
-### 1) Proposta de interface de props (texto)
-- `PricingProps`
-  - `title` (**Obrigatória**): string do `h2#planos-title`
-  - `description` (**Opcional**): parágrafo abaixo do título
-  - `tiers` (**Obrigatória**): lista de `PricingTier`
+### Props reais (`Benefits.tsx`)
+```ts
+type BenefitsProps = {
+  benefits?: Benefit[]  // default: BENEFITS (6 itens reais)
+  label?: string        // default: '// beneficios'
+  heading?: string      // default: 'Não é só um site.\nÉ máquina de vender.'
+  pullQuote?: string    // default: '// bh, br · one-person studio · do design ao deploy'
+  ctaLabel?: string     // default: 'Bora conversar'
+}
+```
+- `heading` usa `\n` como quebra editorial (linha 1/linha 2 do bicolor).
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `tiers` ← `PRICING`
-
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#planos`
-  - `aria-labelledby="planos-title"`
-  - `h2#planos-title` deve existir
-- Title masks (split):
-  - manter `.luxury-title` no título
-
-### 4) Riscos & validações recomendadas
-- `tiers[*].features` deve ser array de strings (evita lista quebrada).
-- `tiers[*].ctaLabel` deve existir para não deixar o CTA sem texto.
-- Garantir consistência do estado `featured` (muda classes e contraste).
+### Contrato DOM/motion a preservar
+- `section#beneficios` + `aria-labelledby="beneficios-title"`.
+- `p.pull-quote[data-pull-quote]` **limpo** (texto simples; motion injeta
+  `.pull-quote__bar` como 1º filho).
 
 ---
 
-## 9) FAQ (seção `#faq`)
+## Metrics (faixa `.metrics`)
 
-### 1) Proposta de interface de props (texto)
-- `FAQProps`
-  - `title` (**Obrigatória**): string do `h2#faq-title`
-  - `description` (**Opcional**): parágrafo abaixo do título
-  - `items` (**Obrigatória**): lista de `FaqItem`
+### Props reais (`Metrics.tsx`)
+```ts
+type MetricsProps = {
+  metrics?: Metric[]   // default: METRICS (4 itens reais)
+  ariaLabel?: string   // default: 'Números do FilipeStudio'
+}
+```
+- Derivação interna `metricAnim()`: `95+` → count `95`/suffix `+`; `100%` →
+  `100`/`%`; `30–90d` → `30`/`–90d`; demais itens estáticos ("Mobile-first").
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `items` ← `FAQS`
-
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#faq`
-  - `aria-labelledby="faq-title"`
-- Title masks (split):
-  - manter `.luxury-title` no título
-
-### 4) Riscos & validações recomendadas
-- A implementação atual usa `useId()` para gerar:
-  - `aria-controls` e `aria-labelledby` entre trigger/panel
-- Se futuramente migrar a props para permitir lazy-load, preserve:
-  - `button[aria-controls=<panelId>]` e `div[aria-labelledby=<buttonId>]`
-- Validar `items[*].id` (chave/estado) e `question/answer` não vazios.
+### Contrato DOM/motion a preservar
+- `data-count` = número limpo, `data-suffix` = resto, nó **sem filhos**
+  (`setupCountUp` sobrescreve `textContent`).
 
 ---
 
-## 10) Contact (seção `#contato`)
+## Process (seção `#processo`)
 
-### 1) Proposta de interface de props (texto)
-- `ContactProps`
-  - `title` (**Obrigatória**): string do `h2#contato-title`
-  - `description` (**Opcional**): parágrafo abaixo do título
-  - `leadSubjectTemplate` (**Opcional**): template para assunto do e-mail/WhatsApp
-  - `projectTypes` (**Obrigatória**): lista { `value`, `label` } (valor deve casar com `ProjectType`)
-  - `defaultForm` (**Opcional**): `ContactFormData` com valores vazios (compatibilidade)
-  - `brandEmail` (**Obrigatória**)
-  - `brandPhoneDisplay` (**Opcional**): usado em links
+### Props reais (`Process.tsx`)
+```ts
+type ProcessProps = {
+  steps?: ProcessStep[]         // default: PROCESS_STEPS (4 etapas reais)
+  label?: string                // default: '// processo'
+  titleLines?: [string, string] // default: ['Simples, transparente', 'e sem surpresa.']
+  description?: string          // default: 'Quatro etapas claras pra tirar o projeto do papel e colocar no ar com qualidade.'
+}
+```
 
-> Nota: o contrato do formulário é essencial porque o componente usa `aria-describedby` apontando para IDs de erro.
-
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `brandEmail` ← `BRAND.email`
-- `brandPhoneDisplay` ← `BRAND.phoneDisplay`
-- WhatsApp link e mailto:
-  - `whatsappLink()` e `mailtoLink()` vêm de `src/data/content.ts`
-  - (proposta) manter a lógica de `buildLeadMessage()`/`validate()` compatível
-
-> `projectTypes` hoje não existe em `content.ts`: o contrato deve permitir override, mas o default pode continuar vindo do array interno do componente (a ser extraído no futuro).
-
-### 3) Contrato DOM/motion a preservar
-- Seção e aria:
-  - `section#contato`
-  - `aria-labelledby="contato-title"`
-  - `h2#contato-title` deve existir
-- Title masks (split):
-  - manter `.luxury-title` no título
-- Acessibilidade do formulário (não é motion, mas é contrato DOM):
-  - `input/select/textarea` usam `id` fixos:
-    - `name`, `email`, `whatsapp`, `projectType`, `message`
-  - `aria-describedby` aponta para IDs de erro:
-    - `name-error`, `email-error`, `projectType-error`, `message-error`
-  - erros usam `role="alert"`
-- Campos obrigatórios (UI atual):
-  - `required` + `aria-required="true"`
-
-### 4) Riscos & validações recomendadas
-- `ContactFormData` deve ser validado com:
-  - `name.length >= 2`
-  - `email` formato válido
-  - `projectType` selecionado (não pode ficar em `''`)
-  - `message.length >= 10`
-- WhatsApp/mailer links:
-  - garantir encoding correto ao montar `whatsappLink(message)` e `mailtoLink(subject, body)`
-- IDs de erro não podem mudar sem atualizar `aria-describedby` (senão acessibilidade quebra e testes falham).
+### Contrato DOM/motion a preservar
+- `section#processo` + `aria-labelledby="processo-title"` +
+  `.luxury-title` (texto + `<br>`).
+- Stepper 01–04 via radios `:checked` (teclado nativo, sem JS novo); grade
+  semana/dia decorativa `aria-hidden` (15 dias preenchidos).
 
 ---
 
-## 11) Footer (sem section id de motion, mas com âncoras e links)
+## Pricing (seção `#planos`)
 
-### 1) Proposta de interface de props (texto)
-- `FooterProps`
-  - `brandName` (**Obrigatória**), `brandNameSuffix` (**Obrigatória**), `brandFullName` (**Obrigatória**)
-  - `socialLinks` (**Obrigatória**): lista { `id`, `label`, `href` }
-  - `navLinks` (**Obrigatória**): lista { `href`, `label` }
-  - `privacyAnchorId` (**Obrigatória**): default `privacidade`
+### Props reais (`Pricing.tsx`)
+```ts
+type PricingProps = {
+  tiers?: PricingTier[]         // default: PRICING (2 planos reais)
+  label?: string                // default: '// planos'
+  titleLines?: [string, string] // default: ['Investimento', 'sem enrolação.']
+  lead?: string                 // default: 'Pacotes flexíveis pra cada momento do seu negócio. O Profissional é sob medida — conta teu projeto e eu mando a proposta.'
+}
+```
+- Rótulos de CTA por card vivem em `CTA_LABELS` interno (`Quero o Essencial` /
+  `Solicitar orçamento`); o `ctaLabel` do `PRICING` no `content.ts` permanece
+  intacto.
 
-### 2) Defaults (src/data/content.ts) e mapeamento
-- `brand*` ← `BRAND` (name/nameSuffix/fullName)
-- `socialLinks` ← `SOCIAL_LINKS`
-- `navLinks` ← `NAV_LINKS`
-
-### 3) Contrato DOM/motion a preservar
-- Âncora de privacidade:
-  - `footer#privacidade`
-- Links de navegação:
-  - `href="#topo"`, `#servicos`, `#beneficios`, `#processo`, `#portfolio`, `#planos`, `#faq`, `#contato`
-
-> Motion underline sweep não atua no Footer atual, mas os hashes devem continuar estáveis.
-
-### 4) Riscos & validações recomendadas
-- `socialLinks[*].href` inválidos quebram acessibilidade por links.
-- Evitar remover `mailto:${BRAND.email}` e WhatsApp (eles fazem parte do contrato funcional de contato).
+### Contrato DOM/motion a preservar
+- `section#planos` + `aria-labelledby="planos-title"` + `.luxury-title`.
+- `data-spotlight` nos cards + `TiltCard`.
+- Preços/features do `PRICING` exibidos sem alteração (nunca inventar valor
+  para o "Sob consulta").
 
 ---
 
-# Checklist final (para implementação futura)
+## FAQ (seção `#faq`)
 
-- [ ] Todos os `section#<id>` e `aria-labelledby` obrigatórios permanecem idênticos aos do contrato.
-- [ ] Todos os seletores do `motion.ts` continuam existindo:
+### Props reais (`FAQ.tsx`)
+- **Nenhuma props** — `export function FAQ()`.
+- Estado interno: `openId` (acordeão 1-aberto; nasce com `FAQS[0].id`).
+
+### Fonte de conteúdo
+- `FAQS` (`content.ts`) — 6 perguntas reais; `useId()` para os pares
+  `aria-controls`/`aria-labelledby` de trigger/panel.
+
+### Contrato DOM/motion a preservar
+- `section#faq` + `aria-labelledby="faq-title"` + `.luxury-title`.
+- `button[aria-controls=<panelId>]` e `div[aria-labelledby=<buttonId>]`
+  gerados por `useId()`.
+
+---
+
+## Contact (seção `#contato`)
+
+### Props reais (`Contact.tsx`)
+- **Nenhuma props** — `export function Contact()`.
+- Internos: `PROJECT_TYPES` (5 valores de `ProjectType`), `EMPTY_FORM`,
+  `buildLeadMessage()`, `validate()`; estado `form`/`errors`/`sent`.
+
+### Fonte de conteúdo
+- `BRAND` (email/telefone), `whatsappLink()`, `mailtoLink()` — `content.ts`.
+
+### Contrato DOM/motion a preservar
+- `section#contato` + `aria-labelledby="contato-title"` + `.luxury-title`.
+- Formulário: ids fixos `name`/`email`/`whatsapp`/`projectType`/`message`;
+  erros `role="alert"` com `aria-describedby` → `name-error`/`email-error`/
+  `projectType-error`/`message-error`; `required` + `aria-required="true"`.
+- Submit → `window.open(whatsappLink(...))` + painel "Quase lá! 🎉"
+  (`#form-success`) + fallback `mailtoLink`; `#form-note` (aviso LGPD).
+- **Sem backend novo.**
+
+---
+
+## Footer (chrome; `#privacidade`)
+
+### Props reais (`Footer.tsx`)
+- **Nenhuma props** — `export function Footer()`.
+
+### Fonte de conteúdo
+- `BRAND`, `SOCIAL_LINKS`, `NAV_LINKS`, `whatsappLink()`, monograma via
+  `assetUrl('/monogram.svg')` — `content.ts`/`asset.ts`.
+
+### Contrato DOM/motion a preservar
+- `footer#privacidade` + `aria-labelledby="privacidade-title"`.
+- Hashes estáveis: `#topo`, `#servicos`, `#beneficios`, `#processo`,
+  `#portfolio`, `#planos`, `#faq`, `#contato` (+ links
+  `mailto:${BRAND.email}`, WhatsApp e Privacidade/Termos → `#privacidade`).
+
+---
+
+## Componentes de chrome sem props (menção)
+
+`FloatingWhatsApp`, `ThemeToggle` (consumido pela Navbar), `ScrollProgress`
+(`data-active`), `ScrollDepth` (`data-parallax`), `CursorFX` (`data-hover`),
+`HeroLogo`, `PixelIcon` (`data-flight-icon`), `PixelBackground`, `StatusClock`,
+`spell/*` (`ShimmerText`, `TiltCard`) — sem contrato de props; hooks de estilo
+(`data-active`/`data-hover`/`data-hero-logo`) não são contratos de motion.
+
+---
+
+# Checklist final (contratos vivos)
+
+- [x] Todos os `section#<id>` e `aria-labelledby` obrigatórios idênticos ao
+  contrato de DOM (§2).
+- [x] Seletores do `motion.ts` existindo no DOM:
   - Hero: `data-hero-intro` + `data-hero-part`
-  - BrandIntro: `data-brand-intro` + `data-brand-mark|ring|rule`
+  - BrandIntro: `data-brand-intro` + `data-brand-mark|ring|rule|name`
   - Benefits: `data-pull-quote`
   - Metrics: `data-count`/`data-suffix`
-  - PixelGallery: `data-flight-*` + lista não vazia de `data-flight-card`
-  - Portfolio: `data-spotlight`, `data-image-zoom` + `data-image-reveal` com `img` dentro
+  - PixelGallery (prancha): 12 `figure[data-image-reveal]` + `figcaption.fig`
+    (`fig. NN ·`); **nenhum** `data-flight-*` de cena (só `data-flight-icon`
+    dos `PixelIcon`)
+  - Portfolio: `data-spotlight`, `data-image-zoom` (com `<img>` direto) +
+    `data-image-reveal`
   - Navbar: `data-underline-sweep`
-  - Títulos: manter `.luxury-title` para split
-
----
-
-# Arquivos provavelmente impactados na implementação (menção apenas)
-
-- `src/components/*` (Hero, Services, Benefits, Metrics, PixelGallery, Process, Portfolio, Pricing, FAQ, Contact, Footer)
-- `src/App.tsx` (injeção das props por seção / montagem data-driven)
-- `src/lib/motion.ts` e hooks de motion:
-  - `src/hooks/useLuxuryMotion.ts`, `src/lib/motion.ts`
-- Tipos/contratos:
-  - `src/types/index.ts` (possível criação de novos tipos para Hero/BrandIntro/Navbar/Fotter se necessário)
-- Fonte de defaults:
-  - `src/data/content.ts` (possível ampliação para incluir textos literais do Hero e defaults do Contact/projectTypes)
+  - Títulos: `.luxury-title` (texto + `<br>`) para o split
+- [x] Props reais espelhadas dos `.tsx` (FS-011.6): Hero (7 opcionais),
+  Portfolio (`title`/`description`), Services (`titleLines`), Process/Pricing
+  (`titleLines`), Benefits/Metrics/PixelGallery; FAQ/Contact/Footer/
+  BrandIntro/Sobre/TechStrip sem props.
