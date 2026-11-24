@@ -5,8 +5,11 @@ gsap.registerPlugin(ScrollTrigger)
 
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return true
-  if (document.documentElement.dataset.motion === 'reduced') return true
-  if (document.documentElement.dataset.motion === 'full') return false
+  // null-guard: scripts de init (ex.: Playwright addInitScript) podem rodar
+  // antes de `document.documentElement` existir — nunca lançar aqui.
+  const motion = document.documentElement?.dataset.motion
+  if (motion === 'reduced') return true
+  if (motion === 'full') return false
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
@@ -45,7 +48,8 @@ export function initLuxuryMotion(): () => void {
     setupHeroIntro()
   }
   setupScrubStatements()
-  setupFlightScene()
+  // setupFlightScene() APOSENTADO (FS-010.8, plano §1.3): a câmera 3D do
+  // Flight foi substituída pela prancha estática de figuras.
   setupCountUp()
   setupPressFeedback()
   setupImageZoom()
@@ -241,117 +245,6 @@ function setupScrubStatements(): void {
       },
     })
   })
-}
-
-/* ---------- flight: câmera em espiral entre as artes ---------- */
-function setupFlightScene(): void {
-  const section = document.querySelector<HTMLElement>('[data-flight-section]')
-  if (!section) return
-  const track = section.querySelector<HTMLElement>('[data-flight-track]')
-  const lean = section.querySelector<HTMLElement>('[data-flight-lean]')
-  const scene = section.querySelector<HTMLElement>('[data-flight-scene]')
-  const cards = section.querySelectorAll<HTMLElement>('[data-flight-card]')
-  if (!track || !scene || !cards.length) return
-
-  // Celular: grade estática, sem pin
-  if (isCoarsePointer() || window.innerWidth < 768) {
-    section.classList.add('flight--static')
-    return
-  }
-
-  // Pausa o túnel (CSS) quando a seção está fora da tela — evita repaint à toa
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        section.classList.toggle('is-idle', !entry.isIntersecting)
-      },
-      { threshold: 0 },
-    )
-    io.observe(section)
-  }
-
-  const count = cards.length
-  const spacing = 340
-  const travel = (count - 1) * spacing + 200
-
-  const tunnel = section.querySelector<HTMLElement>('.flight__tunnel')
-  const header = section.querySelector<HTMLElement>('.flight__header')
-  const field = section.querySelector<HTMLElement>('.flight__field')
-
-  // Um único onUpdate para z + saída (scrub travado no scroll).
-  // Sem proxy/lerp: em scroll rápido não "acorda" em salto (a travada na saída).
-  let lastExit = -1
-  ScrollTrigger.create({
-    trigger: track,
-    start: 'top top',
-    end: 'bottom bottom',
-    scrub: true,
-    invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const p = self.progress
-      const exit = Math.max(0, (p - 0.68) / 0.32)
-      const op = 1 - Math.min(1, exit * 1.05)
-
-      gsap.set(scene, {
-        z: p * travel,
-        scale: 1 - exit * 0.1,
-        opacity: exit > 0 ? Math.max(0, 1 - exit * 1.1) : 1,
-        force3D: true,
-      })
-
-      // só grava opacity quando muda de verdade
-      const next = Math.round(op * 100) / 100
-      if (next !== lastExit) {
-        lastExit = next
-        if (tunnel) tunnel.style.opacity = String(next)
-        if (header) header.style.opacity = String(next)
-        if (field) field.style.opacity = String(Math.max(next, 0.001))
-      }
-    },
-  })
-
-  if (isCoarsePointer() || prefersReducedMotion() || !lean) return
-
-  let mx = 0
-  let my = 0
-  let sx = 0
-  let sy = 0
-  let active = false
-
-  const tick = () => {
-    sx += (mx - sx) * 0.06
-    sy += (my - sy) * 0.06
-    lean.style.setProperty('--lean-y', `${(sx * 8).toFixed(2)}deg`)
-    lean.style.setProperty('--lean-x', `${(-sy * 5).toFixed(2)}deg`)
-    if (Math.abs(mx - sx) > 0.002 || Math.abs(my - sy) > 0.002) {
-      requestAnimationFrame(tick)
-    } else {
-      active = false
-    }
-  }
-
-  const onMove = (e: PointerEvent) => {
-    if (e.pointerType !== 'mouse') return
-    const r = section.getBoundingClientRect()
-    mx = ((e.clientX - r.left) / r.width) * 2 - 1
-    my = ((e.clientY - r.top) / r.height) * 2 - 1
-    if (!active) {
-      active = true
-      requestAnimationFrame(tick)
-    }
-  }
-
-  const onLeave = () => {
-    mx = 0
-    my = 0
-    if (!active) {
-      active = true
-      requestAnimationFrame(tick)
-    }
-  }
-
-  section.addEventListener('pointermove', onMove, { passive: true })
-  section.addEventListener('pointerleave', onLeave)
 }
 
 /* ---------- countUp nas métricas ---------- */

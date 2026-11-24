@@ -78,6 +78,30 @@ npm run build
 
 ---
 
+## 🧪 Testes
+
+```bash
+# Testes unitários (node --test) — rodam também no CI (deploy-pages.yml)
+# · scripts/issue-to-post.test.mjs  — regressões do blog por Issue
+# · scripts/check-jsonld.test.mjs   — sincronia FAQS (content.ts) × FAQPage (index.html) + priceRange
+npm test
+
+# Contrato e2e da home (tests/home-contract.e2e.spec.ts)
+# Sobe o dev server (vite em 127.0.0.1:5173) e valida DOM, motion, interação e CLS
+npx playwright test
+
+# Qualidade
+npm run lint
+npm run build
+```
+
+> **Playwright é gate manual fora do CI.** O workflow `deploy-pages.yml` roda
+> apenas `node --test` (`npm test`); a suíte Playwright não roda no CI — execute
+> `npx playwright test` local (com a porta 5173 livre) como gate antes de cada
+> lote e cite o resultado no resumo.
+
+---
+
 ## 📦 Deploy
 
 Cada `git push` na branch `main` dispara o workflow em  

@@ -1,12 +1,77 @@
 @import "tailwindcss";
+/* FS-010.2 · CSS escopado por seção (stubs) — cada lote escreve no seu arquivo */
+@import "./styles/home/intro.css";
+@import "./styles/home/chrome.css";
+@import "./styles/home/hero.css";
+@import "./styles/home/portfolio.css";
+@import "./styles/home/servicos.css";
+@import "./styles/home/sobre.css";
+@import "./styles/home/processo.css";
+@import "./styles/home/planos.css";
+@import "./styles/home/faq.css";
+@import "./styles/home/contato.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── FS-010.1 · Tipografia (brand board v1, aprovada em docs/decisoes-aprovadas.md) ───────────────
+   Famílias: Space Grotesk (títulos e textos, 400/500/600/700) + JetBrains Mono (rótulos técnicos,
+   código e legendas, 400/500). Montserrat/Inter/Press Start 2P aposentados do carregamento web.
+   Wordmark dos SVGs (public/, FilipeStudio_Logo_Pack/) intocado — não lê webfonts da página.
+
+   Fallback stacks (documentado conforme plano FS-010.1 §2):
+     --font-display / --font-sans : "Space Grotesk" → "Space Grotesk Fallback" → "Montserrat" → Arial → sans-serif
+     --font-mono (mono)          : "JetBrains Mono" → "JetBrains Mono Fallback" → ui-monospace → "Courier New" → monospace
+   ("Space Grotesk Fallback"/"JetBrains Mono Fallback" são as faces locais abaixo, com métricas
+   ajustadas — UMA face por família: duas faces com o mesmo nome se sobrepõem e só a última
+   valia (face morta), então a cadeia local vive em um único `src`. "Space Grotesk Fallback"
+   resolve para Montserrat → Arial → Liberation Sans; "JetBrains Mono Fallback" para
+   Menlo/Courier New. Ordem de fallback preservada: Space Grotesk > Montserrat > Arial e
+   JetBrains Mono > ui-monospace.)
+
+   Mitigação de CLS (plano §2.4): faces "fallback" locais com size-adjust/ascent-override/
+   descent-override derivados de métricas reais (hhea + larguras de avanço medidas em amostra de
+   prosa do próprio site) de Space Grotesk/JetBrains Mono vs Montserrat/Arial (= Liberation Sans,
+   metric-compatible)/Courier New (= Liberation Mono). Fórmula (padrão next/font/fontaine):
+   size-adjust = largura média do alvo / largura média do fallback;
+   ascent/descent/line-gap-override = razão do alvo / size-adjust.
+   Valores: SG asc 0.984 / desc 0.292 / gap 0; JBM asc 1.020 / desc 0.300 / gap 0; avanço mono 0.6em
+   idêntico em JBM e Courier New (size-adjust 100%). `font-weight: 400 700` nas faces de fallback
+   evita síntese de negrito (larguras imprevisíveis por browser) durante a janela de swap.
+   `display=swap` no <link> do index.html (faces mínimas: 6). Sem `font-display: optional`.
+   Dimensões reservadas: imagens já auditadas com width/height explícitos (preview/MOBILE.md) —
+   mantidas sem alteração neste lote (tipografia apenas).                           ─────────────── */
+
+/* Fallback métrico de Space Grotesk — UMA face por família (FS-010.2 · correção
+   do revisor: as duas faces "Space Grotesk Fallback" tinham descritores idênticos
+   e só a última valia — face morta). Cadeia local em um único src: Montserrat →
+   Arial → Liberation Sans; size-adjust/ascent/descent-override da família primária
+   da cadeia (Montserrat; prosa: Montserrat ≈ 1.03× SG). */
+@font-face {
+  font-family: "Space Grotesk Fallback";
+  src: local("Montserrat"), local("Arial"), local("Liberation Sans");
+  font-weight: 400 700;
+  size-adjust: 97.1%;
+  ascent-override: 101.3%;
+  descent-override: 30.1%;
+  line-gap-override: 0%;
+}
+
+/* Fallback métrico de JetBrains Mono sobre Menlo/Courier New local (avanço 0.6em idêntico). */
+@font-face {
+  font-family: "JetBrains Mono Fallback";
+  src: local("Menlo"), local("Courier New");
+  font-weight: 400 700;
+  size-adjust: 100%;
+  ascent-override: 102%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
 /* FilipeStudio brand — manual: Roxo Código, Azul Deploy, Ciano Neon, Noite, Névoa */
 @theme {
-  --font-display: "Montserrat", "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", "Montserrat", system-ui, sans-serif;
-  --font-pixel: "Press Start 2P", "Pixelify Sans", monospace;
+  --font-display: "Space Grotesk", "Space Grotesk Fallback", "Montserrat", Arial, sans-serif;
+  --font-sans: "Space Grotesk", "Space Grotesk Fallback", "Montserrat", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, "Courier New", monospace;
 
   --color-roxo: #7c3aed;
   --color-roxo-claro: #a78bfa;
@@ -85,6 +150,61 @@
   }
 }
 
+/* ============================================================
+   FS-010.2 · TOKENS VISUAIS (fase-2-direcao-criativa.md §2.1/§2.2)
+   Colunas dark (default) e light; valores conforme o protótipo de
+   referência (preview/filipestudio-home-preview.html). Nomes de token
+   de fonte (--font-display/--font-sans/--font-mono) NÃO mudam
+   (token mono renomeado --font-pixel → --font-mono em FS-011.6).
+   ============================================================ */
+:root {
+  /* superfícies */
+  --bg: #0b0b1f; /* Noite — fundo base */
+  --surface: #12122e; /* superfície elevada: cards, faixas */
+  --surface-deep: #1b1550; /* Índigo Profundo: seções com identidade própria */
+  --surface-pixel: #070714; /* trilhos/molduras de pixel art */
+  /* texto */
+  --fg: #eef0ff; /* Névoa */
+  --fg-mut: rgba(238, 240, 255, 0.62);
+  /* fg-com elevado para AA em textos mono pequenos (12px): ≥5.9:1 em todos os fundos dark */
+  --fg-com: rgba(238, 240, 255, 0.6);
+  /* destaque */
+  --accent: #7c3aed; /* Roxo Código */
+  --accent-2: #3b82f6; /* Azul Deploy */
+  --accent-neon: #22d3ee; /* Ciano Neon */
+  --roxo-claro: #a78bfa;
+  /* bordas (névoa sobre noite) */
+  --border: rgba(238, 240, 255, 0.1);
+  --border-strong: rgba(34, 211, 238, 0.35); /* contorno neon */
+  /* gradientes autorizados (§2.2) — exatamente 3, nada além */
+  --grad-marca: linear-gradient(90deg, #7c3aed 0%, #3b82f6 50%, #22d3ee 100%);
+  --grad-cta: linear-gradient(135deg, #7c3aed, #22d3ee);
+  --grad-voile: radial-gradient(60% 50% at 50% 0%, rgba(124, 58, 237, 0.18), transparent);
+}
+
+/* Coluna light (§2.1) — contrato html.dark + useTheme: light = sem .dark;
+   `html.light` aceito por paridade com o protótipo. FS-010.12 fecha a ligação. */
+html.light,
+html:not(.dark) {
+  --bg: #eef0ff; /* Névoa */
+  --surface: #ffffff;
+  --surface-deep: #e4e7fa;
+  --surface-pixel: #f5f6ff;
+  --fg: #0b0b1f; /* Noite */
+  --fg-mut: rgba(11, 11, 31, 0.62);
+  --fg-com: rgba(11, 11, 31, 0.62);
+  --accent-neon: #0891b2; /* ciano escurecido p/ contraste AA em fundo claro */
+  --border: rgba(11, 11, 31, 0.12); /* noite */
+  --border-strong: rgba(124, 58, 237, 0.35);
+  /* FS-010.12 · paridade light: stop ciano do grad-marca escurecido para o
+     mesmo #0891b2 do --accent-neon — o fill grad-marca É texto (linha 2 do
+     .luxury-title/H1, wordmark, bio) e o stop #22d3ee rende 1.6:1 sobre o
+     fundo claro (vs 10.7:1 no dark). Mesmo gradiente autorizado (3 tokens,
+     §2.2) — só o valor light do stop muda. --grad-cta permanece intacto
+     (fundo de botão, texto próprio; idêntico nos 2 temas). */
+  --grad-marca: linear-gradient(90deg, #7c3aed 0%, #3b82f6 50%, #0891b2 100%);
+}
+
 /* Base */
 html {
   scroll-behavior: smooth;
@@ -107,7 +227,7 @@ body {
 
 /* Skip link */
 .skip-link {
-  @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:border-2 focus:border-black focus:bg-ciano focus:px-4 focus:py-2.5 focus:font-pixel focus:text-[10px] focus:text-black focus:shadow-pixel;
+  @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:border-2 focus:border-black focus:bg-ciano focus:px-4 focus:py-2.5 focus:font-mono focus:text-[10px] focus:text-black focus:shadow-pixel;
 }
 
 /* Focus visibility */
@@ -122,99 +242,19 @@ body {
   image-rendering: crisp-edges;
 }
 
-/* Navigation — dinâmico no scroll */
-.nav-shell {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition:
-    padding 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s ease,
-    margin 0.35s ease,
-    border-radius 0.35s ease;
-  padding: 0.85rem 1.1rem;
-}
+/* FS-010.4 · limpeza dirigida (fase-4 §3.2): regras legadas pixel das classes
+   usadas APENAS por Navbar/Footer removidas (grep confirmado em src/):
+   .nav-shell*, .nav-logo, .nav-cta, .nav-burger, .nav-mobile (+ keyframes),
+   .mobile-nav-link, .footer-link, .social-link e hovers legados de .nav-link.
+   O visual editorial dessas classes vive em src/styles/home/chrome.css.
+   Exceção compartilhada: .btn-primary:hover (bg-roxo-claro residual sob o
+   grad-cta do FS-010.2) é usado por Hero/Contact/Pricing/Benefits/Blog —
+   mantido aqui; o resíduo é neutralizado por sobrescrita em chrome.css. */
 
-.nav-shell--top {
-  margin-top: 0.25rem;
-  border-radius: 2px;
-  box-shadow: 3px 3px 0 0 rgba(11, 11, 31, 0.12);
-}
 
-.nav-shell--scrolled {
-  padding: 0.55rem 1.1rem;
-  margin-top: 0;
-  border-radius: 2px;
-  box-shadow:
-    0 8px 24px rgba(11, 11, 31, 0.1),
-    4px 4px 0 0 rgba(11, 11, 31, 0.16),
-    8px 8px 0 0 rgba(124, 58, 237, 0.1);
-}
 
-.dark .nav-shell--scrolled {
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.35),
-    4px 4px 0 0 rgba(255, 255, 255, 0.08),
-    8px 8px 0 0 rgba(124, 58, 237, 0.18);
-}
-
-.nav-logo {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
-  box-shadow: 2px 2px 0 0 rgba(11, 11, 31, 0.18);
-}
-
-.group:hover .nav-logo {
-  transform: scale(1.08) rotate(-3deg);
-  box-shadow: 3px 3px 0 0 rgba(124, 58, 237, 0.28);
-}
-
-.nav-cta {
-  transition:
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.25s ease !important;
-}
-
-.nav-cta:hover {
-  transform: translate(2px, 2px) scale(1.02);
-}
-
-.nav-burger {
-  box-shadow: 2px 2px 0 0 rgba(11, 11, 31, 0.15);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.2s ease;
-}
-
-.nav-burger:hover {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 0 rgba(11, 11, 31, 0.15);
-  @apply bg-ciano/20;
-}
-
-.dark .nav-burger:hover {
-  @apply bg-roxo/25;
-}
-
-.nav-mobile {
-  animation: nav-mobile-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-origin: top center;
-}
-
-@keyframes nav-mobile-in {
-  0% {
-    opacity: 0;
-    transform: translateY(-8px) scaleY(0.96);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-}
-
-/* Nav links — underline animado */
-.nav-link {
-  @apply border-2 border-transparent px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300;
-  position: relative;
-  transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
-}
-
+/* Nav links — underline animado (base do ::after = indicador do estado ATIVO;
+   hover usa .sweep-line injetada via [data-underline-sweep] — FS-010.4) */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -228,17 +268,8 @@ body {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.nav-link:hover {
-  @apply border-transparent text-slate-900 dark:text-white;
-}
-
-.nav-link:hover::after,
 .nav-link--active::after {
   transform: scaleX(1);
-}
-
-.nav-link--active {
-  @apply border-transparent text-roxo dark:text-ciano;
 }
 
 .nav-link:focus-visible {
@@ -264,22 +295,12 @@ body {
   }
 }
 
-/* Mobile nav */
-.mobile-nav-link {
-  @apply block border-2 border-black px-4 py-3 text-sm font-semibold text-slate-800 shadow-pixel-sm transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-100;
-}
-
-.footer-link {
-  @apply text-slate-600 transition-colors hover:text-roxo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:text-slate-400 dark:hover:text-ciano;
-}
-
-.social-link {
-  @apply grid h-10 w-10 place-items-center border-2 border-black text-slate-700 shadow-pixel-sm transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-roxo hover:text-white hover:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-roxo dark:border-white/30 dark:text-slate-300 dark:hover:bg-roxo dark:hover:text-white;
-}
+/* (.mobile-nav-link/.footer-link/.social-link legados removidos — FS-010.4 (E);
+   foco visível segue pelo bloco FS-010.2 abaixo + visual em chrome.css) */
 
 /* Buttons — profundidade limpa, press sóbrio */
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-2 border-2 border-black bg-roxo px-6 py-3 font-pixel text-[11px] text-white transition-all;
+  @apply inline-flex items-center justify-center gap-2 border-2 border-black bg-roxo px-6 py-3 font-mono text-[11px] text-white transition-all;
   box-shadow: var(--shadow-extrude);
 }
 .btn-primary:hover {
@@ -292,7 +313,7 @@ body {
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 border-2 border-black bg-white px-6 py-3 font-pixel text-[11px] text-black transition-all dark:border-white/40 dark:bg-ink-800 dark:text-white;
+  @apply inline-flex items-center justify-center gap-2 border-2 border-black bg-white px-6 py-3 font-mono text-[11px] text-black transition-all dark:border-white/40 dark:bg-ink-800 dark:text-white;
   box-shadow: var(--shadow-extrude);
 }
 .btn-secondary:hover {
@@ -305,7 +326,7 @@ body {
 }
 
 .btn-whatsapp {
-  @apply inline-flex items-center justify-center gap-2 border-2 border-black bg-[#25D366] px-6 py-3 font-pixel text-[11px] text-black transition-all;
+  @apply inline-flex items-center justify-center gap-2 border-2 border-black bg-[#25D366] px-6 py-3 font-mono text-[11px] text-black transition-all;
   box-shadow: var(--shadow-extrude-sm);
 }
 .btn-whatsapp:hover {
@@ -408,7 +429,7 @@ body {
 }
 
 .avatar {
-  @apply grid h-11 w-11 place-items-center border-2 border-black font-pixel text-[10px] text-black;
+  @apply grid h-11 w-11 place-items-center border-2 border-black font-mono text-[10px] text-black;
 }
 
 .pricing-card {
@@ -699,7 +720,7 @@ body {
 
 /* Section eyebrow label — chip sóbrio */
 .pixel-label {
-  @apply inline-block border-2 border-black bg-ciano px-3 py-1.5 font-pixel text-[9px] uppercase tracking-wider text-black dark:border-white/30 dark:bg-roxo dark:text-white;
+  @apply inline-block border-2 border-black bg-ciano px-3 py-1.5 font-mono text-[9px] uppercase tracking-wider text-black dark:border-white/30 dark:bg-roxo dark:text-white;
   box-shadow: 3px 3px 0 0 rgba(11, 11, 31, 0.18);
   transform: none;
 }
@@ -1058,7 +1079,7 @@ body {
 
 /* Badge compacto — chip 3D */
 .pixel-badge {
-  @apply inline-flex items-center gap-1.5 border-2 border-black bg-white px-2.5 py-1 font-pixel text-[8px] text-black dark:border-white/30 dark:bg-ink-800 dark:text-white;
+  @apply inline-flex items-center gap-1.5 border-2 border-black bg-white px-2.5 py-1 font-mono text-[8px] text-black dark:border-white/30 dark:bg-ink-800 dark:text-white;
   box-shadow: var(--shadow-extrude-sm);
 }
 
@@ -1207,7 +1228,7 @@ body {
   border: 2px solid rgba(11, 11, 31, 0.75);
   background: #fff;
   padding: 0.65rem 0.95rem;
-  font-family: var(--font-pixel);
+  font-family: var(--font-mono);
   font-size: 8px;
   line-height: 1.25;
   color: #000;
@@ -2092,479 +2113,6 @@ html.brand-intro-lock [data-hero-part] {
   }
 }
 
-/* ===== Flight gallery (espiral de posters) ===== */
-.flight {
-  position: relative;
-  background: var(--color-ink-950, #050512);
-  border-block: 2px solid rgba(0, 0, 0, 0.8);
-}
-
-.flight .dark &,
-.dark .flight {
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.flight__track {
-  /* altura extra = espaço de scroll para o voo */
-  height: 380vh;
-  position: relative;
-}
-
-.flight__viewport {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  perspective: 1000px;
-}
-
-.flight__lean {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  transform: rotateX(var(--lean-x, 0deg)) rotateY(var(--lean-y, 0deg));
-  will-change: transform;
-}
-
-.flight__scene {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  /* GSAP escreve z/scale aqui — não colocar transform no CSS */
-  will-change: transform;
-}
-
-.flight__header {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 10;
-  text-align: center;
-  padding: calc(5.5rem + 0.5rem) 1.25rem 1.75rem;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(5, 5, 18, 0.96) 0%,
-    rgba(5, 5, 18, 0.78) 55%,
-    rgba(5, 5, 18, 0) 100%
-  );
-  transform: none;
-}
-
-.flight__field {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-}
-
-.flight__card {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: clamp(160px, 22vw, 240px);
-  margin: 0;
-  border: 2px solid rgba(0, 0, 0, 0.85);
-  background: #0b0b1f;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-  overflow: hidden;
-  transform:
-    translate(-50%, -50%)
-    rotate(var(--angle, 0deg))
-    translateY(calc(var(--radius, 280px) * -1))
-    rotate(calc(var(--angle, 0deg) * -1))
-    translateZ(var(--z, 0px));
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
-
-.flight__card img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  object-position: top;
-  image-rendering: pixelated;
-}
-
-/* fog sutil: cartões muito próximos do fim somem */
-.flight__card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(5, 5, 18, 0.35));
-  pointer-events: none;
-}
-
-/* estático no mobile */
-.flight--static .flight__track {
-  height: auto;
-}
-
-.flight--static .flight__viewport {
-  position: relative;
-  height: auto;
-  min-height: auto;
-  overflow: visible;
-  padding: 3.5rem 1rem 4rem;
-}
-
-.flight--static .flight__scene {
-  position: relative;
-  transform: none !important;
-}
-
-.flight--static .flight__header {
-  position: relative;
-  left: auto;
-  top: auto;
-  transform: none;
-  margin-bottom: 1.5rem;
-  background: none;
-  padding: 0;
-  text-align: center;
-}
-
-.flight--static .flight__field {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.75rem;
-  inset: auto;
-}
-
-.flight--static .flight__card {
-  position: relative;
-  left: auto;
-  top: auto;
-  width: 100%;
-  transform: none !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flight__scene {
-    transform: none !important;
-  }
-  .flight__track {
-    height: auto;
-  }
-  .flight__viewport {
-    position: relative;
-    height: auto;
-    overflow: visible;
-    padding: 3rem 1rem;
-  }
-  .flight__scene {
-    position: relative;
-  }
-  .flight__header {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    margin-bottom: 1rem;
-  }
-  .flight__field {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 0.75rem;
-    inset: auto;
-  }
-  .flight__card {
-    position: relative;
-    left: auto;
-    top: auto;
-    width: 100%;
-    transform: none !important;
-  }
-}
-
-/* ===== Túnel espacial pixelado no Flight ===== */
-.flight__viewport {
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(59, 130, 246, 0.14), transparent 70%),
-    radial-gradient(ellipse 40% 30% at 30% 80%, rgba(124, 58, 237, 0.12), transparent 60%),
-    #050512;
-}
-
-.flight__tunnel {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  perspective: 700px;
-  perspective-origin: 50% 50%;
-}
-
-.flight__tunnel-grid {
-  position: absolute;
-  left: -40%;
-  right: -40%;
-  top: -20%;
-  height: 70%;
-  background-image:
-    linear-gradient(rgba(34, 211, 238, 0.22) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.22) 1px, transparent 1px);
-  background-size: 48px 48px;
-  transform: rotateX(72deg);
-  transform-origin: center bottom;
-  mask-image: linear-gradient(to top, transparent 0%, #000 45%, #000 100%);
-  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 45%, #000 100%);
-  animation: tunnel-scroll 4.5s linear infinite;
-  opacity: 0.7;
-}
-
-.flight__tunnel-grid--floor {
-  top: auto;
-  bottom: -20%;
-  height: 70%;
-  transform: rotateX(-72deg);
-  transform-origin: center top;
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 100%);
-  animation-name: tunnel-scroll-floor;
-  opacity: 0.55;
-}
-
-@keyframes tunnel-scroll {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 0 48px, 48px 0; }
-}
-
-@keyframes tunnel-scroll-floor {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 0 -48px, -48px 0; }
-}
-
-/* estrelas / pixels flutuantes */
-.flight__stars {
-  position: absolute;
-  inset: 0;
-}
-
-.flight__stars i {
-  position: absolute;
-  display: block;
-  background: rgba(238, 240, 255, 0.7);
-  box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
-  animation: star-pulse ease-in-out infinite alternate;
-  image-rendering: pixelated;
-}
-
-.flight__stars i:nth-child(3n) {
-  background: rgba(167, 139, 250, 0.75);
-  box-shadow: 0 0 6px rgba(124, 58, 237, 0.55);
-}
-
-.flight__stars i:nth-child(4n) {
-  background: rgba(34, 211, 238, 0.85);
-}
-
-@keyframes star-pulse {
-  from { opacity: 0.25; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1.15); }
-}
-
-.flight__tunnel-glow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(50vw, 480px);
-  height: min(50vw, 480px);
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.22), rgba(124, 58, 237, 0.08) 45%, transparent 70%);
-  animation: tunnel-breathe 5s ease-in-out infinite alternate;
-}
-
-@keyframes tunnel-breathe {
-  from { opacity: 0.55; transform: translate(-50%, -50%) scale(0.92); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
-}
-
-/* header e cartões acima do túnel */
-.flight__scene {
-  z-index: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flight__tunnel-grid,
-  .flight__stars i,
-  .flight__tunnel-glow {
-    animation: none !important;
-  }
-}
-
-/* ===== Túnel circular — anéis simples (barato de repintar) ===== */
-.flight__tunnel {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 48%, rgba(59, 130, 246, 0.26) 0%, rgba(124, 58, 237, 0.1) 30%, transparent 60%),
-    #050512;
-}
-
-.flight__tunnel-rings {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
-}
-
-/* Cada anel é uma borda sólida: transform barato, sem gradientes gigantes */
-.flight__ring {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(70vmin, 520px);
-  height: min(70vmin, 520px);
-  margin-left: calc(min(70vmin, 520px) / -2);
-  margin-top: calc(min(70vmin, 520px) / -2);
-  border-radius: 50%;
-  border: 2px solid rgba(34, 211, 238, 0.4);
-  box-shadow: 0 0 18px rgba(59, 130, 246, 0.12), inset 0 0 18px rgba(124, 58, 237, 0.08);
-  animation: ring-fly 6.5s linear infinite;
-  will-change: transform, opacity;
-  opacity: 0;
-}
-
-.flight__ring:nth-child(even) {
-  border-color: rgba(124, 58, 237, 0.45);
-  width: min(85vmin, 640px);
-  height: min(85vmin, 640px);
-  margin-left: calc(min(85vmin, 640px) / -2);
-  margin-top: calc(min(85vmin, 640px) / -2);
-}
-
-@keyframes ring-fly {
-  0% {
-    transform: scale(0.12);
-    opacity: 0;
-  }
-  12% {
-    opacity: 0.75;
-  }
-  80% {
-    opacity: 0.25;
-  }
-  100% {
-    transform: scale(1.85);
-    opacity: 0;
-  }
-}
-
-/* núcleo do túnel */
-.flight__tunnel-core {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(42vmin, 280px);
-  height: min(42vmin, 280px);
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.32) 0%, rgba(59, 130, 246, 0.16) 40%, transparent 70%);
-  animation: tunnel-core 4.5s ease-in-out infinite alternate;
-}
-
-@keyframes tunnel-core {
-  from { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
-  to { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
-}
-
-/* Pausa tudo do túnel quando a seção está fora da tela */
-.flight.is-idle .flight__ring,
-.flight.is-idle .flight__tunnel-core,
-.flight.is-idle .flight__stars i {
-  animation-play-state: paused !important;
-}
-
-.flight.is-idle .flight__lean,
-.flight.is-idle .flight__scene {
-  will-change: auto;
-}
-
-.flight__stars i {
-  position: absolute;
-  display: block;
-  width: 3px;
-  height: 3px;
-  background: rgba(238, 240, 255, 0.7);
-  box-shadow: 0 0 5px rgba(34, 211, 238, 0.5);
-  animation: star-pulse ease-in-out infinite alternate;
-}
-
-.flight__stars i:nth-child(3n) {
-  background: rgba(167, 139, 250, 0.7);
-}
-
-@keyframes star-pulse {
-  from { opacity: 0.25; }
-  to { opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flight__ring,
-  .flight__tunnel-core,
-  .flight__stars i {
-    animation: none !important;
-  }
-  .flight__ring {
-    opacity: 0.25;
-    transform: scale(1);
-  }
-}
-
-/* ===== Transição suave: fim do túnel → próxima seção ===== */
-.flight {
-  position: relative;
-}
-
-.flight::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: min(50vh, 420px);
-  z-index: 3;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(11, 11, 31, 0.35) 40%,
-    rgba(11, 11, 31, 0.85) 75%,
-    var(--color-noite, #0b0b1f) 100%
-  );
-}
-
-.dark .flight::after {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(11, 11, 31, 0.35) 40%,
-    rgba(11, 11, 31, 0.85) 75%,
-    #0b0b1f 100%
-  );
-}
-
-/* tema claro: esvazia para o fundo claro do corpo */
-html:not(.dark) .flight::after {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(238, 240, 255, 0.5) 55%,
-    #eef0ff 100%
-  );
-}
-
 /* Próxima seção chega um pouco mais "em cima" da saída */
 #processo {
   position: relative;
@@ -2585,25 +2133,6 @@ html:not(.dark) .flight::after {
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .flight::after {
-    height: 80px;
-  }
-}
-
-
-.flight--static .flight__lean {
-  position: relative;
-  inset: auto;
-  transform: none !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flight__lean {
-    transform: none !important;
-  }
-}
-
 /* ===== Home ocupa a tela toda + dica de scroll ===== */
 #topo {
   min-height: 100svh;
@@ -2619,7 +2148,7 @@ html:not(.dark) .flight::after {
   flex-direction: column;
   align-items: center;
   gap: 0.45rem;
-  font-family: var(--font-pixel, monospace);
+  font-family: var(--font-mono, monospace);
   font-size: 9px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2647,140 +2176,184 @@ html:not(.dark) .flight::after {
   100% { transform: scaleY(1); opacity: 0; transform-origin: top; }
 }
 
+/* ============================================================
+   FS-010.2 · ESTADOS INTERATIVOS (fase-2 §2.3)
+   ============================================================ */
+
+/* Focus-visible acessível (ambos os temas, via token --accent-neon) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 3px;
+}
+
+/* controles com outline próprio — mesmo contorno neon */
+.nav-link:focus-visible,
+.mobile-nav-link:focus-visible,
+.footer-link:focus-visible,
+.social-link:focus-visible {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 3px;
+}
+
+/* hover (link): cor → --roxo-claro; underline sweep (.sweep-line) 0.25s */
+[data-underline-sweep]:hover {
+  color: var(--roxo-claro);
+}
+.sweep-line {
+  transition-duration: 0.25s;
+}
+
+/* hover (CTA primário): grad-cta → brilho + lift + glow */
+.btn-primary:hover {
+  background-image: var(--grad-cta);
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.25);
+}
+
+/* hover (CTA secundário): borda → --accent-neon, texto → --fg */
+.btn-secondary:hover {
+  border-color: var(--accent-neon);
+  color: var(--fg);
+}
+
+/* hover (card): borda neon + lift 0.25s; spotlight sutil reusa setupSpotlight */
+[data-spotlight] {
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+[data-spotlight]:hover {
+  border-color: rgba(34, 211, 238, 0.35);
+  transform: translateY(-4px);
+}
+
+/* pressed: scale(.97) — press-feedback (setupPressFeedback) mantém o inline */
+.btn-primary:active,
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+/* ativo (nav): texto --accent-neon + underline grad-marca */
+.nav-link--active {
+  color: var(--accent-neon);
+}
+.nav-link::after {
+  background-image: var(--grad-marca);
+}
+
+/* ============================================================
+   FS-010.2 · KIT EDITORIAL (fase-2 §3.2/§3.3/§3.4)
+   ============================================================ */
+
+/* kicker mono "// secao" (12px) */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  color: var(--fg-com);
+}
+
+/* micro-copy mono (instrução/legenda) */
+.micro {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--fg-com);
+}
+
+/* legenda de figura — conteúdo "fig. NN · legenda" */
+.fig {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--fg-com);
+}
+
+/* status bar mono (faixa de metadados) */
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--fg-com);
+}
+.status-bar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.status-bar__sep {
+  color: var(--border-strong);
+}
+
+/* H2 bicolor (§3.4) — PADRÃO OBRIGATÓRIO: texto + <br> sob .luxury-title.
+   setupTitleMasks (motion.ts) divide cada linha em
+   .luxury-title > .luxury-line > .luxury-line__in — NUNCA spans de linha
+   partidos no markup (ex.: classes de linha .h2-… — o split os destrói).
+   Linha 1: peso 500 + --fg; linha 2: peso 700
+   com fill de grad-marca (background-size 0→100% em .is-visible). */
+.luxury-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.luxury-title .luxury-line:nth-of-type(1) .luxury-line__in {
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.luxury-title .luxury-line:nth-of-type(2) .luxury-line__in {
+  font-weight: 700;
+  background-image: var(--grad-marca);
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-size 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.luxury-title.is-visible .luxury-line:nth-of-type(2) .luxury-line__in {
+  background-size: 100% 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-scrollhint__line {
     animation: none;
     opacity: 0.5;
   }
-}
 
-/* ===== Mobile / estático: layout do Pixel World ===== */
-.flight--static .flight__viewport {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 4.5rem 1rem 3.5rem;
-}
-
-.flight--static .flight__header {
-  position: relative;
-  order: -1;
-  z-index: 4;
-  width: 100%;
-}
-
-.flight--static .flight__lean,
-.flight--static .flight__scene {
-  position: relative;
-  inset: auto;
-  width: 100%;
-}
-
-.flight--static .flight__tunnel {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  opacity: 0.55;
-  z-index: 0;
-}
-
-.flight--static .flight__lean {
-  z-index: 1;
-}
-
-.flight--static .flight__field {
-  z-index: 1;
-}
-
-.flight--static .flight__card {
-  border-radius: 4px;
-}
-
-/* título sempre legível no topo do mobile */
-.flight--static .flight__header .luxury-title {
-  color: #fff;
-}
-
-/* ===== Fallback mobile por media query (não depende do JS) ===== */
-@media (max-width: 767px) {
-  .flight__track {
-    height: auto !important;
+  /* FS-010.2 — estados §2.3 e fill do H2 em estado final, sem movimento
+     (regra acrescida a este bloco existente: a contagem de blocos de
+     reduced-motion do arquivo permanece 17) */
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .btn-primary:active,
+  .btn-secondary:active,
+  [data-spotlight]:hover {
+    transform: none;
+    transition: none;
+    filter: none;
   }
 
-  .flight__viewport {
-    position: relative !important;
-    top: auto !important;
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible !important;
-    display: flex !important;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 4.5rem 1rem 3.5rem !important;
-    perspective: none;
-  }
-
-  .flight__tunnel {
-    position: absolute !important;
-    inset: 0;
-    opacity: 0.5;
-    z-index: 0;
-  }
-
-  .flight__header {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    order: -1;
-    z-index: 4;
-    width: 100%;
-    padding: 0 !important;
-    background: none !important;
-    text-align: center;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-
-  .flight__lean,
-  .flight__scene {
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-    z-index: 1;
-    width: 100%;
-  }
-
-  .flight__field {
-    position: relative !important;
-    inset: auto !important;
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
-    width: 100%;
-  }
-
-  .flight__card {
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    width: 100% !important;
-    margin: 0 !important;
-    transform: none !important;
-  }
-
-  .flight__card img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-  }
-
-  .flight--static .flight__field {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .luxury-title .luxury-line:nth-of-type(2) .luxury-line__in {
+    transition: none;
+    background-size: 100% 100%;
   }
 }
-
 
 #topo {
   overflow-x: clip;

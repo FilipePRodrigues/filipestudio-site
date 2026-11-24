@@ -17,18 +17,15 @@ Este documento define:
 Na Home (rota `#/` ou sem `#/...`), o layout é renderizado em:
 - `main#conteudo` (no `src/App.tsx`).
 
-Ordem de alto nível (atuais):
+Ordem de alto nível (atuais — composição aprovada FS-010.3):
 1. `Hero` (seção `#topo`)
-2. `TechStrip` (sem contrato de motion neste doc)
-3. `Services` (`#servicos`)
-4. `Benefits` (`#beneficios`)
-5. `Metrics` (não tem id de seção âncora, mas tem contrato de count-up)
-6. `PixelGallery` (seção de Flight; não é uma âncora pedida, mas é contrato de motion)
-7. `Process` (`#processo`)
-8. `Portfolio` (`#portfolio`)
-9. `Pricing` (`#planos`)
-10. `FAQ` (`#faq`)
-11. `Contact` (`#contato`)
+2. `Portfolio` (`#portfolio`)
+3. `Services` (`#servicos`) + `TechStrip` (régua no rodapé de serviços; sem contrato de motion neste doc)
+4. `Sobre` (`#sobre`) — fusão: bio editorial → `PixelGallery` (prancha de fig.) → `Benefits` (`#beneficios`, aninhada) → `Metrics` (faixa `.metrics`; count-up)
+5. `Process` (`#processo`)
+6. `Pricing` (`#planos`)
+7. `FAQ` (`#faq`)
+8. `Contact` (`#contato`)
 
 Além disso, `BrandIntro` é renderizado **fora** do `main#conteudo`, antes do `Landing` (rota home).
 
@@ -44,15 +41,20 @@ Cada seção abaixo **deve existir** na Home e seguir o padrão:
 | Seção | ID obrigatório | `aria-labelledby` obrigatório (na implementação atual) |
 |---|---|---|
 | Hero | `#topo` | `hero-title` |
+| Portfolio | `#portfolio` | `portfolio-title` |
 | Serviços | `#servicos` | `servicos-title` |
+| Sobre | `#sobre` | `sobre-title` |
 | Benefícios | `#beneficios` | `beneficios-title` |
 | Processo | `#processo` | `processo-title` |
-| Portfolio | `#portfolio` | `portfolio-title` |
 | Planos | `#planos` | `planos-title` |
 | FAQ | `#faq` | `faq-title` |
 | Contato | `#contato` | `contato-title` |
 
 > Observação: `Navbar` e CTAs usam hashes como `href="#contato"`, `href="#portfolio"`, etc. Se os IDs mudarem, navegar/ativar estados também quebra.
+
+IDs suplementares presentes no DOM final (verificados em FS-011.6): `main#conteudo` (App.tsx), `#privacidade`/`#privacidade-title` (Footer), `#pixel-world` (prancha), `#brandIntro` (splash), `#heroScrollHint` (Hero) e os ids do formulário (`name`, `email`, `whatsapp`, `projectType`, `message`, `*-error`, `#form-success`, `#form-note`).
+
+> Atributos `data-*` de estilo (não contratos de motion): `data-hero-logo` (HeroLogo), `data-active` (ScrollProgress), `data-hover` (CursorFX) e `data-motion` (dataset do `documentElement` para reduced-motion). Os contratos de motion são exclusivamente os das §§3–4.
 
 ---
 
@@ -115,30 +117,28 @@ Os contratos abaixo são **exatamente os seletores** que o `src/lib/motion.ts` u
 
 ---
 
-### 3.5 Flight Scene (pixel gallery)
+### 3.5 Prancha de figuras (pixel gallery) — substitui o Flight (FS-010.8)
 
-**Raiz do Flight:** `[data-flight-section]`
+**Raiz da prancha:** `section#pixel-world.prancha` (`aria-label="Artes pixel do Filipe"`).
 
-Dentro dele, o motion exige os seguintes nós:
-- Track: `[data-flight-track]`
-- Lean: `[data-flight-lean]`
-- Scene: `[data-flight-scene]`
-- Cards: `[data-flight-card]` (lista não vazia)
+Dentro dela, a estrutura exigida:
+- `.prancha__head` — kicker `// pixel gallery`, `h3` "Um pouco de mim em pixels", subtítulo "Dev, atleta e criador — a mesma energia que eu levo pros projetos." e micro `// 12 figuras · catálogo pessoal`.
+- `.prancha__grid` com **12** `figure.prancha__frame`, cada uma com `data-image-reveal`.
+- Cada `figure` contém `img` (314×418, `image-rendering: pixelated`, alts descritivos de `PIXEL_ARTS`) + `figcaption.fig` no formato `fig. NN · <legenda>` — `fig. 01 · codando` … `fig. 12 · headphone` (ordem do catálogo).
 
-**Elementos opcionais (para fading de camadas):**
-- `.flight__tunnel` (ajusta `style.opacity`)
-- `.flight__header` (ajusta `style.opacity`)
-- `.flight__field` (ajusta `style.opacity`)
+**Contrato mínimo:**
+- 12 `figure` com `data-image-reveal` (reveal por `setupImageReveal`; `dataset.revealed='1'` após entrar na viewport).
+- `figcaption` começando por `fig. NN · ` na ordem 01–12.
+- **Ausência total do contrato antigo do Flight**: `[data-flight-section]`, `[data-flight-track]`, `[data-flight-lean]`, `[data-flight-scene]`, `[data-flight-card]`, classes `.flight*`/`.flight--static`/`.is-idle` — não existem mais no DOM, no CSS nem em `motion.ts` (`setupFlightScene` foi removido).
 
-**Contrato mínimo (estrutura):**
-- Pelo menos 1 card com `data-flight-card`.
-- `[data-flight-scene]` é o nó que recebe mudanças de `z/scale/opacity` via GSAP.
-- `[data-flight-lean]` recebe CSS vars `--lean-y`/`--lean-x` com base em pointer.
+**Aposentadoria do Flight (FS-010.8, plano §1.3) — registro da remoção atômica:**
+- `src/lib/motion.ts`: `setupFlightScene` removido (consumo de `data-flight-section/track/lean/scene/card` e `.flight__tunnel/header/field`). `setupIconFlight`/`[data-flight-icon]` **preservados** (Services dependem — ver §3.15).
+- `src/index.css`: removido todo o bloco da Flight gallery (`.flight`, `.flight__*`, `.flight--static`, `.flight.is-idle`, keyframes `tunnel-*`/`ring-fly`/`star-pulse`/`tunnel-breathe`) junto com **5 blocos `@media (prefers-reduced-motion: reduce)` que continham somente regras `.flight__*`** — remoção justificada: a feature inteira foi aposentada e as regras não têm mais alvo. A contagem de blocos reduced-motion do `index.css` cai de **17 → 12**; os 12 restantes estão intactos (incluindo o guarda `[data-flight-icon]`). A única peça com movimento do lote (lift do hover da prancha) tem degradação reduced-motion/coarse-pointer em bloco próprio do `src/styles/home/sobre.css`.
+- Teste 7 reescrito para o contrato da prancha (12 `figure` + `fig. NN ·` + `data-image-reveal` + ausência de `[data-flight-section]`), no mesmo commit.
 
 **Riscos:**
-- Em desktop: motion roda com `ScrollTrigger` (scrub) e pointermove.
-- Em mobile/coarse pointer: class `flight--static` é aplicada e a cena fica estática.
-- Se o número de cards variar (ou `data-flight-card` sumir), espaçamento/viagem da câmera muda.
+- Alterar figuras/captions/`data-image-reveal` da prancha quebra o teste 7.
+- O Flight não pode voltar sem o plano B registrado (`fs/redesign-gallery-flight`, plano §1.3).
 
 ---
 
@@ -150,6 +150,7 @@ Dentro dele, o motion exige os seguintes nós:
 - O nó deve possuir `data-count` como string numérica “limpa” (o motion remove qualquer coisa que não seja dígito ou `.`).
 - `data-suffix` é opcional (usado para anexar `%`, `+`, etc.).
 - `data-prefix` é opcional (o motion concatena `prefix + n + suffix`).
+- **Formato obrigatório a partir de FS-010.8 (plano §1.2.4):** `data-count` = número limpo (`"95"`, `"100"`, `"30"`), `data-suffix` = resto (`"+"`, `"%"`, `"–90d"`), e o nó deve ser **sem filhos** (texto puro — `setupCountUp` sobrescreve `textContent`).
 
 **Efeito colateral:** o motion sobrescreve `el.textContent` durante o onUpdate.
 
@@ -261,7 +262,7 @@ Checklist de presença nos componentes atuais (Home):
 - **`#servicos`**: `h2#servicos-title.section-title.luxury-title`.
 - **`#beneficios`**: `p[data-pull-quote]`.
 - **`Metrics`**: métricas usam `data-count` e `data-suffix` (e prefix quando aplicável).
-- **`PixelGallery`**: `data-flight-section` + `data-flight-track` + `data-flight-lean` + `data-flight-scene` + `data-flight-card`.
+- **`PixelGallery`** (`#pixel-world`): prancha com 12 `figure[data-image-reveal]` + `figcaption.fig` (`fig. NN ·`); nenhum nó `data-flight-*` de cena (Flight aposentado — §3.5).
 - **`PixelIcon`** (usado em **Services/Benefits**): possui `data-flight-icon` (não é renderizado dentro do `PixelGallery` hoje).
 - **`#portfolio`**: cards com `data-spotlight` e thumbnails com `data-image-zoom` + `data-image-reveal`.
 - **`Navbar`**: links com `data-underline-sweep`.
@@ -276,7 +277,7 @@ Checklist de presença nos componentes atuais (Home):
 1. **IDs de seções**: mudar `#topo/#servicos/...` quebra navegação por hash e/ou `aria-labelledby`.
 2. **`aria-labelledby` apontando para id inexistente**: acessibilidade e testes falham.
 3. **Remover `img` dentro de `data-image-zoom`**: zoom não roda (silenciosamente).
-4. **Remover nós dentro do Flight** (`data-flight-track/lean/scene`): `setupFlightScene()` aborta e a cena fica sem animação.
+4. **Alterar a prancha de figuras** (`figure`/`figcaption`/`data-image-reveal`): quebra o contrato da §3.5 e o teste 7. O Flight (`setupFlightScene`) foi aposentado em FS-010.8 — voltar com ele exige o plano B (`fs/redesign-gallery-flight`).
 5. **Quebrar a estrutura do scrub/pull-quote**: ambos reescrevem/injetam nós e podem destruir conteúdo se houver markup interno.
 6. **Duplicar ids**: `aria-labelledby` e navigation podem se tornar ambíguos.
 7. **Repetir elementos sem idempotência**: alguns motions guardam `dataset.*` (`done/split/ready/revealed/flown`). Em renders incrementais, pode ser necessário resetar dataset conscientemente.
@@ -314,10 +315,11 @@ Checklist de presença nos componentes atuais (Home):
   - o elemento entra em `classList.contains('is-on')`.
   - CSS vars `--spot-x/--spot-y` mudam.
 
-### 6.7 Flight (mínimo de integridade)
-- Garantir presença dos nós do flight quando em desktop:
-  - `[data-flight-section]` contendo `[data-flight-track]`, `[data-flight-lean]`, `[data-flight-scene]`, e ao menos 1 `[data-flight-card]`.
-- Simular scroll e validar que o `[data-flight-scene]` recebe mudanças (ex: style inclui `z`/`opacity` alterados).
+### 6.7 Prancha de figuras (mínimo de integridade)
+- Garantir a prancha (`#pixel-world`):
+  - 12 `figure[data-image-reveal]`, cada uma com `figcaption` no formato `fig. NN · <legenda>` (ordem 01–12).
+- Garantir a **ausência** do contrato antigo do Flight: `[data-flight-section]`, `[data-flight-track]`, `[data-flight-lean]`, `[data-flight-scene]`, `[data-flight-card]`.
+- Rolar até a prancha e validar `dataset.revealed === '1'` nos frames (reuso do teste 5).
 
 ### 6.8 Reduced motion
 - Emular `prefers-reduced-motion: reduce` (ou setar `documentElement.dataset.motion='reduced'`) e validar que:
@@ -328,7 +330,7 @@ Checklist de presença nos componentes atuais (Home):
 
 ## 7) Referências de código (contrato → implementação)
 
-- `src/lib/motion.ts`: funções `setupBrandIntro`, `setupHeroIntro`, `setupFlightScene`, `setupCountUp`, `setupImageZoom`, `setupUnderlineSweep`, `setupImageReveal`, `setupSpotlight`, `setupParallaxDepth`, `setupPullQuote`, `setupIconFlight`, etc.
+- `src/lib/motion.ts`: funções `setupBrandIntro`, `setupHeroIntro`, `setupCountUp`, `setupImageZoom`, `setupUnderlineSweep`, `setupImageReveal`, `setupSpotlight`, `setupParallaxDepth`, `setupPullQuote`, `setupIconFlight`, etc. (`setupFlightScene` foi **removido** em FS-010.8 — ver §3.5).
 - Componentes Home principais com contratos:
   - `src/components/BrandIntro.tsx`
   - `src/components/Hero.tsx`

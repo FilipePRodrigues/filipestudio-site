@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { BRAND, NAV_LINKS } from '../data/content.ts'
 import { assetUrl } from '../lib/asset.ts'
 import { ThemeToggle } from './ThemeToggle.tsx'
@@ -10,13 +11,19 @@ interface NavbarProps {
 
 const ALL_LINKS = [
   ...NAV_LINKS,
-  { href: '#/blog', label: 'Blog' },
+  { href: '#/blog', label: 'Blog ↗' },
 ]
+
+const pad = (n: number) => String(n).padStart(2, '0')
 
 export function Navbar({ theme, onToggleTheme }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState<string>('')
+  const burgerRef = useRef<HTMLButtonElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const wasOpen = useRef(false)
 
   useEffect(() => {
     const onScroll = () => {
@@ -51,40 +58,81 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
     }
   }, [open])
 
+  // menu mobile: foco inicial, fechamento por Esc e ciclo de Tab contido no overlay
+  useEffect(() => {
+    if (!open) {
+      if (wasOpen.current) {
+        wasOpen.current = false
+        burgerRef.current?.focus()
+      }
+      return
+    }
+    wasOpen.current = true
+    closeRef.current?.focus()
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setOpen(false)
+        return
+      }
+      if (e.key !== 'Tab') return
+      const menu = menuRef.current
+      if (!menu) return
+      const focusables = Array.from(
+        menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      )
+      if (focusables.length === 0) return
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+      const current = document.activeElement
+      if (e.shiftKey && current === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && current === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [open])
+
   const closeMenu = () => setOpen(false)
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <>
+      {/* régua de assinatura (topo) — fase-2 §5/01 */}
+      <div className="chrome-brand-rule" aria-hidden="true" />
+
+      <header className="chrome-nav">
         <nav
           aria-label="Navegação principal"
-          className={`nav-shell mt-3 flex items-center justify-between border-2 border-black dark:border-white/30 ${
-            scrolled
-              ? 'nav-shell--scrolled bg-white/95 dark:bg-ink-900/95'
-              : 'nav-shell--top bg-white/85 dark:bg-ink-900/85'
-          }`}
+          className={`chrome-bar${scrolled ? ' chrome-bar--scrolled' : ''}`}
         >
-          <a href="#topo" className="group flex min-w-0 items-center gap-2" onClick={closeMenu}>
+          <a href="#topo" className="chrome-brand" onClick={closeMenu} aria-label="FilipeStudio — início">
             <img
               src={assetUrl('/monogram.svg')}
               alt=""
               width={36}
               height={36}
-              className="nav-logo h-8 w-8 shrink-0 border-2 border-black dark:border-white/30 sm:h-9 sm:w-9"
+              className="nav-logo"
             />
-            <span className="whitespace-nowrap font-display text-base font-semibold tracking-tight sm:text-lg">
+            <span className="chrome-brand__name">
               {BRAND.name}
-              <span className="text-roxo dark:text-ciano">{BRAND.nameSuffix}</span>
+              <span className="chrome-brand__suffix">{BRAND.nameSuffix}</span>
             </span>
           </a>
 
-          <ul className="hidden items-center gap-0.5 lg:flex">
+          <ul className="chrome-links">
             {ALL_LINKS.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
                   data-underline-sweep
-                  className={`nav-link ${active === link.href ? 'nav-link--active' : ''}`}
+                  className={`nav-link${link.href === '#/blog' ? ' nav-blog' : ''}${
+                    active === link.href ? ' nav-link--active' : ''
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -92,17 +140,17 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
             ))}
           </ul>
 
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-            {/* wrapper: `hidden` não vence o `inline-flex` do .btn-primary */}
-            <span className="hidden sm:block">
-              <a href="#contato" data-underline-sweep className="btn-primary nav-cta px-3 py-2.5 text-[10px] sm:px-4 sm:text-[11px]">
-                Orçamento
-              </a>
+          <div className="chrome-actions">
+            <span className="chrome-toggle">
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} />
             </span>
+            <a href="#contato" data-underline-sweep className="nav-cta" onClick={closeMenu}>
+              Contato
+            </a>
             <button
+              ref={burgerRef}
               type="button"
-              className="nav-burger inline-flex h-10 w-10 items-center justify-center border-2 border-black text-slate-700 lg:hidden dark:border-white/30 dark:text-slate-200"
+              className="nav-burger"
               aria-label={open ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
               aria-expanded={open}
               aria-controls="mobile-menu"
@@ -118,32 +166,63 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
             </button>
           </div>
         </nav>
+      </header>
 
-        <div
-          id="mobile-menu"
-          hidden={!open}
-          className="nav-mobile mt-2 border-2 border-black bg-white p-4 lg:hidden dark:border-white/30 dark:bg-ink-850"
-        >
-          <ul className="flex flex-col gap-1">
-            {ALL_LINKS.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className="mobile-nav-link" onClick={closeMenu}>
-                  {link.label}
-                </a>
-              </li>
-            ))}
-            <li>
+      {/* menu mobile — overlay com itens numerados 01…08 (fase-2 §7) */}
+      <div
+        id="mobile-menu"
+        ref={menuRef}
+        className={`chrome-menu${open ? ' is-open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu de navegação"
+      >
+        <div className="chrome-menu__head">
+          <a
+            href="#topo"
+            className="chrome-menu__brand"
+            onClick={closeMenu}
+            aria-label="FilipeStudio — início"
+          >
+            <img src={assetUrl('/monogram.svg')} alt="" width={38} height={38} className="chrome-menu__logo" />
+            <span className="chrome-brand__name">
+              {BRAND.name}
+              <span className="chrome-brand__suffix">{BRAND.nameSuffix}</span>
+            </span>
+          </a>
+          <button ref={closeRef} type="button" className="chrome-menu__close" onClick={closeMenu}>
+            [ fechar ]
+          </button>
+        </div>
+
+        <ul className="chrome-menu__list">
+          {ALL_LINKS.map((link, i) => (
+            <li
+              key={link.href}
+              className="chrome-menu__item"
+              style={{ '--i': i } as CSSProperties}
+            >
               <a
-                href="#contato"
-                className="mobile-nav-link mt-2 block border-2 border-black bg-roxo px-4 py-3 text-center font-pixel text-[11px] text-black shadow-pixel-sm"
+                href={link.href}
+                className={`mobile-nav-link chrome-menu__link${active === link.href ? ' is-active' : ''}`}
                 onClick={closeMenu}
               >
-                Bora conversar
+                <span className="chrome-menu__num">{pad(i + 1)}</span>
+                {link.label}
               </a>
             </li>
-          </ul>
-        </div>
+          ))}
+          <li
+            className="chrome-menu__item chrome-menu__item--cta"
+            style={{ '--i': ALL_LINKS.length } as CSSProperties}
+          >
+            <a href="#contato" className="mobile-nav-link chrome-menu__cta" onClick={closeMenu}>
+              <span className="chrome-menu__num">{pad(ALL_LINKS.length + 1)}</span>
+              Contato
+            </a>
+          </li>
+        </ul>
       </div>
-    </header>
+    </>
   )
 }

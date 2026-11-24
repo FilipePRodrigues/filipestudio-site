@@ -1,0 +1,261 @@
+/* ── FS-010.2 · stub de seção — planos ─────────────────────────────────────────
+   Escopo: planos (cards de preço, features, destaque de plano).
+   CSS ESCOPADO POR SEÇÃO: cada lote do redesign escreve NO SEU próprio arquivo —
+   nunca no index.css — para zerar conflitos de merge entre workers.
+
+   Regras duras (docs/fase-4-plano-implementacao.md §3.2/§3.3):
+   - classes de contrato (.luxury-*, .reveal, .flight__*) não são renomeadas;
+   - títulos: texto + <br> sob .luxury-title (setupTitleMasks divide em
+     .luxury-line; NUNCA spans .h2-l1/.h2-l2 — o split os destrói);
+   - peças novas com movimento: estado final em reduced-motion (regra no bloco
+     global de prefers-reduced-motion do index.css — contagem 17 preservada) +
+     equivalente mobile/coarse-pointer.
+
+   Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
+   --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
+   --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
+   --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
+   Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+   Mono = --font-mono (renomeado de --font-pixel em FS-011.6).
+*/
+
+/* ============================================================
+   FS-010.10 · PLANOS (fase-2 §5.06 bloco A — capítulo "decisão")
+   ============================================================ */
+
+.planos {
+  position: relative;
+  padding: 96px 0;
+}
+
+/* régua grad-marca do cabeçalho (protótipo .sec-mark) */
+.planos__mark {
+  width: 56px;
+  height: 3px;
+  margin-bottom: 24px;
+  background: var(--grad-marca);
+}
+
+/* cabeçalho editorial: kicker + H2 bicolor + lead à esquerda, contagem à direita */
+.planos__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.planos__lead {
+  max-width: 60ch;
+  margin-top: 24px;
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--fg-mut);
+}
+
+.planos__count {
+  padding-top: 6px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* grid dos planos (protótipo .plans) */
+.planos__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+/* wrapper do TiltCard: overflow visível para o badge "★ Mais popular" poder
+   invadir a borda superior do card (top: -16px) — vence o overflow-hidden do
+   TiltCard sem tocar no componente */
+.planos .planos__tilt {
+  overflow: visible;
+}
+
+/* card de plano (protótipo .plan) — hover (lift + borda) vem do kit
+   [data-spotlight] no index.css; spotlight segue via setupSpotlight */
+.planos .plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+  padding: 48px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* destaque (protótipo .plan--featured): borda grad-marca de 2px via
+   background border-box — preços/features NÃO mudam, só o tratamento visual */
+.planos .plan--featured {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--grad-marca) border-box;
+}
+
+/* badge mono "★ Mais popular" (vazamento editorial sobre a borda) */
+.planos .plan-badge {
+  position: absolute;
+  top: -16px;
+  left: 48px;
+  z-index: 2;
+  padding: 0.45rem 1.15rem;
+  border-radius: 999px;
+  background: var(--grad-marca);
+  color: #0b0b1f;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.planos .plan-name {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--fg);
+}
+
+.planos .plan-desc {
+  font-size: 1rem;
+  color: var(--fg-mut);
+}
+
+/* preço: valor em display 700 + nota mono (fase-2 §5.06: intocáveis) */
+.planos .plan-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.planos .plan-price__value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.planos .plan-price__note {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--fg-com);
+}
+
+/* features exatas do PRICING com check mono (protótipo .plan-features) */
+.planos .plan-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.planos .plan-features li {
+  position: relative;
+  padding-left: 28px;
+  color: var(--fg-mut);
+}
+
+.planos .plan-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--accent-neon);
+}
+
+/* CTA do card: .btn-primary (kit) ancorado em #contato, colado ao rodapé */
+.planos .plan-cta {
+  justify-content: center;
+  width: 100%;
+  margin-top: auto;
+}
+
+/* barra mono de atenção (protótipo .attention-bar) */
+.planos .planos__attention {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 48px;
+  padding: 14px 24px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-pixel);
+  text-align: center;
+}
+
+/* ============================================================
+   RESPONSIVO — grid 2 → 1 (breakpoints do protótipo)
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .planos {
+    padding: 80px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .planos {
+    padding: 64px 0;
+  }
+
+  .planos__head {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .planos__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .planos .plan {
+    padding: 36px 28px;
+  }
+
+  .planos .plan-badge {
+    left: 28px;
+  }
+}
+
+@media (max-width: 390px) {
+  .planos__lead {
+    font-size: 1.125rem;
+  }
+}
+
+/* ============================================================
+   FS-010.10 · degradação do TiltCard — bloco PRÓPRIO deste arquivo
+   (o index.css e seus 17 blocos de reduced-motion permanecem intocados).
+   O transform do TiltCard é inline, então a neutralização exige !important.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .planos .planos__tilt,
+  .planos .planos__tilt:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* equivalente mobile/coarse-pointer (regra dura do stub): sem tilt/escala */
+@media (max-width: 767px), (pointer: coarse) {
+  .planos .planos__tilt,
+  .planos .planos__tilt:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+}

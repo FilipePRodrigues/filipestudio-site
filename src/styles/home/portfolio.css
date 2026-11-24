@@ -1,0 +1,349 @@
+/* ── FS-010.6 · Portfolio — painel de abas estilo editor ─────────────────────────
+   Escopo: portfólio (abas de arquivo, painel dividido resultado/preview,
+   status bar). CSS ESCOPADO POR SEÇÃO: este arquivo é dono 1:1 do lote
+   FS-010.6 — nada é escrito no index.css (contagem dos 17 blocos
+   prefers-reduced-motion do index.css preservada; o bloco reduced-motion
+   deste componente vive AQUI, em .pf-*).
+
+   Regras duras (docs/fase-4-plano-implementacao.md §3.2/§3.3):
+   - classes de contrato (.luxury-*, .reveal, .btn-*, .kicker/.micro/.fig/
+     .status-bar) não são renomeadas — reaproveitadas do kit do index.css;
+   - transição de aba: fade/stagger ≤0.35s (fadeUp 0.35s + stagger 60ms) com
+     fallback instantâneo em prefers-reduced-motion;
+   - equivalente mobile/coarse-pointer para peças com movimento.
+
+   Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
+   --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
+   --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
+   --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
+   Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+*/
+
+/* ── cabeçalho da seção (textos via props — preservados) ─────────────────────── */
+.pf-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.pf-head__micro {
+  padding-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* ── abas .tsx = navegação de arquivo ────────────────────────────────────────── */
+.pf-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.pf-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--fg-com);
+  padding: 0.85rem 1.35rem;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pf-tab:hover {
+  color: var(--fg);
+}
+
+.pf-tab.is-active {
+  color: var(--fg);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.pf-tab__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--fg-com);
+}
+
+.pf-tab.is-active .pf-tab__dot {
+  background: var(--accent-neon);
+  border-color: var(--accent-neon);
+}
+
+.pf-tabs__hint {
+  margin-left: auto;
+  padding-right: 0.5rem;
+}
+
+/* ── painel dividido: gutter 01–05 (// resultado) + // preview ───────────────── */
+.pf-panel-wrap {
+  border: 1px solid var(--border);
+  border-radius: 0 0 12px 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.pf-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.pf-panel[hidden] {
+  display: none;
+}
+
+.pf-result {
+  padding: 48px;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+}
+
+.pf-preview {
+  padding: 48px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface-pixel);
+}
+
+.pf-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 16px;
+  padding-block: 14px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.pf-row:last-of-type {
+  border-bottom: none;
+}
+
+.pf-row__num {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--fg-com);
+  padding-top: 3px;
+}
+
+.pf-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.pf-context {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-com);
+}
+
+.pf-stack {
+  color: var(--roxo-claro);
+}
+
+/* FS-010.12 · paridade light: --roxo-claro (#a78bfa) rende 2.7:1 sobre
+   --surface claro — texto real (stack do projeto), então no light vira
+   --accent (#7c3aed, 5.7:1). Dark preservado (6.7:1). */
+html.light .pf-stack,
+html:not(.dark) .pf-stack {
+  color: var(--accent);
+}
+
+.pf-desc {
+  color: var(--fg-mut);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+/* ── preview: mock de navegador com a imagem real do projeto ─────────────────── */
+.pf-browser {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0d0d22;
+}
+
+.pf-browser__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-browser__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(238, 240, 255, 0.22);
+}
+
+.pf-browser__url {
+  margin-left: 10px;
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(238, 240, 255, 0.75);
+  background: rgba(238, 240, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.35rem 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* zoom real é feito pelo motion ([data-image-zoom] → escala 1.05 no hover);
+   sem transform CSS aqui para não competir com o GSAP. */
+.pf-browser img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── status bar: main · projetos + 01 / 02 + barra de progresso ──────────────── */
+.pf-status-bar {
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: none;
+  background: var(--surface-pixel);
+}
+
+.pf-counter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pf-progress {
+  width: 140px;
+  height: 3px;
+  background: var(--border-strong);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.pf-progress i {
+  display: block;
+  height: 100%;
+  background: var(--grad-marca);
+  transition: width 0.35s ease;
+}
+
+/* ── entrada fade/stagger ao trocar de projeto (≤0.35s + stagger 60ms) ───────── */
+.pf-panel.is-entering .anim-1 {
+  animation: pfFadeUp 0.35s ease both;
+}
+
+.pf-panel.is-entering .anim-2 {
+  animation: pfFadeUp 0.35s ease 0.06s both;
+}
+
+.pf-panel.is-entering .anim-3 {
+  animation: pfFadeUp 0.35s ease 0.12s both;
+}
+
+.pf-panel.is-entering .anim-4 {
+  animation: pfFadeUp 0.35s ease 0.18s both;
+}
+
+.pf-panel.is-entering .anim-5 {
+  animation: pfFadeUp 0.35s ease 0.24s both;
+}
+
+@keyframes pfFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── prefers-reduced-motion: troca de aba instantânea (bloco próprio) ────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pf-panel.is-entering .anim-1,
+  .pf-panel.is-entering .anim-2,
+  .pf-panel.is-entering .anim-3,
+  .pf-panel.is-entering .anim-4,
+  .pf-panel.is-entering .anim-5 {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .pf-progress i,
+  .pf-tab,
+  .pf-browser img {
+    transition: none;
+  }
+}
+
+/* ── responsivo ─────────────────────────────────────────────────────────────── */
+@media (max-width: 1280px) {
+  .pf-result,
+  .pf-preview {
+    padding: 36px;
+  }
+}
+
+@media (max-width: 900px) {
+  .pf-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pf-result {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 768px) {
+  .pf-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .pf-head__micro {
+    padding-bottom: 0;
+  }
+
+  .pf-result,
+  .pf-preview {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .pf-status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 390px) {
+  .pf-tab {
+    padding: 0.7rem 0.95rem;
+    font-size: 0.8125rem;
+  }
+}

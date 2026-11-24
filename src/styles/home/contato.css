@@ -1,0 +1,540 @@
+/* ── FS-010.2 · stub de seção — contato ─────────────────────────────────────────
+   Escopo: contato (formulário, campos, nota LGPD).
+   CSS ESCOPADO POR SEÇÃO: cada lote do redesign escreve NO SEU próprio arquivo —
+   nunca no index.css — para zerar conflitos de merge entre workers.
+
+   Regras duras (docs/fase-4-plano-implementacao.md §3.2/§3.3):
+   - classes de contrato (.luxury-*, .reveal, .flight__*) não são renomeadas;
+   - títulos: texto + <br> sob .luxury-title (setupTitleMasks divide em
+     .luxury-line; NUNCA spans .h2-l1/.h2-l2 — o split os destrói);
+   - peças novas com movimento: estado final em reduced-motion (regra no bloco
+     global de prefers-reduced-motion do index.css — contagem 17 preservada) +
+     equivalente mobile/coarse-pointer.
+
+   Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
+   --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
+   --accent-2, --accent-neon, --roxo-claro, --border, --border-strong,
+   --grad-marca, --grad-cta, --grad-voile (somente estes 3 gradientes).
+   Kit editorial (index.css): .kicker, .micro, .fig, .status-bar, .luxury-title.
+
+   ── FS-010.11 · CONTATO (fase-2 §5/07 — bloco centralizado) ────────────────
+   Composição: bloco centralizado sobre --surface-deep + grad-voile +
+   LightRays (reuso, sem glow pesado); H2 bicolor "Pronto pra / subir de nível?";
+   régua mono de 3 colunas de apoio; formulário com rótulos mono `? campo` e
+   inputs sublinhados. FLUXO DE SUBMIT IDÊNTICO ao legado (window.open →
+   WhatsApp + painel "Quase lá! 🎉" + contingências WhatsApp/mailto) — só o
+   visual muda; as classes legadas (.form-label, .form-input, .btn-*) são
+   sobrescritas AQUI com especificidade .contact .* porque o index.css importa
+   este arquivo antes do CSS legado (mesma tática do hero.css com #topo).
+   O bloco reduced-motion deste arquivo fica NO FIM — o index.css permanece
+   com seus 17 blocos intactos.
+*/
+
+.contact {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0 6rem;
+  background: var(--surface-deep);
+  color: var(--fg);
+}
+
+/* faixa de capítulo no topo (grad-marca, discreta) */
+.contact::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  height: 1px;
+  background: var(--grad-marca);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* véu grad-voile da seção (fase-2 §5/07) */
+.contact__veil {
+  position: absolute;
+  inset: 0;
+  background: var(--grad-voile);
+  pointer-events: none;
+}
+
+.contact__inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   HEAD CENTRALIZADO — kicker, H2 bicolor, lead, contador 07/08
+   ============================================================ */
+.contact__head {
+  position: relative;
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.contact__head .kicker {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.contact__lead {
+  margin-top: 1.25rem;
+  color: var(--fg-mut);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.contact__count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   RÉGUA MONO DE 3 COLUNAS DE APOIO (Orçamento gratuito ·
+   Resposta rápida · Papo direto — textos do inventário)
+   ============================================================ */
+.contact__apoio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 3.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.contact__apoio-item {
+  min-width: 0;
+  padding: 2rem 1.75rem;
+  border-left: 1px solid var(--border);
+}
+
+.contact__apoio-item:first-child {
+  border-left: 0;
+}
+
+/* FS-011.7 · I3a (fidelidade FS-013): marcador `✓` do protótipo aprovado
+   (<span class="check"> — caixa 34px, borda 2px, fundo roxo da marca, glifo
+   branco mono) no lugar da numeração mono 01/02/03. --accent = #7C3AED = --roxo
+   do protótipo; borda literal do protótipo (névoa 28%). */
+.contact__apoio-check {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 0.875rem;
+  border: 2px solid rgba(238, 240, 255, 0.28);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+
+.contact__apoio-title {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.contact__apoio-text {
+  margin-top: 0.5rem;
+  color: var(--fg-mut);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   CTAs DIRETOS — WhatsApp / e-mail (links reais) + linha SLA
+   ============================================================ */
+.contact__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.contact__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.contact__sla {
+  text-align: center;
+  word-break: break-word;
+}
+
+/* pílulas editoriais (mesma tática do hero.css, escopado por .contact) */
+.contact .contact__btn {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  padding: 0.95rem 1.9rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.contact .btn-whatsapp,
+.contact .btn-whatsapp:hover,
+.contact .btn-whatsapp:active {
+  background-color: transparent;
+  background-image: var(--grad-cta);
+  border: 0;
+  color: var(--fg);
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.25);
+}
+
+.contact .btn-whatsapp:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.contact .btn-secondary,
+.contact .btn-secondary:hover,
+.contact .btn-secondary:active {
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid var(--border-strong);
+  color: var(--fg);
+  box-shadow: none;
+}
+
+.contact .btn-secondary:hover {
+  border-color: var(--accent-neon);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   FORMULÁRIO — cartão centralizado, rótulos mono `? campo`,
+   inputs sublinhados (fluxo de submit preservado)
+   ============================================================ */
+.contact__formwrap {
+  max-width: 44rem;
+  margin: 3.5rem auto 0;
+}
+
+.contact__form {
+  padding: 3rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.contact__form-title {
+  font-family: var(--font-sans);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.contact__form-note {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-com);
+}
+
+.contact .req {
+  color: var(--accent-neon);
+  font-family: inherit;
+}
+
+.contact__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.contact__field {
+  min-width: 0;
+}
+
+/* rótulo mono "linguagem prompt" (fase-2 §6) */
+.contact .contact__label {
+  display: block;
+  margin: 0 0 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--fg-com);
+}
+
+/* inputs sublinhados — sobrescreve o .form-input legado */
+.contact .contact__input {
+  width: 100%;
+  padding: 0.625rem 0.125rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-strong);
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  color: var(--fg);
+  box-shadow: none;
+  transition: border-color 0.2s ease;
+}
+
+.contact .contact__input::placeholder {
+  color: var(--fg-com);
+}
+
+.contact .contact__input:focus {
+  outline: none;
+  border-color: transparent;
+  border-bottom-color: var(--accent-neon);
+  border-bottom-width: 2px;
+  box-shadow: none;
+}
+
+.contact .contact__input[aria-invalid='true'] {
+  border-bottom-color: #f87171;
+}
+
+/* FS-010.12 · paridade light: vermelho de erro #f87171 rende 2.8:1 sobre
+   --surface claro — no light vira #b91c1c (6.5:1 no texto, AA). Dark
+   preservado (#f87171 = 6.6:1 sobre --surface dark). */
+html.light .contact .contact__input[aria-invalid='true'],
+html:not(.dark) .contact .contact__input[aria-invalid='true'] {
+  border-bottom-color: #b91c1c;
+}
+
+.contact .contact__textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* seta customizada do select (sem appearance nativa) */
+.contact .contact__select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--fg-com) 50%),
+    linear-gradient(135deg, var(--fg-com) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 1.35rem,
+    calc(100% - 12px) 1.35rem;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.contact .contact__select option {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.contact .form-error {
+  margin-top: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: #f87171;
+}
+
+/* FS-010.12 · paridade light: erro 12px legível (ver nota acima). */
+html.light .contact .form-error,
+html:not(.dark) .contact .form-error {
+  color: #b91c1c;
+}
+
+/* botão de envio "Enviar ↩" */
+.contact .contact__submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 2.5rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: 999px;
+  border: 0;
+  background-color: transparent;
+  background-image: var(--grad-cta);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--fg);
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.25);
+}
+
+.contact .contact__submit:hover:not(:disabled) {
+  background-color: transparent;
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.25);
+}
+
+.contact .contact__submit:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* nota LGPD → #privacidade */
+.contact__lgpd {
+  margin-top: 1.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--fg-com);
+}
+
+.contact__lgpd a {
+  color: var(--accent-neon);
+  text-decoration: underline;
+}
+
+/* painel "Quase lá! 🎉" (fluxo idêntico — só o visual muda) */
+.contact__success {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--grad-voile), var(--surface-deep);
+  color: var(--fg);
+}
+
+.contact__success-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.contact__success-text {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--fg-mut);
+}
+
+.contact__success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.contact__success-actions .btn-primary,
+.contact__success-actions .btn-secondary {
+  border-radius: 999px;
+  border: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+}
+
+.contact__success-actions .btn-primary {
+  background-color: transparent;
+  background-image: var(--grad-cta);
+  color: var(--fg);
+  box-shadow: none;
+}
+
+.contact__success-actions .btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--fg);
+  box-shadow: none;
+}
+
+.contact__success-reset {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  opacity: 0.8;
+  color: var(--fg);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.contact__success-reset:hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   RESPONSIVO — régua empilha, CTAs largura total
+   ============================================================ */
+@media (max-width: 900px) {
+  .contact__apoio {
+    grid-template-columns: 1fr;
+  }
+
+  .contact__apoio-item {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .contact__apoio-item:first-child {
+    border-top: 0;
+  }
+
+  .contact__count {
+    position: static;
+    margin-top: 1.25rem;
+    text-align: center;
+  }
+
+  .contact__form {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .contact {
+    padding: 3.5rem 0 4.5rem;
+  }
+
+  .contact__cta-row {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .contact .contact__btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 640px) {
+  .contact__success-actions {
+    flex-direction: row;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — estado final, sem movimento
+   (index.css permanece com seus 17 blocos; este é o bloco do contato.css —
+   + equivalente hover:none/coarse-pointer para os hovers novos)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .contact .contact__input {
+    transition: none;
+  }
+
+  .contact .btn-whatsapp:hover,
+  .contact .btn-secondary:hover,
+  .contact .contact__submit:hover:not(:disabled),
+  .contact__success-actions .btn-primary:hover,
+  .contact__success-actions .btn-secondary:hover {
+    transform: none;
+    filter: none;
+  }
+
+  .contact__success-reset {
+    transition: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .contact .btn-whatsapp:hover,
+  .contact .btn-secondary:hover,
+  .contact .contact__submit:hover:not(:disabled),
+  .contact__success-actions .btn-primary:hover,
+  .contact__success-actions .btn-secondary:hover {
+    transform: none;
+    filter: none;
+  }
+}

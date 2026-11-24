@@ -183,48 +183,55 @@ test.describe('Home — DOM & motion contracts', () => {
     expect(after.x !== before.x || after.y !== before.y).toBe(true)
   })
 
-  test('7) flight minimal: nodes exist; scene receives updates after scroll (when not static)', async ({ page }) => {
+  test('7) prancha de figuras: 12 figures with fig. NN · + data-image-reveal; flight retired', async ({ page }) => {
     await gotoHome(page)
     await waitForLuxuryInit(page)
 
-    const section = page.locator('[data-flight-section]').first()
-    await expect(section).toHaveCount(1)
+    // Flight aposentado (FS-010.8, plano §1.3): nenhum nó do contrato antigo
+    // permanece no DOM (setupFlightScene também foi removido de motion.ts).
+    expect(await page.locator('[data-flight-section]').count()).toBe(0)
+    expect(
+      await page
+        .locator('[data-flight-track], [data-flight-lean], [data-flight-scene], [data-flight-card]')
+        .count(),
+    ).toBe(0)
 
-    await expect(section.locator('[data-flight-track]')).toHaveCount(1)
-    await expect(section.locator('[data-flight-lean]')).toHaveCount(1)
-    await expect(section.locator('[data-flight-scene]')).toHaveCount(1)
+    // Prancha (contrato §3.5): 12 figure catalogadas, cada frame com
+    // data-image-reveal e figcaption "fig. NN · <legenda>".
+    const frames = page.locator('#pixel-world figure[data-image-reveal]')
+    await expect(frames).toHaveCount(12)
 
-    const cardsCount = await section.locator('[data-flight-card]').count()
-    expect(cardsCount).toBeGreaterThan(0)
-
-    const isStatic = await section.evaluate((el: HTMLElement) => el.classList.contains('flight--static'))
-    if (isStatic) {
-      test.skip(true, 'Flight is static on this pointer/viewport; skipping scene update assertion')
-    }
-
-    const scene = section.locator('[data-flight-scene]').first()
-    const sceneHandle = await scene.elementHandle()
-    expect(sceneHandle).toBeTruthy()
-
-    const beforeOpacity = await scene.evaluate((el: HTMLElement) => getComputedStyle(el).opacity)
-
-    await page.evaluate((el: HTMLElement) => el.scrollIntoView({ block: 'end' }), await section.elementHandle())
-
-    await page.waitForFunction(
-      (el: any) => parseFloat(getComputedStyle(el).opacity) < 0.999,
-      sceneHandle,
-    )
-
-    const afterOpacity = await scene.evaluate((el: HTMLElement) => getComputedStyle(el).opacity)
-    expect(parseFloat(afterOpacity)).toBeLessThanOrEqual(1)
+    const captions = await frames.locator('figcaption').allTextContents()
+    expect(captions).toHaveLength(12)
+    captions.forEach((text, index) => {
+      const nn = String(index + 1).padStart(2, '0')
+      expect(text.trim().startsWith(`fig. ${nn} · `)).toBe(true)
+    })
   })
 
   test('8) reduced motion emulation does not crash', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
 
+    // Causa raiz do pageerror pré-existente ("Cannot read properties of null
+    // (reading dataset)"): o init script lia `document.documentElement.dataset`
+    // antes de <html> existir (documentElement === null em addInitScript).
+    // Correção: guard null + aplicação assim que o elemento for inserido.
+    // (motion.ts também ganhou null-guard em prefersReducedMotion.)
     await page.addInitScript(() => {
-      document.documentElement.dataset.motion = 'reduced'
+      const apply = () => {
+        const el = document.documentElement
+        if (el) el.dataset.motion = 'reduced'
+      }
+      apply()
+      if (!document.documentElement) {
+        new MutationObserver((_, obs) => {
+          if (document.documentElement) {
+            apply()
+            obs.disconnect()
+          }
+        }).observe(document, { childList: true })
+      }
     })
 
     await gotoHome(page)
@@ -234,5 +241,311 @@ test.describe('Home — DOM & motion contracts', () => {
     if (errors.length) {
       console.log('[reduced motion] pageerror(s):', errors)
     }
+    expect(errors).toEqual([])
+  })
+})
+
+// ---------------------------------------------------------------------------
+// FS-011.5 — reforço do contrato: interação (abas/stepper/FAQ/tema), H2
+// bicolor e guarda de CLS. Padrão dos testes 2–8: dispatch direto de eventos
+// (headless flaka com mouse/teclado reais em elementos animados/ocultos).
+// ---------------------------------------------------------------------------
+
+type TabState = {
+  index: number
+  selected: boolean
+  isActive: boolean
+  tabIndex: string | null
+  panelHidden: boolean
+}
+
+/**
+ * O dev server do Vite injeta o CSS como <style> inline e a CSP estrita do
+ * index.html (style-src 'self', sem 'unsafe-inline') bloqueia estilos inline —
+ * em produção o CSS sai como <link rel="stylesheet"> ('self' → permitido).
+ * Para asserções de estilo computado, habilitar via CDP o bypass de CSP
+ * reproduz a condição de produção (regras reais aplicadas). Só os testes que
+ * leem getComputedStyle usam este helper.
+ */
+async function enableComputedStyles(page: any): Promise<void> {
+  const cdp = await page.context().newCDPSession(page)
+  await cdp.send('Page.setBypassCSP', { enabled: true })
+}
+
+function readTabState(page: any): Promise<TabState[]> {
+  return page.evaluate(() => {
+    const tabs = Array.from(document.querySelectorAll('#portfolio [role="tablist"] [role="tab"]'))
+    return tabs.map((tab, index) => ({
+      index,
+      selected: tab.getAttribute('aria-selected') === 'true',
+      isActive: tab.classList.contains('is-active'),
+      tabIndex: tab.getAttribute('tabindex'),
+      panelHidden: !document.getElementById(`pf-panel-${index}`) || document.getElementById(`pf-panel-${index}`)!.hasAttribute('hidden'),
+    }))
+  })
+}
+
+test.describe('Home — contratos de interação & guarda de CLS (FS-011.5)', () => {
+  test('9) portfolio tabs: setas/Home/End por teclado + aria-selected consistente', async ({ page }) => {
+    await gotoHome(page)
+    await waitForLuxuryInit(page)
+
+    await expect(page.locator('#portfolio [role="tablist"]')).toHaveCount(1)
+    const tabCount = await page.locator('#portfolio [role="tablist"] [role="tab"]').count()
+    expect(tabCount).toBeGreaterThan(1)
+
+    // dispatch direto do KeyboardEvent (o handler React onKeyDown lê event.key)
+    const pressTabKey = async (index: number, key: string) => {
+      await page.evaluate(
+        ({ index, key }) => {
+          const tab = document.querySelectorAll('#portfolio [role="tablist"] [role="tab"]')[index] as HTMLElement
+          tab.focus()
+          tab.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
+        },
+        { index, key },
+      )
+    }
+
+    const expectSelected = async (expected: number) => {
+      await expect
+        .poll(async () => {
+          const state = await readTabState(page)
+          const selected = state.filter((s: TabState) => s.selected)
+          return selected.length === 1 ? selected[0].index : -1
+        })
+        .toBe(expected)
+
+      for (const s of await readTabState(page)) {
+        // aria-selected espelha .is-active, tabindex roving e painel visível
+        expect(s.selected, `aba ${s.index} aria-selected`).toBe(s.index === expected)
+        expect(s.isActive, `aba ${s.index} .is-active`).toBe(s.index === expected)
+        expect(s.tabIndex, `aba ${s.index} tabindex roving`).toBe(s.index === expected ? '0' : '-1')
+        expect(s.panelHidden, `painel ${s.index} hidden`).toBe(s.index !== expected)
+      }
+    }
+
+    await expectSelected(0)
+
+    await pressTabKey(0, 'ArrowRight')
+    await expectSelected(1)
+
+    await pressTabKey(1, 'End')
+    await expectSelected(tabCount - 1)
+
+    // ArrowRight no fim faz wrap para a primeira
+    await pressTabKey(tabCount - 1, 'ArrowRight')
+    await expectSelected(0)
+
+    // ArrowLeft no início faz wrap para a última
+    await pressTabKey(0, 'ArrowLeft')
+    await expectSelected(tabCount - 1)
+
+    await pressTabKey(tabCount - 1, 'Home')
+    await expectSelected(0)
+  })
+
+  test('10) processo stepper: radios trocam o painel (clique + setas do radio group)', async ({ page }) => {
+    await enableComputedStyles(page)
+    await gotoHome(page)
+    await waitForLuxuryInit(page)
+
+    await expect(page.locator('#processo .proc-radio')).toHaveCount(4)
+
+    const readStepper = () =>
+      page.evaluate(() => {
+        const radios = Array.from(document.querySelectorAll<HTMLInputElement>('#processo .proc-radio'))
+        const panels = Array.from(document.querySelectorAll<HTMLElement>('#processo .proc-panel'))
+        return {
+          checked: radios.map((r) => (r.checked ? 1 : 0)),
+          displays: panels.map((p) => getComputedStyle(p).display),
+        }
+      })
+
+    // estado inicial: etapa 01 marcada, só o painel 1 visível (CSS :checked)
+    const initial = await readStepper()
+    expect(initial.checked).toEqual([1, 0, 0, 0])
+    expect(initial.displays).toEqual(['block', 'none', 'none', 'none'])
+
+    // teclado: radio group nativo move a seleção com setas (radio focado)
+    await page.evaluate(() => document.getElementById('proc-1')?.focus())
+    await page.keyboard.press('ArrowRight')
+    await expect.poll(async () => (await readStepper()).checked).toEqual([0, 1, 0, 0])
+    expect((await readStepper()).displays).toEqual(['none', 'block', 'none', 'none'])
+
+    // dispatch direto de clique no radio 4 → só o painel 4 aparece
+    await page.evaluate(() => (document.getElementById('proc-4') as HTMLInputElement).click())
+    await expect.poll(async () => (await readStepper()).checked).toEqual([0, 0, 0, 1])
+    expect((await readStepper()).displays).toEqual(['none', 'none', 'none', 'block'])
+  })
+
+  test('11) FAQ: acordeão 1-aberto — abrir fecha os demais', async ({ page }) => {
+    await gotoHome(page)
+    await waitForLuxuryInit(page)
+
+    const faqState = () =>
+      page.evaluate(() => {
+        const buttons = Array.from(document.querySelectorAll('#faq .faq-q'))
+        return buttons.map((_, i) => {
+          const btn = document.querySelectorAll('#faq .faq-q')[i]
+          const panel = document.getElementById(`faq-a-${i + 1}`)
+          return {
+            expanded: btn.getAttribute('aria-expanded') === 'true',
+            panelHidden: !panel || panel.hasAttribute('hidden'),
+          }
+        })
+      })
+
+    // 6 FAQS exatos (FS-011.4); o primeiro nasce aberto (contrato do protótipo)
+    const initial = await faqState()
+    expect(initial).toHaveLength(6)
+    expect(initial.filter((s) => s.expanded)).toHaveLength(1)
+    expect(initial[0].expanded).toBe(true)
+    initial.forEach((s, i) => expect(s.panelHidden, `painel ${i + 1}`).toBe(i !== 0))
+
+    const clickFaq = (index: number) =>
+      page.evaluate((i) => (document.querySelectorAll('#faq .faq-q')[i] as HTMLElement).click(), index)
+
+    // abrir o item 3 fecha o item 1 (1-aberto = mutualmente exclusivo)
+    await clickFaq(2)
+    await expect.poll(async () => (await faqState()).filter((s) => s.expanded)).toHaveLength(1)
+    const afterThird = await faqState()
+    expect(afterThird[2].expanded).toBe(true)
+    afterThird.forEach((s, i) => expect(s.panelHidden, `painel ${i + 1}`).toBe(i !== 2))
+
+    // clicar no item aberto fecha tudo (comportamento do protótipo)
+    await clickFaq(2)
+    await expect.poll(async () => (await faqState()).filter((s) => s.expanded)).toHaveLength(0)
+    const afterClose = await faqState()
+    afterClose.forEach((s, i) => expect(s.panelHidden, `painel ${i + 1}`).toBe(true))
+  })
+
+  test('12) tema: toggle html.dark ↔ html.light persiste no localStorage', async ({ page }) => {
+    await gotoHome(page)
+
+    const themeState = () =>
+      page.evaluate(() => ({
+        dark: document.documentElement.classList.contains('dark'),
+        colorScheme: document.documentElement.style.colorScheme,
+        stored: window.localStorage.getItem('filipestudio-theme'),
+      }))
+
+    const clickToggle = () =>
+      page.evaluate(() => {
+        const btn = document.querySelector<HTMLButtonElement>('button[aria-label^="Ativar modo"]')
+        btn?.click()
+      })
+
+    // padrão: dark (index.html + getInitialTheme do useTheme)
+    await expect.poll(themeState).toEqual({ dark: true, colorScheme: 'dark', stored: 'dark' })
+
+    // toggle → light
+    await clickToggle()
+    await expect.poll(themeState).toEqual({ dark: false, colorScheme: 'light', stored: 'light' })
+
+    // persistência: reload mantém light (localStorage → getInitialTheme)
+    await page.reload()
+    await page.waitForSelector('main#conteudo')
+    await expect.poll(themeState).toEqual({ dark: false, colorScheme: 'light', stored: 'light' })
+
+    // volta para dark
+    await clickToggle()
+    await expect.poll(themeState).toEqual({ dark: true, colorScheme: 'dark', stored: 'dark' })
+  })
+
+  test('13) H2 bicolor: gradiente (fill) aplicado em .luxury-line:nth-of-type(2)', async ({ page }) => {
+    await enableComputedStyles(page)
+    await gotoHome(page)
+    await waitForLuxuryInit(page)
+
+    // A intro (BrandIntro) trava o scroll (`html.brand-intro-lock` → overflow
+    // hidden) até o splash terminar (≤1.2s + fail-safe 3s). Rolar durante a
+    // trava é engolido e o ScrollTrigger do título nunca dispara (flakiness sob
+    // carga em headless) — aguardar a liberação torna o scroll determinístico.
+    await page.waitForFunction(() => !document.documentElement.classList.contains('brand-intro-lock'))
+
+    const titleHandle = await page.locator('#portfolio-title').elementHandle()
+    expect(titleHandle).toBeTruthy()
+    await page.evaluate((el: HTMLElement) => {
+      el.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior })
+      // dispatch direto (padrão dos testes 2–8): atualiza o ScrollTrigger mesmo
+      // se o scroll nativo for atrasado pelo compositor em headless sob carga
+      window.dispatchEvent(new Event('scroll'))
+    }, titleHandle)
+
+    // split do setupTitleMasks: .luxury-title > .luxury-line > .luxury-line__in
+    // (expect.poll = polling por intervalo no Node, independente de rAF)
+    await expect
+      .poll(
+        () =>
+          page.evaluate(() => {
+            const t = document.getElementById('portfolio-title')
+            return !!t && t.dataset.split === '1' && t.querySelectorAll('.luxury-line').length >= 2
+          }),
+        { timeout: 15_000 },
+      )
+      .toBe(true)
+
+    // ScrollTrigger onEnter (top 88%) adiciona .is-visible → fill 0→100%
+    await expect
+      .poll(
+        () =>
+          page.evaluate(
+            () => document.getElementById('portfolio-title')?.classList.contains('is-visible') === true,
+          ),
+        { timeout: 15_000 },
+      )
+      .toBe(true)
+
+    const line2 = await page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>(
+        '#portfolio-title .luxury-line:nth-of-type(2) .luxury-line__in',
+      )
+      if (!el) return null
+      const cs = getComputedStyle(el)
+      return {
+        backgroundImage: cs.backgroundImage,
+        backgroundClip: cs.backgroundClip,
+        color: cs.color,
+      }
+    })
+    if (!line2) throw new Error('linha 2 (.luxury-line:nth-of-type(2)) não encontrada no H2')
+    expect(line2.backgroundImage).not.toBe('none')
+    expect(line2.backgroundImage).toContain('gradient')
+    expect(line2.backgroundClip).toBe('text')
+    expect(line2.color).toBe('rgba(0, 0, 0, 0)')
+
+    // fill completo após a transição 0.7s (background-size 0% → 100%)
+    await expect
+      .poll(
+        () =>
+          page.evaluate(() => {
+            const el = document.querySelector(
+              '#portfolio-title .luxury-line:nth-of-type(2) .luxury-line__in',
+            )
+            return !!el && getComputedStyle(el).backgroundSize === '100% 100%'
+          }),
+        { timeout: 15_000 },
+      )
+      .toBe(true)
+  })
+
+  test('14) CLS guard: toda <img> da home declara width/height', async ({ page }) => {
+    await gotoHome(page)
+
+    const report = await page.evaluate(() => {
+      const imgs = Array.from(document.images)
+      return {
+        total: imgs.length,
+        missing: imgs
+          .filter((img) => {
+            const w = img.getAttribute('width')
+            const h = img.getAttribute('height')
+            return !(w && h && Number(w) > 0 && Number(h) > 0)
+          })
+          .map((img) => img.getAttribute('src') ?? '(sem src)'),
+      }
+    })
+    expect(report.total).toBeGreaterThan(0)
+    expect(report.missing).toEqual([])
   })
 })
