@@ -1,5 +1,5 @@
 /* ── FS-010.2 · stub de seção — processo ─────────────────────────────────────────
-   Escopo: processo (stepper por radios, semanas, dias).
+   Escopo: processo (stepper por radios, palco horizontal, cronograma).
    CSS ESCOPADO POR SEÇÃO: cada lote do redesign escreve NO SEU próprio arquivo —
    nunca no index.css — para zerar conflitos de merge entre workers.
 
@@ -8,11 +8,13 @@
    - títulos: texto + <br> sob .luxury-title (setupTitleMasks divide em
      .luxury-line; NUNCA spans .h2-l1/.h2-l2 — o split os destrói);
    - peças novas com movimento: estado final em reduced-motion (regra no bloco
-     global de prefers-reduced-motion do index.css — contagem 17 preservada) +
+     global de prefers-reduced-motion do index.css — contagem preservada) +
      equivalente mobile/coarse-pointer.
      [FS-010.9] exceção autorizada pelo lote: a degradação reduced-motion do
      stepper (troca de etapa instantânea, sem fade/lift) fica em bloco PRÓPRIO
-     deste arquivo (o index.css e seus 17 blocos permanecem intocados).
+     deste arquivo (o index.css e seus blocos permanecem intocados).
+     [FS-017] o bloco próprio deste arquivo foi reescrito para o palco
+     horizontal (mesma exceção: nenhum bloco de index.css/outra seção alterado).
 
    Tokens globais (fase-2 §2.1/§2.2, definidos em index.css): --bg, --surface,
    --surface-deep, --surface-pixel, --fg, --fg-mut, --fg-com, --accent,
@@ -23,17 +25,26 @@
 */
 
 /* ============================================================
-   FS-010.9 · PROCESSO (fase-2 §5.05 — padrão E 4/8: stepper + grade)
-   Stepper 01–04 por radios `:checked` (teclado nativo, sem JS novo);
-   grade semana/dia decorativa como "dado visual" do cronograma.
+   FS-017 · PROCESSO v2 (fase-17-processo-reformulacao.md — aprovada
+   em 2026-11-26): padrão F "palco horizontal" (substitui o padrão E 4/8
+   do FS-010.9, que gerava os defectos D1–D5).
+
+   head editorial → stepper horizontal 01–04 (trilho editorial) →
+   conector da etapa ativa → palco full-width com painel rico +
+   cronograma integrado + faixa de prazos → micro de fechamento.
+
+   Conexão em 3 níveis (D5): (a) card ativo com anel grad-marca + num
+   ciano + trilho aceso; (b) conector vertical de 3px descendo do card;
+   (c) segmento grad-marca na borda superior do palco, na mesma coluna.
+   Troca de etapa = `:checked` + seletores `~` (nenhum JS novo).
    ============================================================ */
 
 .processo {
   position: relative;
-  padding: 5rem 0;
+  padding: 96px 0;
 }
 
-/* barra de identidade da seção (sec-mark do protótipo — decorativa) */
+/* barra de identidade da sec — decorativa */
 .processo__mark {
   width: 56px;
   height: 3px;
@@ -64,18 +75,21 @@
   color: var(--fg-mut);
 }
 
-.processo__foot {
+/* único micro no rodapé (D4: eram 5 linhas soltas) — 6.90:1 no dark (spec §8).
+   Seletor qualificado (0,2,0): `.micro` é declarado DEPOIS em index.css e, em
+   especificidade igual, venceria font-size/peso/cor deste rodapé. */
+.processo .processo__foot {
   margin-top: 32px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--fg-mut);
 }
 
-/* ── stepper 4/8 (padrão E — fase-2 §3.1) ─────────────────────────────────────
-   Seletores `~` canônicos para as 4 etapas de PROCESS_STEPS (01–04).
-   Os radios são irmãos de .stepper/.proc-panels dentro de .process-grid. */
+/* ── radios do stepper (teclado nativo: Tab + setas) ───────────────────────────
+   Os inputs são irmãos de .stepper/.proc-conn/.proc-stage dentro de
+   .process-grid — os seletores `~` abaixo dependem dessa ordem. */
 .process-grid {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: 48px;
   margin-top: 48px;
 }
 
@@ -85,23 +99,58 @@
   pointer-events: none;
 }
 
+/* ── stepper horizontal (4 colunas contíguas = trilho editorial) ─────────────── */
 .processo .stepper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.processo .stepper li {
+  position: relative;
+  padding-top: 28px;
+}
+
+/* trilho contínuo: cada li pinta o próprio trecho (união = largura total) */
+.processo .stepper li::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+  transition: background 0.25s ease;
+}
+
+/* marcador da etapa, alinhado à esquerda do card (x = 24px) */
+.processo .stepper li::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 23px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
 .processo .stepper li label {
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  gap: 16px;
-  align-items: baseline;
-  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 24px 20px;
+  min-height: 96px;
   border: 1px solid var(--border);
   border-radius: 12px;
+  background: transparent;
   cursor: pointer;
   transition:
     border-color 0.25s ease,
@@ -109,16 +158,19 @@
     transform 0.25s ease;
 }
 
-.processo .num {
+.processo .stepper .num {
   font-family: var(--font-mono);
   font-size: 0.875rem;
   color: var(--fg-com);
+  transition: color 0.25s ease;
 }
 
-.processo .step-title {
-  font-size: 1.375rem;
+.processo .stepper .step-title {
+  font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.25;
+  color: var(--fg-mut);
+  transition: color 0.25s ease;
 }
 
 /* hover (lift) só em pointer fino — coarse/mobile fica sem hover "presa" */
@@ -129,15 +181,16 @@
   }
 }
 
-/* etapa ativa: borda grad-marca + num neon (fase-2 §5.05) */
+/* etapa ativa: anel grad-marca (borda 1px transparente + background-clip
+   padding-box/border-box) + preenchimento --surface + num neon + título em --fg */
 .processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1) label,
 .processo .proc-radio:nth-of-type(2):checked ~ .stepper li:nth-child(2) label,
 .processo .proc-radio:nth-of-type(3):checked ~ .stepper li:nth-child(3) label,
 .processo .proc-radio:nth-of-type(4):checked ~ .stepper li:nth-child(4) label {
-  border-color: var(--border-strong);
-  background: var(--surface);
-  border-top: 2px solid transparent;
-  border-image: var(--grad-marca) 1;
+  border-color: transparent;
+  background-image: linear-gradient(var(--surface), var(--surface)), var(--grad-marca);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1) label .num,
@@ -147,7 +200,31 @@
   color: var(--accent-neon);
 }
 
-/* anel de foco no label do radio focado (teclado) */
+.processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1) label .step-title,
+.processo .proc-radio:nth-of-type(2):checked ~ .stepper li:nth-child(2) label .step-title,
+.processo .proc-radio:nth-of-type(3):checked ~ .stepper li:nth-child(3) label .step-title,
+.processo .proc-radio:nth-of-type(4):checked ~ .stepper li:nth-child(4) label .step-title {
+  color: var(--fg);
+}
+
+/* segmento do trilho acima do card ativo → grad-marca */
+.processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1)::before,
+.processo .proc-radio:nth-of-type(2):checked ~ .stepper li:nth-child(2)::before,
+.processo .proc-radio:nth-of-type(3):checked ~ .stepper li:nth-child(3)::before,
+.processo .proc-radio:nth-of-type(4):checked ~ .stepper li:nth-child(4)::before {
+  background: var(--grad-marca);
+}
+
+/* marcador da etapa ativa → ciano sólido */
+.processo .proc-radio:nth-of-type(1):checked ~ .stepper li:nth-child(1)::after,
+.processo .proc-radio:nth-of-type(2):checked ~ .stepper li:nth-child(2)::after,
+.processo .proc-radio:nth-of-type(3):checked ~ .stepper li:nth-child(3)::after,
+.processo .proc-radio:nth-of-type(4):checked ~ .stepper li:nth-child(4)::after {
+  background: var(--accent-neon);
+  border-color: var(--accent-neon);
+}
+
+/* anel de foco no card do radio focado (teclado) — outline ciano 2px/offset 3px */
 .processo .proc-radio:nth-of-type(1):focus-visible ~ .stepper li:nth-child(1) label,
 .processo .proc-radio:nth-of-type(2):focus-visible ~ .stepper li:nth-child(2) label,
 .processo .proc-radio:nth-of-type(3):focus-visible ~ .stepper li:nth-child(3) label,
@@ -156,13 +233,110 @@
   outline-offset: 3px;
 }
 
-/* painéis de descrição (à direita) */
+/* ── conector etapa ativa → palco (defect D5, nível 2) ────────────────────────── */
+.processo .proc-conn {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: 24px;
+}
+
+.processo .proc-conn span {
+  position: relative;
+}
+
+.processo .proc-conn span::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--grad-marca);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.processo .proc-radio:nth-of-type(1):checked ~ .proc-conn span:nth-child(1)::before,
+.processo .proc-radio:nth-of-type(2):checked ~ .proc-conn span:nth-child(2)::before,
+.processo .proc-radio:nth-of-type(3):checked ~ .proc-conn span:nth-child(3)::before,
+.processo .proc-radio:nth-of-type(4):checked ~ .proc-conn span:nth-child(4)::before {
+  opacity: 1;
+}
+
+/* ── palco (stage): painel rico + cronograma integrado + faixa de prazos ───────
+   Faixas full-width empilhadas = nenhuma célula vazia > 1 linha (D1/D2). */
+.processo .proc-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/* trilho de 4 segmentos na borda superior do palco — o segmento ativo é a
+   "aba" que aponta de volta para a etapa selecionada (conexão nível 3) */
+.processo .stage__rail {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.processo .stage__rail span {
+  background: transparent;
+  transition: background 0.25s ease;
+}
+
+.processo .proc-radio:nth-of-type(1):checked ~ .proc-stage .stage__rail span:nth-child(1),
+.processo .proc-radio:nth-of-type(2):checked ~ .proc-stage .stage__rail span:nth-child(2),
+.processo .proc-radio:nth-of-type(3):checked ~ .proc-stage .stage__rail span:nth-child(3),
+.processo .proc-radio:nth-of-type(4):checked ~ .proc-stage .stage__rail span:nth-child(4) {
+  background: var(--grad-marca);
+}
+
+.processo .stage__body {
+  display: grid;
+  gap: 32px;
+  padding: 36px 40px 32px;
+}
+
+/* ── painel da etapa (conteúdo exato de PROCESS_STEPS) ────────────────────────── */
 .processo .proc-panels {
   position: relative;
 }
 
 .processo .proc-panel {
   display: none;
+}
+
+.processo .proc-radio:nth-of-type(1):checked ~ .proc-stage .proc-panel:nth-child(1),
+.processo .proc-radio:nth-of-type(2):checked ~ .proc-stage .proc-panel:nth-child(2),
+.processo .proc-radio:nth-of-type(3):checked ~ .proc-stage .proc-panel:nth-child(3),
+.processo .proc-radio:nth-of-type(4):checked ~ .proc-stage .proc-panel:nth-child(4) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 32px;
+  align-items: center;
+  animation: processo-fade-up 0.35s ease both;
+}
+
+.processo .proc-panel__meta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.processo .proc-panel__title {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  min-width: 0;
 }
 
 .processo .proc-panel h3 {
@@ -172,18 +346,24 @@
   letter-spacing: -0.01em;
 }
 
-.processo .proc-panel p {
-  margin-top: 16px;
-  max-width: 56ch;
+/* a descrição ocupa a coluna inteira ao lado do título (sem medida presa:
+   evita o vão horizontal entre bloco de título e texto) */
+.processo .proc-panel__desc {
+  max-width: none;
   color: var(--fg-mut);
 }
 
-.processo .proc-radio:nth-of-type(1):checked ~ .proc-panels .proc-panel:nth-child(1),
-.processo .proc-radio:nth-of-type(2):checked ~ .proc-panels .proc-panel:nth-child(2),
-.processo .proc-radio:nth-of-type(3):checked ~ .proc-panels .proc-panel:nth-child(3),
-.processo .proc-radio:nth-of-type(4):checked ~ .proc-panels .proc-panel:nth-child(4) {
-  display: block;
-  animation: processo-fade-up 0.35s ease both;
+/* numeral gigante em grad-marca (D1: o painel vira "cabeçalho de arquivo") */
+.processo .proc-num {
+  font-size: clamp(4.5rem, 8vw, 7.5rem);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  background: var(--grad-marca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
 }
 
 @keyframes processo-fade-up {
@@ -197,23 +377,116 @@
   }
 }
 
-/* ── grade semana/dia (decorativa — "dado visual" do cronograma) ────────────── */
-.processo .week-grid {
-  margin-top: 48px;
-  padding: 32px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
+/* ── cronograma integrado (D3: a grade ganha significado) ─────────────────────── */
+.processo .proc-timeline {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
 }
 
-.processo .week-cols {
+.processo .tl__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 24px;
+}
+
+.processo .tl__label {
+  font-weight: 500;
+  color: var(--fg-mut);
+}
+
+.processo .tl__key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.processo .tl__key .micro {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.processo .tl__sw {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.processo .tl__sw--on {
+  background: var(--grad-marca);
+}
+
+.processo .tl__sw--off {
+  border: 1px dashed var(--border-strong);
+}
+
+.processo .tl__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
+  gap: 16px;
 }
 
-.processo .week h4 {
-  margin-bottom: 12px;
+.processo .tl__week {
+  position: relative;
+  min-width: 0;
+}
+
+.processo .tl__days {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 34px;
+}
+
+.processo .tl__days i {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+}
+
+/* fill contínuo: cada célula mostra a fatia do grad-marca do próprio dia
+   (background-size 2000% + position --i/19 → rampa roxo→azul→ciano) */
+.processo .tl__days i.on {
+  border-color: transparent;
+  background-image: var(--grad-marca);
+  background-size: 2000% 100%;
+  background-position: calc(var(--i, 0) * 100% / 19) center;
+}
+
+/* marco do dia 15 (última célula preenchida) */
+.processo .tl__days i.is-mile {
+  outline: 2px solid var(--accent-neon);
+  outline-offset: 2px;
+}
+
+/* semana 04 = dias após o dia 15 (células fantasma tracejadas) */
+.processo .tl__week--beyond .tl__days i {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+/* divisor de fronteira: fim do dia 15 → início da semana 04 */
+.processo .tl__week--beyond::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed var(--border-strong);
+}
+
+.processo .tl__axis {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 10px;
+}
+
+.processo .tl__axis .w {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
@@ -221,42 +494,84 @@
   color: var(--fg-com);
 }
 
-.processo .days {
+.processo .tl__axis .d {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-com);
+}
+
+/* marcador do dia 15 — pendurado na fronteira semana 03 / 04 (10.09:1) */
+.processo .tl__flag {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 8px);
+  white-space: nowrap;
+  color: var(--accent-neon);
+  font-weight: 500;
+}
+
+.processo .tl__flag::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 100%;
+  border: 4px solid transparent;
+  border-top-color: var(--accent-neon);
+}
+
+/* ── faixa de prazos reais (FAQ) — dado em superfície de destaque (D4) ───────── */
+.processo .stage__notes {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 32px;
+  align-items: start;
+  padding: 20px 40px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-deep);
 }
 
-.processo .days i {
-  aspect-ratio: 1;
-  border: 1px solid var(--border);
-  border-radius: 3px;
+.processo .stage__notes-label {
+  font-weight: 500;
+  color: var(--fg-mut);
+  white-space: nowrap;
+  padding-top: 2px;
 }
 
-/* dia preenchido: fill grad-marca (progressivo até o dia 15) */
-.processo .days i.on {
-  border-color: transparent;
-  background: var(--grad-marca);
+.processo .stage__notes-lines {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 
-.processo .week-marker {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 24px;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px dashed var(--border);
+/* 5.97:1 — mínimo da seção (spec §8, medido no dark) */
+.processo .stage__notes-lines .micro {
+  color: var(--fg-com);
 }
 
-.processo .week-note {
-  margin-top: 16px;
+/* ============================================================
+   RESPONSIVO (spec §5)
+   1024: mesmo desenho, padding reduzido · 768: stepper 2×2, conector/trilho
+   escondidos (o card ativo carrega o estado), painel empilhado, cronograma
+   2×2, prazos em 1 coluna · ≤420: células e títulos mais compactos.
+   ============================================================ */
+@media (max-width: 1024px) {
+  .processo {
+    padding: 80px 0;
+  }
+
+  .processo .stage__body {
+    padding: 32px 28px 28px;
+  }
+
+  .processo .stage__notes {
+    padding: 20px 28px;
+  }
 }
 
-/* ── responsivo (protótipo §RESPONSIVO — 768) ───────────────────────────────── */
 @media (max-width: 768px) {
   .processo {
-    padding: 4rem 0;
+    padding: 64px 0;
   }
 
   .processo__head {
@@ -264,21 +579,124 @@
     gap: 12px;
   }
 
-  .process-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+  /* stepper 2×2 (alvos de toque ≥44px, títulos sem apertar) */
+  .processo .stepper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
-  .processo .week-cols {
+  .processo .stepper li {
+    padding-top: 0;
+  }
+
+  .processo .stepper li::before,
+  .processo .stepper li::after {
+    display: none;
+  }
+
+  .processo .stepper li label {
+    min-height: 88px;
+    padding: 16px 18px 18px;
+  }
+
+  /* sem trilho/conector alinhado em 2 colunas — o card ativo carrega o estado */
+  .processo .proc-conn,
+  .processo .stage__rail {
+    display: none;
+  }
+
+  .processo .stage__body {
+    gap: 24px;
+    padding: 24px 20px 24px;
+  }
+
+  /* painel empilhado: meta → 0N + título → descrição */
+  .processo .proc-radio:nth-of-type(1):checked ~ .proc-stage .proc-panel:nth-child(1),
+  .processo .proc-radio:nth-of-type(2):checked ~ .proc-stage .proc-panel:nth-child(2),
+  .processo .proc-radio:nth-of-type(3):checked ~ .proc-stage .proc-panel:nth-child(3),
+  .processo .proc-radio:nth-of-type(4):checked ~ .proc-stage .proc-panel:nth-child(4) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .processo .proc-panel__meta {
+    order: 1;
+    padding-bottom: 16px;
+  }
+
+  .processo .proc-panel__title {
+    order: 2;
+  }
+
+  .processo .proc-num {
+    font-size: 3.5rem;
+  }
+
+  .processo .proc-panel__desc {
+    order: 3;
+    max-width: none;
+  }
+
+  /* cronograma 2×2 (células legíveis) */
+  .processo .tl__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 16px;
+  }
+
+  .processo .tl__flag {
+    right: 0;
+  }
+
+  .processo .tl__flag::after {
+    display: none;
+  }
+
+  .processo .stage__notes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 18px 20px;
+  }
+
+  .processo .stage__notes-label {
+    white-space: normal;
+  }
+
+  .processo .processo__foot {
+    margin-top: 24px;
   }
 }
 
-/* ── prefers-reduced-motion: stepper/painel instantâneos (bloco próprio) ──────
-   Estado final direto: sem lift no hover e sem fade na troca de etapa.
-   Mesmos seletores das regras que neutraliza (mesma especificidade, depois
-   delas) — senão :checked/:hover vencem o bloco.
-   Os 17 blocos do index.css permanecem intocados (contagem preservada). */
+@media (max-width: 420px) {
+  .processo .tl__days {
+    gap: 4px;
+    margin-top: 30px;
+  }
+
+  .processo .stepper .step-title {
+    font-size: 1rem;
+  }
+}
+
+/* ── tema light: callout do dia 15 em --accent (spec §8) ───────────────────────
+   #0891b2 (light de --accent-neon) rende 3.2:1 — insuficiente para texto
+   pequeno; --accent #7C3AED rende 5.0:1. Ciano continua como preenchimento/
+   borda, nunca como texto, no tema claro. Mesma coluna `html.light` +
+   `html:not(.dark)` usada pelos tokens em index.css. */
+html.light .processo .tl__flag,
+html:not(.dark) .processo .tl__flag {
+  color: var(--accent);
+}
+
+html.light .processo .tl__flag::after,
+html:not(.dark) .processo .tl__flag::after {
+  border-top-color: var(--accent);
+}
+
+/* ── prefers-reduced-motion: estados finais, sem movimento (bloco próprio) ─────
+   Sem lift no hover, sem fade/lift na troca de etapa e trilho/conector já
+   acesos. Mesmos seletores das regras que neutraliza (mesma especificidade,
+   depois delas) — senão :checked/:hover vencem o bloco.
+   Os blocos do index.css e das demais seções permanecem intocados. */
 @media (prefers-reduced-motion: reduce) {
   .processo .stepper li label {
     transition: none;
@@ -289,10 +707,19 @@
     transform: none;
   }
 
-  .processo .proc-radio:nth-of-type(1):checked ~ .proc-panels .proc-panel:nth-child(1),
-  .processo .proc-radio:nth-of-type(2):checked ~ .proc-panels .proc-panel:nth-child(2),
-  .processo .proc-radio:nth-of-type(3):checked ~ .proc-panels .proc-panel:nth-child(3),
-  .processo .proc-radio:nth-of-type(4):checked ~ .proc-panels .proc-panel:nth-child(4) {
+  .processo .stepper li::before,
+  .processo .stepper li::after,
+  .processo .stepper .num,
+  .processo .stepper .step-title,
+  .processo .proc-conn span::before,
+  .processo .stage__rail span {
+    transition: none;
+  }
+
+  .processo .proc-radio:nth-of-type(1):checked ~ .proc-stage .proc-panel:nth-child(1),
+  .processo .proc-radio:nth-of-type(2):checked ~ .proc-stage .proc-panel:nth-child(2),
+  .processo .proc-radio:nth-of-type(3):checked ~ .proc-stage .proc-panel:nth-child(3),
+  .processo .proc-radio:nth-of-type(4):checked ~ .proc-stage .proc-panel:nth-child(4) {
     animation: none;
   }
 }

@@ -361,21 +361,36 @@ test.describe('Home — contratos de interação & guarda de CLS (FS-011.5)', ()
         }
       })
 
+    /*
+      FS-017 (fase-17-processo-reformulacao.md): a seção passou do padrão E
+      (4/8) para o padrão F "palco horizontal" — o painel da etapa ativa agora
+      é `display:grid` (meta em linha cheia + numeral/título + descrição na
+      coluna vizinha) em vez de `block`, e os demais continuam `none`.
+      `visible()` normaliza qualquer display ≠ none para 'block', preservando a
+      forma e a cobertura do assert original (exatamente UM painel visível,
+      sempre o da etapa marcada); o assert explícito logo abaixo documenta o
+      novo markup do palco.
+    */
+    const visible = (displays: string[]) =>
+      displays.map((d) => (d === 'none' ? 'none' : 'block'))
+
     // estado inicial: etapa 01 marcada, só o painel 1 visível (CSS :checked)
     const initial = await readStepper()
     expect(initial.checked).toEqual([1, 0, 0, 0])
-    expect(initial.displays).toEqual(['block', 'none', 'none', 'none'])
+    expect(visible(initial.displays)).toEqual(['block', 'none', 'none', 'none'])
+    // FS-017: painel ativo renderiza como grid (faixas do palco), não block
+    expect(initial.displays[0]).toBe('grid')
 
     // teclado: radio group nativo move a seleção com setas (radio focado)
     await page.evaluate(() => document.getElementById('proc-1')?.focus())
     await page.keyboard.press('ArrowRight')
     await expect.poll(async () => (await readStepper()).checked).toEqual([0, 1, 0, 0])
-    expect((await readStepper()).displays).toEqual(['none', 'block', 'none', 'none'])
+    expect(visible((await readStepper()).displays)).toEqual(['none', 'block', 'none', 'none'])
 
     // dispatch direto de clique no radio 4 → só o painel 4 aparece
     await page.evaluate(() => (document.getElementById('proc-4') as HTMLInputElement).click())
     await expect.poll(async () => (await readStepper()).checked).toEqual([0, 0, 0, 1])
-    expect((await readStepper()).displays).toEqual(['none', 'none', 'none', 'block'])
+    expect(visible((await readStepper()).displays)).toEqual(['none', 'none', 'none', 'block'])
   })
 
   test('11) FAQ: acordeão 1-aberto — abrir fecha os demais', async ({ page }) => {
