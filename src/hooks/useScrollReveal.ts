@@ -1,5 +1,17 @@
 import { useEffect } from 'react'
 
+/**
+ * Scroll reveal compartilhado: adiciona `.is-visible` DIRETAMENTE no DOM
+ * (fora do React) via IntersectionObserver.
+ *
+ * Armadilha (FS-019 — bug do FAQ): o React reescreve o atributo `class` do
+ * elemento inteiro toda vez que o prop `className` muda, e a string do prop
+ * não contém `is-visible`. Num elemento `.reveal` com classe condicional
+ * (ex.: `faq-item${open ? ' open' : ''} reveal`), qualquer re-render apaga o
+ * reveal → opacity:0 mantendo o layout (título/resposta somem, espaço resta).
+ * Regra: em `.reveal`, o `className` do React deve ser ESTÁTICO; estado vai
+ * para atributo (`data-*`/`hidden`) ou para filho, nunca para o `class`.
+ */
 let sharedObserver: IntersectionObserver | null = null
 const observedElements = new Set<Element>()
 

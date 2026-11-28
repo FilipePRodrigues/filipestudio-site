@@ -563,4 +563,162 @@ test.describe('Home — contratos de interação & guarda de CLS (FS-011.5)', ()
     expect(report.total).toBeGreaterThan(0)
     expect(report.missing).toEqual([])
   })
+  // FS-019 — regressão do acordeão "sumindo" ao clicar: o React reescreve o
+  // atributo `class` do `.faq-item` a cada re-render (o prop é
+  // `faq-item${open ? ' open' : ''} reveal`), e a string do prop não contém
+  // `is-visible` — injetado por fora pelo IntersectionObserver do
+  // useScrollReveal. Resultado do bug: o item perdia o reveal, ficava com
+  // opacity:0 e seguia ocupando layout (título + resposta viravam área vazia).
+  // Este caso cobre a VISIBILIDADE (o teste 11 cobre só o estado aria/hidden).
+  test(
+    '15) FAQ accordion: expandir mantém tópico visível + resposta aparece + sem espaço vazio + 1-aberto + cliques rápidos',
+    async ({ page }) => {
+      // getComputedStyle precisa do CSS real: em dev a CSP (style-src 'self')
+      // bloqueia os <style> inline do Vite — mesmo bypass do teste 13.
+      await enableComputedStyles(page)
+      await gotoHome(page)
+      await waitForLuxuryInit(page)
+
+      // a intro trava o scroll até o splash terminar (guarda do teste 13)
+      await page.waitForFunction(() => !document.documentElement.classList.contains('brand-intro-lock'))
+
+      // revela os 6 itens (scroll reveal) antes de asserir visibilidade:
+      // varre a lista em passos de 120px cedendo um frame por passo, para que
+      // cada item cruze o viewport e o IntersectionObserver dispara.
+      const revealFaqItems = async () => {
+        for (let pass = 0; pass < 5; pass++) {
+          const revealed = await page.evaluate(
+            () => document.querySelectorAll('#faq .faq-item.is-visible').length,
+          )
+          if (revealed === 6) break
+          await page.evaluate(async () => {
+            const list = document.querySelector('.faq-list') as HTMLElement
+            const rect = list.getBoundingClientRect()
+            const top = rect.top + window.scrollY - 150
+            const bottom = top + rect.height + 150
+            for (let y = top; y <= bottom; y += 120) {
+              window.scrollTo({ top: y, behavior: 'instant' as ScrollBehavior })
+              await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+            }
+          })
+          await page.waitForTimeout(400)
+        }
+        // volta o topo da lista para a viewport (teclado/click nos itens)
+        await page.evaluate(() => {
+          const list = document.querySelector('.faq-list') as HTMLElement
+          list?.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior })
+        })
+      }
+      await revealFaqItems()
+      await expect
+        .poll(() => page.evaluate(() => document.querySelectorAll('#faq .faq-item.is-visible').length), {
+          timeout: 20_000,
+        })
+        .toBe(6)
+
+      const readFaq = () =>
+        page.evaluate(() => {
+          const st = Array.from(document.querySelectorAll('#faq .faq-item')).map((it, i) => {
+            const cs = getComputedStyle(it)
+            const r = it.getBoundingClientRect()
+            const btn = it.querySelector('.faq-q') as HTMLButtonElement
+            const h3 = it.querySelector('h3')
+            const hcs = h3 ? getComputedStyle(h3) : null
+            const hr = h3 ? h3.getBoundingClientRect() : null
+            const panel = it.querySelector('.faq-a') as HTMLElement | null
+            const pcs = panel ? getComputedStyle(panel) : null
+            const pr = panel ? panel.getBoundingClientRect() : null
+            return {
+              i,
+              cls: it.className,
+              itemOpacity: cs.opacity,
+              h3Opacity: hcs ? hcs.opacity : '0',
+              h3Box: hr ? Math.round(hr.height) : 0,
+              open: btn.getAttribute('aria-expanded') === 'true',
+              panelOpen: !!panel && !panel.hasAttribute('hidden'),
+              panelOpacity: pcs ? pcs.opacity : '0',
+              panelH: pr ? Math.round(pr.height) : 0,
+              // "espaço vazio": ocupa layout sem pintar nada
+              ghost: cs.opacity === '0' && r.height > 0,
+            }
+          })
+          return {
+            st,
+            openIdx: st.findIndex((s) => s.open),
+            openCount: st.filter((s) => s.open).length,
+            panelCount: st.filter((s) => s.panelOpen).length,
+            ghosts: st.filter((s) => s.ghost).map((s) => s.i),
+            notVisible: st.filter((s) => s.itemOpacity !== '1').map((s) => s.i),
+            h3Hidden: st.filter((s) => s.h3Opacity !== '1' || s.h3Box === 0).map((s) => s.i),
+          }
+        })
+
+      const clickFaq = (index: number) =>
+        page.evaluate((i) => (document.querySelectorAll('#faq .faq-q')[i] as HTMLElement).click(), index)
+
+      /** espera o item `idx` aberto, 1-aberto global e o painel com opacity 1 */
+      const waitForOpen = (idx: number) =>
+        expect
+          .poll(
+            async () => {
+              const s = await readFaq()
+              return JSON.stringify({ openIdx: s.openIdx, panelCount: s.panelCount, panelOpacity: s.st[idx].panelOpacity })
+            },
+            { timeout: 20_000 },
+          )
+          .toBe(JSON.stringify({ openIdx: idx, panelCount: 1, panelOpacity: '1' }))
+
+      const expectNoGhost = (label: string, s: Awaited<ReturnType<typeof readFaq>>) => {
+        expect(s.ghosts, `${label}: item ocupando espaço sem pintar`).toEqual([])
+        expect(s.notVisible, `${label}: tópico invisível`).toEqual([])
+        expect(s.h3Hidden, `${label}: pergunta (h3) invisível`).toEqual([])
+      }
+
+      // ── abrir cada uma das 6 perguntas individualmente ──────────────────
+      for (let i = 0; i < 6; i++) {
+        let s = await readFaq()
+        if (s.st[i].open) {
+          await clickFaq(i)
+          await expect.poll(async () => (await readFaq()).openCount, { timeout: 20_000 }).toBe(0)
+        }
+        await clickFaq(i)
+        await waitForOpen(i)
+        s = await readFaq()
+        expectNoGhost(`abrir pergunta ${i + 1}`, s)
+        expect(s.st[i].panelH, `abrir pergunta ${i + 1}: resposta com altura`).toBeGreaterThan(0)
+        // o reveal do item aberto e do que perdeu o `open` sobrevive ao re-render
+        expect(s.st[i].cls, `item ${i + 1} perdeu .is-visible`).toContain('is-visible')
+        const prev = (i + 5) % 6
+        expect(s.st[prev].cls, `item ${prev + 1} perdeu .is-visible ao fechar`).toContain('is-visible')
+      }
+
+      // ── 10 cliques rápidos e consecutivos ───────────────────────────────
+      const seq = [0, 3, 1, 5, 2, 4, 0, 3, 5, 1]
+      for (const i of seq) await clickFaq(i)
+      await waitForOpen(seq[seq.length - 1])
+      let s = await readFaq()
+      expectNoGhost('10 cliques rápidos', s)
+      expect(s.openCount).toBe(1)
+
+      // ── fechar (clicar no item aberto) → nenhum painel ocupando espaço ──
+      await clickFaq(seq[seq.length - 1])
+      await expect.poll(async () => (await readFaq()).openCount, { timeout: 20_000 }).toBe(0)
+      s = await readFaq()
+      expect(s.panelCount).toBe(0)
+      expectNoGhost('fechar', s)
+      expect(s.st.every((x) => x.panelH === 0), 'painel fechado ainda ocupando altura').toBe(true)
+
+      // ── teclado nativo do <button>: Enter e Espaço (a11y FS-011.4) ─────
+      await page.evaluate(() => (document.querySelectorAll('#faq .faq-q')[2] as HTMLElement).focus())
+      await page.keyboard.press('Enter')
+      await waitForOpen(2)
+      await page.evaluate(() => (document.querySelectorAll('#faq .faq-q')[4] as HTMLElement).focus())
+      await page.keyboard.press('Space')
+      await waitForOpen(4)
+      await expect.poll(() => page.evaluate(() => document.activeElement?.id), { timeout: 5_000 }).toBe('faq-q-5')
+      s = await readFaq()
+      expectNoGhost('teclado', s)
+    },
+    { timeout: 180_000 },
+  )
 })
