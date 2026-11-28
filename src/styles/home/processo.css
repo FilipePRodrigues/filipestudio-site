@@ -41,14 +41,17 @@
 
 .processo {
   position: relative;
-  padding: 96px 0;
+  padding: 0 0 5rem; /* o respiro de abertura passa todo para BAIXO do filete
+                        (FS-018 — o filete encosta na costura) */
 }
 
-/* barra de identidade da sec — decorativa */
+/* filete de costura (FS-018): régua de 2px na largura do container, encostada
+   na fronteira .metrics → .processo — alinhada às réguas grad-marca de 2px no
+   topo de cada .metric. Decorativa (aria-hidden no DOM). */
 .processo__mark {
-  width: 56px;
-  height: 3px;
-  margin-bottom: 24px;
+  width: 100%;
+  height: 2px;
+  margin: 0 0 24px;
   background: var(--grad-marca);
 }
 
@@ -557,7 +560,7 @@
    ============================================================ */
 @media (max-width: 1024px) {
   .processo {
-    padding: 80px 0;
+    padding: 0 0 80px; /* top = 0 em todas as larguras: o filete fica na costura */
   }
 
   .processo .stage__body {
@@ -571,7 +574,7 @@
 
 @media (max-width: 768px) {
   .processo {
-    padding: 64px 0;
+    padding: 0 0 4rem; /* era 64px 0 — só o respiro inferior sobrevive */
   }
 
   .processo__head {

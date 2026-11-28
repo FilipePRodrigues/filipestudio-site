@@ -30,8 +30,17 @@
 
 .sobre {
   position: relative;
-  padding: 5rem 0 0;
-  background: var(--surface-deep);
+  padding: 5rem 0 96px; /* ← era 5rem 0 0: a margem do .metrics vira padding
+                           (sem isso ela colapsa para fora e o degradê não
+                           teria onde morar) */
+  background-color: var(--surface-deep);
+  /* costura (FS-018): a última faixa da seção sai de --surface-deep e pousa
+     em --bg ao longo de exatamente a faixa vazia sob os metrics
+     (96px = valor da escala base 8 §4.2) */
+  background-image: linear-gradient(180deg, var(--surface-deep) 0%, var(--bg) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 96px;
+  background-position: left bottom;
 }
 
 .sobre__head {
@@ -202,7 +211,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
-  margin: 4rem 0 6rem;
+  margin: 4rem 0 0; /* o 6rem mora agora no padding-bottom do .sobre */
 }
 
 .metric {
@@ -255,6 +264,8 @@
 @media (max-width: 640px) {
   .sobre {
     padding-top: 3.5rem;
+    padding-bottom: 64px; /* ← faixa de costura mobile = 64px (§4.2) */
+    background-size: 100% 64px; /* ← a faixa acompanha a margem removida */
   }
 
   .sobre__head {
@@ -272,7 +283,7 @@
 
   .metrics {
     grid-template-columns: minmax(0, 1fr);
-    margin-bottom: 4rem;
+    margin-bottom: 0;
   }
 }
 
