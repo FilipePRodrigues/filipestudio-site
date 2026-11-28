@@ -131,7 +131,12 @@ html:not(.dark) .faq-q:hover {
 }
 
 /* painel: visibilidade pelo atributo hidden (contrato a11y); entrada fade-up
-   quando abre (classe .open do item = estado do protótipo) */
+   quando abre. O estado aberto é lido do PRÓPRIO painel (`:not([hidden])`) e
+   não de uma classe no item (FS-019): o React reescreve o atributo `class` do
+   `.faq-item` inteiro a cada re-render, e a string do prop não contém
+   `is-visible` (injetado pelo IntersectionObserver do useScrollReveal) — uma
+   classe condicional no item apagava o reveal e o tópico+resposta sumiam
+   com opacity:0 mantendo o espaço. */
 .faq-a {
   padding: 0 8px 28px 56px;
   color: var(--fg-mut);
@@ -154,7 +159,7 @@ html:not(.dark) .faq-q:hover {
   }
 }
 
-.faq-item.open .faq-a {
+.faq-a:not([hidden]) {
   animation: faq-fade-up 0.3s ease both;
 }
 
@@ -187,7 +192,7 @@ html:not(.dark) .faq-q:hover {
    o index.css e seus 17 blocos de reduced-motion permanecem intocados)
    ============================================================ */
 @media (prefers-reduced-motion: reduce), (hover: none) {
-  .faq-item.open .faq-a {
+  .faq-a:not([hidden]) {
     animation: none;
   }
 

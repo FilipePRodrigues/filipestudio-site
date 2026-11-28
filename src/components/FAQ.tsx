@@ -53,7 +53,15 @@ export function FAQ() {
             const isOpen = openId === item.id
 
             return (
-              <div key={item.id} className={`faq-item${isOpen ? ' open' : ''} reveal`}>
+              // className ESTÁTICO por contrato (FS-019): o React reescreve o
+              // atributo `class` inteiro sempre que o valor do prop muda — e a
+              // string do prop NÃO contém `is-visible`, que é injetado por fora
+              // pelo IntersectionObserver (useScrollReveal). Qualquer classe
+              // condicional aqui apagaria o reveal e deixaria o item com
+              // opacity:0 ocupando espaço (bug do acordeão "sumindo" ao clicar).
+              // Estado aberto é lido do atributo `hidden` do painel (a11y), não
+              // de uma classe no item — ver faq.css `.faq-a:not([hidden])`.
+              <div key={item.id} className="faq-item reveal">
                 <button
                   type="button"
                   className="faq-q"
